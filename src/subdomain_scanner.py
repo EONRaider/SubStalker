@@ -25,11 +25,13 @@ class SubdomainScanner:
         found_domains = []
         crtsh_info = crtsh.API(target=url)
         crtsh_info.fetch()
-        found_domains.append(crtsh_info.found_domains)
+        for d in crtsh_info.found_domains:
+            found_domains.append(d)
 
         hackertarget_info = hackertarget.API(target=url)
         hackertarget_info.hostsearch()
-        found_domains.append(hackertarget_info.found_domains)
+        for d in hackertarget_info.found_domains[url]:
+            found_domains.append(d)
 
         return found_domains
 

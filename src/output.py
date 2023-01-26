@@ -15,4 +15,5 @@ class ScreenOutput(Output):
         super().__init__(subject)
 
     def update(self, domains) -> None:
-        print(f"{domains}")
+        for domain in domains:
+            print(f"[+] {domain}")
