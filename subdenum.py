@@ -12,6 +12,8 @@ class App:
                     threads=self.cli_args.threads
                 )
         self.screen_output = ScreenOutput(self.subdomain_scanner)
+        if self.cli_args.output:
+            self.file_output = FileOutput(self.subdomain_scanner)
 
     def run(self):
         try:

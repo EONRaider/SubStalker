@@ -42,3 +42,6 @@ class SubdomainScanner:
                     self.notify(result)
             except KeyboardInterrupt:
                 print("\n[-] Scan ended by user input")
+
+        for observer in self.observers:
+            observer.end_output()
