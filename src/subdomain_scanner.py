@@ -6,13 +6,8 @@ from reconlib import crtsh, hackertarget, virustotal
 
 
 class SubdomainScanner:
-    def __init__(
-            self,
-            url: Collection[str],
-            output_file: str,
-            threads: int
-        ):
-        self.url = url
+    def __init__(self, domains: Collection[str], output_file: str, threads: int):
+        self.domains = domains
         self.output_file = output_file
         self.threads = threads
         self.observers = []
