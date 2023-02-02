@@ -43,7 +43,8 @@ class CLIArgumentsParser:
 
         return self.args
 
-    def read_from_file(self, filepath):
+    @staticmethod
+    def read_from_file(filepath):
         try:
             with open(filepath, mode="r", encoding="utf-8") as f:
                 yield from (str(line.strip()) for line in f)
