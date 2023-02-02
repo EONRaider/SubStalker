@@ -35,7 +35,7 @@ class CLIArgumentsParser:
 
         self.args = self.parser.parse_args(*args, **kwargs)
 
-        self.args.url = tuple(self.parse_urls())
+        self.args.domains = tuple(self.parse_domains())
 
         return self.args
 
@@ -47,12 +47,12 @@ class CLIArgumentsParser:
         except FileNotFoundError:
             raise SystemExit(f"Error reading from file {filepath}")
 
-    def parse_urls (self):
-        if self.args.url:
-            yield str(self.args.url)
-        elif self.args.url_list:
-            if "," in self.args.url_list:
-                for url in self.args.url_list.split(","):
-                    yield url
+    def parse_domains(self):
+        if self.args.domain:
+            yield str(self.args.domain)
+        elif self.args.domain_list:
+            if "," in self.args.domain_list:
+                for domain in self.args.domain_list.split(","):
+                    yield domain
             else:
-                yield from self.read_from_file(self.args.url_list)
+                yield from self.read_from_file(self.args.domain_list)
