@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "subdomainenumerator"
+version = "0.1.0"
+description = "Enumerate subdomains of different targets through external APIs and active methods"
+authors = ["eonraider <livewire_voodoo@protonmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
