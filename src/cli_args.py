@@ -1,40 +1,36 @@
 import argparse
 
+
 class CLIArgumentsParser:
     def __init__(self):
         self.parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
-            description="Enumerate subdomains on given target(s)"
+            description="Enumerate subdomains on given target(s)",
         )
         self.target_group = self.parser.add_mutually_exclusive_group(required=True)
         self.args = None
 
     def parse(self, *args, **kwargs) -> argparse.Namespace:
         self.target_group.add_argument(
-            "-u",
-            "--url",
-            type=str,
-            help="Target URL to enumerate"
+            "-d", "--domain", type=str, help="Target domain to enumerate"
         )
         self.target_group.add_argument(
-            "-U",
-            "--url-list",
+            "-D",
+            "--domain-list",
             type=str,
-            help="Can pass multiple URLs separated by a comma"
-            " or a wordlist (one URL per line)"
+            help="Absolute path to a file containing comma- or line-separated domain "
+            "names to enumerate",
         )
         self.parser.add_argument(
-            "-o",
-            "--output",
-            type=str,
-            help="Save the output to the specified filepath"
+            "-o", "--output", type=str, help="Save the output to the specified filepath"
         )
         self.parser.add_argument(
             "-t",
             "--threads",
             type=int,
-            help="Specify number of threads (default=10)",
-            default=10
+            help="Maximum number of threads to use when enumerating subdomains "
+            "(defaults to 10)",
+            default=10,
         )
 
         self.args = self.parser.parse_args(*args, **kwargs)
