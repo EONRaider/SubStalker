@@ -35,7 +35,7 @@ class CLIArgumentsParser:
 
         self.args = self.parser.parse_args(*args, **kwargs)
 
-        self.args.domains = tuple(self.parse_domains())
+        self.args.domain = tuple(self.parse_domains())
 
         return self.args
 
