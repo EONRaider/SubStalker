@@ -1,0 +1,4 @@
+domain1.com
+domain2.com
+domain3.org
+domain4.org
