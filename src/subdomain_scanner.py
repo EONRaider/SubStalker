@@ -1,8 +1,6 @@
-from dotenv import load_dotenv
-load_dotenv()
 from collections.abc import Collection
 from concurrent.futures import ThreadPoolExecutor
-from reconlib import crtsh, hackertarget, virustotal
+from reconlib import CRTShAPI, HackerTargetAPI, VirusTotalAPI
 
 
 class SubdomainScanner:
@@ -19,30 +17,15 @@ class SubdomainScanner:
         for observer in self.observers:
             observer.update(result)
 
-    def scan_url(self, url):
-        found_domains = []
-        crtsh_info = crtsh.API(target=url)
-        crtsh_info.fetch()
-        for d in crtsh_info.subdomains[url]:
-            found_domains.append(d)
-        found_domains.append(crtsh_info.subdomains)
-
-        hackertarget_info = hackertarget.API(target=url)
-        hackertarget_info.hostsearch()
-        for d in hackertarget_info.subdomains[url]:
-            found_domains.append(d)
-        found_domains.append(hackertarget_info.subdomains)
-        
-        virustotal_info = virustotal.API(target=url)
-        found_domains.append(virustotal_info.get_subdomains())
-        found_domains.append(virustotal_info)
-
-        return found_domains
+    @staticmethod
+    def scan_url(domain) -> set[str]:
+        apis = CRTShAPI(), HackerTargetAPI(), VirusTotalAPI()
+        return set().union(*(api.fetch_subdomains(target=domain) for api in apis))
 
     def scan(self):
         with ThreadPoolExecutor(max_workers=self.threads) as executor:
             try:
-                for result in executor.map(self.scan_url, self.url):
+                for result in executor.map(self.scan_url, self.domains):
                     self.notify(result)
             except KeyboardInterrupt:
                 print("\n[-] Scan ended by user input")
