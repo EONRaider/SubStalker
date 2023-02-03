@@ -27,7 +27,7 @@ from argparse import Namespace
 import pytest
 
 from subenum.cli_parser import CLIArgumentsParser
-from subenum.exceptions import TargetSpecificationError, FileReadError
+from subenum.core.exceptions import TargetSpecificationError, FileReadError
 
 
 class TestCLIArgumentsParser:
