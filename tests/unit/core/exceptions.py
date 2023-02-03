@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 
 import pytest
 
-from subenum.exceptions import TargetSpecificationError, FileReadError
+from subenum.core.exceptions import TargetSpecificationError, FileReadError
 
 
 class TestExceptions:
