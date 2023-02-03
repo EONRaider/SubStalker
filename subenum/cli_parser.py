@@ -74,14 +74,7 @@ class CLIArgumentsParser:
             default=self.max_threads,
         )
         self.args = self.parser.parse_args(*args, **kwargs)
-
-        if len(targets := tuple(self.parse_targets())) == 0:
-            raise InvalidTargetSpecification(
-                "No targets were specified. Cannot proceed with subdomain "
-                "enumeration. Review input settings and try again. Aborting..."
-            )
-        self.args.targets = targets
-
+        self.args.targets = self._set_targets()
         return self.args
 
     @staticmethod
@@ -108,3 +101,11 @@ class CLIArgumentsParser:
             yield from self._read_from_file()
         else:
             yield from self._read_from_cli_option()
+
+    def _set_targets(self) -> Iterator[str]:
+        if len(targets := tuple(self.parse_targets())) == 0:
+            raise InvalidTargetSpecification(
+                "No targets were specified. Cannot proceed with subdomain "
+                "enumeration. Review input settings and try again. Aborting..."
+            )
+        return targets
