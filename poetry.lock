@@ -111,6 +111,36 @@ tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
+name = "python-dotenv"
+version = "0.21.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "python-dotenv-0.21.1.tar.gz", hash = "sha256:1c93de8f636cde3ce377292818d0e440b6e45a82f215c3744979151fa8151c49"},
+    {file = "python_dotenv-0.21.1-py3-none-any.whl", hash = "sha256:41e12e0318bebc859fcc4d97d4db8d20ad21721a6aa5047dd59f090391cb549a"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
+name = "reconlib"
+version = "0.4.1"
+description = "A collection of modules and helpers for active and passive reconnaissance of remote hosts"
+category = "main"
+optional = false
+python-versions = ">=3.10,<4.0"
+files = [
+    {file = "reconlib-0.4.1-py3-none-any.whl", hash = "sha256:a99181357d3416eae7b9ec473dc8313d2d2f0299bb4d15a1956d3d1caa37e93d"},
+    {file = "reconlib-0.4.1.tar.gz", hash = "sha256:3c5ab09cee83c05e61d0f6bfb2bc4ef4c8a2437ba90a89d5c73d49f5c1ea6796"},
+]
+
+[package.dependencies]
+python-dotenv = ">=0.21.1,<0.22.0"
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -125,4 +155,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5cc31f425b89f170060e68b0dad0df336e6ec37c3d4132a6e6ff7541118570a8"
+content-hash = "0bce08c43bbf8a75104aeba7d3421b900c9d55217f9d4a3656f95b8f05445225"

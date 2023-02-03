@@ -1,12 +1,15 @@
 [tool.poetry]
-name = "subdomainenumerator"
+name = "subenum"
+repository = "https://github.com/EONRaider/SubdomainEnumerator"
 version = "0.1.0"
 description = "Enumerate subdomains of different targets through external APIs and active methods"
-authors = ["eonraider <livewire_voodoo@protonmail.com>"]
+authors = ["EONRaider <livewire_voodoo@protonmail.com>"]
 readme = "README.md"
+license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+reconlib = "^0.4.1"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.1"
