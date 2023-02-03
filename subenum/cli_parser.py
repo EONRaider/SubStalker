@@ -94,7 +94,7 @@ class CLIArgumentsParser:
     def _read_from_cli_option(self) -> Iterator[str]:
         yield from re.split(r"\s*,\s*", self.args.targets)
 
-    def parse_targets(self) -> Iterator[str]:
+    def _parse_targets(self) -> Iterator[str]:
         if self.args.stdin is True:
             yield from self._read_from_stdin()
         elif self.args.from_file is not None:
@@ -103,7 +103,7 @@ class CLIArgumentsParser:
             yield from self._read_from_cli_option()
 
     def _set_targets(self) -> Iterator[str]:
-        if len(targets := tuple(self.parse_targets())) == 0:
+        if len(targets := tuple(self._parse_targets())) == 0:
             raise InvalidTargetSpecification(
                 "No targets were specified. Cannot proceed with subdomain "
                 "enumeration. Review input settings and try again. Aborting..."
