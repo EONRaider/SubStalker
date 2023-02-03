@@ -99,8 +99,9 @@ class CLIArgumentsParser:
                 f'file "{str(self.args.from_file)}"'
             )
 
-    def _read_from_cli_option(self) -> Iterator[str]:
-        yield from re.split(r"\s*,\s*", self.args.targets)
+    @staticmethod
+    def _read_from_cli_option(option: str) -> Iterator[str]:
+        yield from re.split(r"\s*,\s*", option)
 
     def _parse_targets(self) -> Iterator[str]:
         if self.args.stdin is True:
@@ -108,7 +109,7 @@ class CLIArgumentsParser:
         elif self.args.from_file is not None:
             yield from self._read_from_file()
         else:
-            yield from self._read_from_cli_option()
+            yield from self._read_from_cli_option(self.args.targets)
 
     def _set_targets(self) -> tuple[str]:
         if len(targets := tuple(self._parse_targets())) == 0:
