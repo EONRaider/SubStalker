@@ -27,7 +27,7 @@ from argparse import Namespace
 import pytest
 
 from subenum.cli_parser import CLIArgumentsParser
-from subenum.exceptions import InvalidTargetSpecification, FileReadError
+from subenum.exceptions import TargetSpecificationError, FileReadError
 
 
 class TestCLIArgumentsParser:
@@ -81,7 +81,7 @@ class TestCLIArgumentsParser:
         from other target specification methods (such as CLI argument
         and file) as well"""
         sys.stdin = io.StringIO("")
-        with pytest.raises(InvalidTargetSpecification) as e:
+        with pytest.raises(TargetSpecificationError) as e:
             CLIArgumentsParser().parse(["--stdin"])
         assert e  # <-- Add breakpoint to inspect exception
 

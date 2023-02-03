@@ -24,7 +24,7 @@ import re
 import sys
 from collections.abc import Iterator
 
-from subenum.exceptions import InvalidTargetSpecification, FileReadError
+from subenum.exceptions import TargetSpecificationError, FileReadError
 
 
 class CLIArgumentsParser:
@@ -104,8 +104,8 @@ class CLIArgumentsParser:
 
     def _set_targets(self) -> Iterator[str]:
         if len(targets := tuple(self._parse_targets())) == 0:
-            raise InvalidTargetSpecification(
+            raise TargetSpecificationError(
                 "No targets were specified. Cannot proceed with subdomain "
-                "enumeration. Review input settings and try again. Aborting..."
+                "enumeration. Review input settings and try again."
             )
         return targets
