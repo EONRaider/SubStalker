@@ -27,7 +27,7 @@ from argparse import Namespace
 import pytest
 
 from subenum.cli_parser import CLIArgumentsParser
-from subenum.exceptions import InvalidTargetSpecification
+from subenum.exceptions import InvalidTargetSpecification, FileReadError
 
 
 class TestCLIArgumentsParser:
@@ -81,8 +81,9 @@ class TestCLIArgumentsParser:
         from other target specification methods (such as CLI argument
         and file) as well"""
         sys.stdin = io.StringIO("")
-        with pytest.raises(InvalidTargetSpecification):
+        with pytest.raises(InvalidTargetSpecification) as e:
             CLIArgumentsParser().parse(["--stdin"])
+        assert e  # <-- Add breakpoint to inspect exception
 
     def test_parse_single_target_from_cli(self, target_domain):
         """
@@ -157,12 +158,12 @@ class TestCLIArgumentsParser:
         parser = CLIArgumentsParser()
         invalid_path = "/invalid/path/to/file"
 
-        with pytest.raises(SystemExit) as e:
+        with pytest.raises(FileReadError) as e:
             parser.parse(["--from-file", invalid_path])
 
         assert (
-            e.value.args[0]
-            == f"[!] FileNotFoundError: Failed to read file {invalid_path}"
+            e.value.args[0] == f"FileReadError: FileNotFoundError: Failed to read "
+            f'target specification from file "{invalid_path}"'
         )
 
     def test_parse_targets_from_inaccessible_file(self):
@@ -179,10 +180,10 @@ class TestCLIArgumentsParser:
         privileges"""
         invalid_path = "/root/some/file"
 
-        with pytest.raises(SystemExit) as e:
+        with pytest.raises(FileReadError) as e:
             parser.parse(["--from-file", invalid_path])
 
         assert (
-            e.value.args[0]
-            == f"[!] PermissionError: Failed to read file {invalid_path}"
+            e.value.args[0] == f"FileReadError: PermissionError: Failed to read target "
+            f'specification from file "{invalid_path}"'
         )

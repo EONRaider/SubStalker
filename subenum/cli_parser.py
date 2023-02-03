@@ -24,7 +24,7 @@ import re
 import sys
 from collections.abc import Iterator
 
-from subenum.exceptions import InvalidTargetSpecification
+from subenum.exceptions import InvalidTargetSpecification, FileReadError
 
 
 class CLIArgumentsParser:
@@ -86,9 +86,9 @@ class CLIArgumentsParser:
             with open(self.args.from_file, encoding="utf_8") as file:
                 yield from (line.strip() for line in file.readlines())
         except OSError as e:
-            raise SystemExit(
-                f"[!] {e.__class__.__name__}: Failed to read file "
-                f"{str(self.args.from_file)}"
+            raise FileReadError(
+                f"{e.__class__.__name__}: Failed to read target specification from "
+                f'file "{str(self.args.from_file)}"'
             )
 
     def _read_from_cli_option(self) -> Iterator[str]:
