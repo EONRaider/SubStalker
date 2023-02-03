@@ -48,6 +48,7 @@ class TestCLIArgumentsParser:
             stdin=True,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
+            virustotal_api_key=None,
         )
 
     def test_parse_multiple_targets_from_stdin(self, target_domain):
@@ -68,6 +69,7 @@ class TestCLIArgumentsParser:
             stdin=True,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
+            virustotal_api_key=None,
         )
 
     def test_parse_empty_stdin(self):
@@ -102,6 +104,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
+            virustotal_api_key=None,
         )
 
     def test_parse_multiple_targets_from_cli(self, target_domain):
@@ -123,6 +126,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
+            virustotal_api_key=None,
         )
 
     def test_parse_targets_from_file(self, targets_file):
@@ -146,6 +150,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
+            virustotal_api_key=None,
         )
 
     def test_parse_targets_from_non_existent_file(self):
