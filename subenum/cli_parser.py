@@ -24,6 +24,8 @@ import re
 import sys
 from collections.abc import Iterator
 
+from subenum.exceptions import InvalidTargetSpecification
+
 
 class CLIArgumentsParser:
     max_threads = 10
@@ -72,7 +74,14 @@ class CLIArgumentsParser:
             default=self.max_threads,
         )
         self.args = self.parser.parse_args(*args, **kwargs)
-        self.args.targets = tuple(self.parse_targets())
+
+        if len(targets := tuple(self.parse_targets())) == 0:
+            raise InvalidTargetSpecification(
+                "No targets were specified. Cannot proceed with subdomain "
+                "enumeration. Review input settings and try again. Aborting..."
+            )
+        self.args.targets = targets
+
         return self.args
 
     @staticmethod

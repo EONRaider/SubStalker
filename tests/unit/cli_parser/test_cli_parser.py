@@ -27,6 +27,7 @@ from argparse import Namespace
 import pytest
 
 from subenum.cli_parser import CLIArgumentsParser
+from subenum.exceptions import InvalidTargetSpecification
 
 
 class TestCLIArgumentsParser:
@@ -68,6 +69,20 @@ class TestCLIArgumentsParser:
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
         )
+
+    def test_parse_empty_stdin(self):
+        """
+        GIVEN an empty string
+        WHEN this string is read from the STDIN as the specification of
+            targets for the application
+        THEN an InvalidTargetSpecification exception must be raised
+        """
+        """This test will necessarily assert empty strings used as input
+        from other target specification methods (such as CLI argument
+        and file) as well"""
+        sys.stdin = io.StringIO("")
+        with pytest.raises(InvalidTargetSpecification):
+            CLIArgumentsParser().parse(["--stdin"])
 
     def test_parse_single_target_from_cli(self, target_domain):
         """
