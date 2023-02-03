@@ -22,7 +22,7 @@ Contact: https://www.twitter.com/eon_raider
 from abc import ABC, abstractmethod
 
 
-class EnumeratorSubscriber(ABC):
+class EnumerationSubscriber(ABC):
     def __init__(self, subject):
         subject.register(self)
         self.subject = subject
@@ -36,7 +36,7 @@ class EnumeratorSubscriber(ABC):
         ...
 
 
-class ScreenOutput(EnumeratorSubscriber):
+class ScreenOutput(EnumerationSubscriber):
     def __init__(self, subject):
         super().__init__(subject)
 
@@ -48,7 +48,7 @@ class ScreenOutput(EnumeratorSubscriber):
         pass
 
 
-class FileOutput(EnumeratorSubscriber):
+class FileOutput(EnumerationSubscriber):
     def __init__(self, subject):
         super().__init__(subject)
         self.output_filepath = subject.output_file
