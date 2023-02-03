@@ -19,18 +19,16 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
+import pytest
 
-class EnumeratorException(Exception):
-    def __init__(self, message: str, code: int):
-        super().__init__(f"{self.__class__.__name__}: {message}")
-        self.code = code
+from subenum.exceptions import TargetSpecificationError, FileReadError
 
 
-class TargetSpecificationError(EnumeratorException):
-    def __init__(self, message: str, code: int = 1):
-        super().__init__(message, code)
-
-
-class FileReadError(EnumeratorException):
-    def __init__(self, message: str, code: int = 1):
-        super().__init__(message, code)
+class TestExceptions:
+    @pytest.mark.parametrize("exception", [TargetSpecificationError, FileReadError])
+    def test_enumerator_exception(self, exception):
+        message = "Something went wrong"
+        with pytest.raises(exception) as e:
+            raise exception(message, code=1337)
+        assert e.value.args[0] == f"{exception.__name__}: {message}"
+        assert e.value.code == 1337
