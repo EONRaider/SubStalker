@@ -73,6 +73,14 @@ class CLIArgumentsParser:
             f"(defaults to {self.max_threads})",
             default=self.max_threads,
         )
+        self.parser.add_argument(
+            "--virustotal-api-key",
+            type=str,
+            default=None,
+            help="API key for access to VirusTotal. Can be set directly through this "
+            'option or simply by setting the "VIRUSTOTAL_API_KEY" environment variable '
+            "to the appropriate value.",
+        )
         self.args = self.parser.parse_args(*args, **kwargs)
         self.args.targets = self._set_targets()
         return self.args
