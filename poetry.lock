@@ -127,14 +127,14 @@ cli = ["click (>=5.0)"]
 
 [[package]]
 name = "reconlib"
-version = "0.4.1"
+version = "0.4.2"
 description = "A collection of modules and helpers for active and passive reconnaissance of remote hosts"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "reconlib-0.4.1-py3-none-any.whl", hash = "sha256:a99181357d3416eae7b9ec473dc8313d2d2f0299bb4d15a1956d3d1caa37e93d"},
-    {file = "reconlib-0.4.1.tar.gz", hash = "sha256:3c5ab09cee83c05e61d0f6bfb2bc4ef4c8a2437ba90a89d5c73d49f5c1ea6796"},
+    {file = "reconlib-0.4.2-py3-none-any.whl", hash = "sha256:dee20541f14578b891b1494dbd9fedf72ff3b2ee88c9fb5dced4e14560ad142b"},
+    {file = "reconlib-0.4.2.tar.gz", hash = "sha256:7a82c309932a2de232499b8f6bf4df443baca0faf7cc69863caf784a9a68d74f"},
 ]
 
 [package.dependencies]
@@ -155,4 +155,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0bce08c43bbf8a75104aeba7d3421b900c9d55217f9d4a3656f95b8f05445225"
+content-hash = "5e39bae5825f277d6830ce787842c077d5aeb4330e2b6003aa88edc219c1eb73"
