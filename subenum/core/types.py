@@ -32,6 +32,10 @@ class EnumerationPublisher(ABC):
         ...
 
     @abstractmethod
+    def unregister(self, observer) -> None:
+        ...
+
+    @abstractmethod
     def _notify_all(self, result: Any) -> None:
         ...
 
