@@ -34,3 +34,8 @@ class TargetSpecificationError(EnumeratorException):
 class FileReadError(EnumeratorException):
     def __init__(self, message: str, code: int = 1):
         super().__init__(message, code)
+
+
+class InvalidProviderError(EnumeratorException):
+    def __init__(self, message: str, code: int = 1):
+        super().__init__(message, code)
