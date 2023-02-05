@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from subenum.cli_parser import CLIParser
+from subenum.core.parsers.cli import CLIParser
 from subenum.enumerator import Enumerator
 from subenum.output import FileOutput, ScreenOutput
 
@@ -31,6 +31,7 @@ class App:
         self.cli_args = (cli_parser := CLIParser()).parse()
         self.subdomain_scanner = Enumerator(
             targets=self.cli_args.targets,
+            enumerators=cli_parser.enumerators,
             output_file=self.cli_args.output,
             max_threads=self.cli_args.max_threads,
         )

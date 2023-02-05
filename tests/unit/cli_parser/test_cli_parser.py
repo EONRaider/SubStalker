@@ -28,7 +28,7 @@ import pytest
 import reconlib
 from reconlib.core.base import ExternalService
 
-from subenum.cli_parser import CLIParser
+from subenum.core.parsers.cli import CLIParser
 from subenum.core.apis import open_providers
 from subenum.core.exceptions import (
     TargetSpecificationError,
