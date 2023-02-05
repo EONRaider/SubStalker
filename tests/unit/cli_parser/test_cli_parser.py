@@ -25,12 +25,49 @@ import sys
 from argparse import Namespace
 
 import pytest
+import reconlib
+from reconlib.core.base import ExternalService
 
 from subenum.cli_parser import CLIArgumentsParser
-from subenum.core.exceptions import TargetSpecificationError, FileReadError
+from subenum.core.apis import open_providers
+from subenum.core.exceptions import (
+    TargetSpecificationError,
+    FileReadError,
+    InvalidProviderError,
+)
 
 
 class TestCLIArgumentsParser:
+    @pytest.mark.parametrize(
+        "cli_option, class_name",
+        [
+            ("crtsh", reconlib.CRTShAPI),
+            ("hackertarget", reconlib.HackerTargetAPI),
+        ],
+    )
+    def test_parse_single_open_provider(
+        self, api_key, target_domain, cli_option, class_name
+    ):
+        parser = CLIArgumentsParser()
+        parser.parse(["--targets", target_domain, "--providers", cli_option])
+        assert len(parser.enumerators) == 1
+        assert isinstance(parser.enumerators.pop(), class_name)
+
+    def test_parse_invalid_provider(self, target_domain):
+        parser = CLIArgumentsParser()
+        parser.parse(["--targets", target_domain, "--providers", "invalid"])
+
+        with pytest.raises(InvalidProviderError):
+            assert parser.enumerators
+
+    def test_parse_all_open_providers(self, target_domain):
+        parser = CLIArgumentsParser()
+        parser.parse(["--targets", target_domain])
+        assert len(parser.enumerators) == len(open_providers)
+        assert all(
+            [isinstance(service, ExternalService) for service in parser.enumerators]
+        )
+
     def test_parse_single_target_from_stdin(self, target_domain):
         """
         GIVEN a string representing a domain name
@@ -46,9 +83,9 @@ class TestCLIArgumentsParser:
             targets=(target_domain,),
             from_file=None,
             stdin=True,
+            providers=None,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
-            virustotal_api_key=None,
         )
 
     def test_parse_multiple_targets_from_stdin(self, target_domain):
@@ -67,9 +104,9 @@ class TestCLIArgumentsParser:
             targets=tuple(domains_str.split("\n")),
             from_file=None,
             stdin=True,
+            providers=None,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
-            virustotal_api_key=None,
         )
 
     def test_parse_empty_stdin(self):
@@ -102,9 +139,9 @@ class TestCLIArgumentsParser:
             targets=(target_domain,),
             from_file=None,
             stdin=False,
+            providers=None,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
-            virustotal_api_key=None,
         )
 
     def test_parse_multiple_targets_from_cli(self, target_domain):
@@ -124,9 +161,9 @@ class TestCLIArgumentsParser:
             targets=tuple(domains_str.split(", ")),
             from_file=None,
             stdin=False,
+            providers=None,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
-            virustotal_api_key=None,
         )
 
     def test_parse_targets_from_file(self, targets_file):
@@ -148,9 +185,9 @@ class TestCLIArgumentsParser:
             targets=file_targets,
             from_file=str(targets_file),
             stdin=False,
+            providers=None,
             output=None,
             max_threads=CLIArgumentsParser.max_threads,
-            virustotal_api_key=None,
         )
 
     def test_parse_targets_from_non_existent_file(self):

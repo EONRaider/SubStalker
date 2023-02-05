@@ -24,7 +24,14 @@ import re
 import sys
 from collections.abc import Iterator
 
-from subenum.core.exceptions import TargetSpecificationError, FileReadError
+from reconlib.core.base import ExternalService
+
+from subenum.core import apis
+from subenum.core.exceptions import (
+    TargetSpecificationError,
+    FileReadError,
+    InvalidProviderError,
+)
 
 
 class CLIArgumentsParser:
@@ -38,6 +45,19 @@ class CLIArgumentsParser:
         )
         self.targeting = self.parser.add_mutually_exclusive_group(required=True)
         self.args = None
+
+    @property
+    def enumerators(self) -> set[ExternalService]:
+        if self.args.providers is not None:
+            user_options = self._read_from_cli_option(self.args.providers)
+            try:
+                return {getattr(apis, api)() for api in user_options}
+            except AttributeError:
+                raise InvalidProviderError(
+                    "Unknown provider name was supplied as a CLI option. Cannot "
+                    "proceed."
+                )
+        return {provider() for provider in apis.open_providers}
 
     def parse(self, *args, **kwargs) -> argparse.Namespace:
         self.targeting.add_argument(
@@ -61,6 +81,16 @@ class CLIArgumentsParser:
             "output of a file.",
         )
         self.parser.add_argument(
+            "-p",
+            "--providers",
+            type=str,
+            default=None,
+            help="A comma-separated list of external services to use when fetching "
+            "subdomains. Uses all open data providers that do not require an API key "
+            "for access by default. Check the online documentation for available "
+            "services.",
+        )
+        self.parser.add_argument(
             "-o",
             "--output",
             type=str,
@@ -72,14 +102,6 @@ class CLIArgumentsParser:
             help=f"Maximum number of threads to use when enumerating subdomains "
             f"(defaults to {self.max_threads})",
             default=self.max_threads,
-        )
-        self.parser.add_argument(
-            "--virustotal-api-key",
-            type=str,
-            default=None,
-            help="API key for access to VirusTotal. Can be set directly through this "
-            'option or simply by setting the "VIRUSTOTAL_API_KEY" environment variable '
-            "to the appropriate value.",
         )
         self.args = self.parser.parse_args(*args, **kwargs)
         self.args.targets = self._set_targets()
