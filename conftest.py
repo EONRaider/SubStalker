@@ -16,7 +16,7 @@ def target_domain() -> str:
 
 @pytest.fixture
 def targets_file(root_dir) -> Path:
-    return root_dir.joinpath("tests/unit/cli_parser/sample_targets.txt")
+    return root_dir.joinpath("tests/unit/parsers/sample_targets.txt")
 
 
 @pytest.fixture
