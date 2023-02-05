@@ -28,7 +28,7 @@ import pytest
 import reconlib
 from reconlib.core.base import ExternalService
 
-from subenum.cli_parser import CLIArgumentsParser
+from subenum.cli_parser import CLIParser
 from subenum.core.apis import open_providers
 from subenum.core.exceptions import (
     TargetSpecificationError,
@@ -48,20 +48,20 @@ class TestCLIArgumentsParser:
     def test_parse_single_open_provider(
         self, api_key, target_domain, cli_option, class_name
     ):
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
         parser.parse(["--targets", target_domain, "--providers", cli_option])
         assert len(parser.enumerators) == 1
         assert isinstance(parser.enumerators.pop(), class_name)
 
     def test_parse_invalid_provider(self, target_domain):
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
         parser.parse(["--targets", target_domain, "--providers", "invalid"])
 
         with pytest.raises(InvalidProviderError):
             assert parser.enumerators
 
     def test_parse_all_open_providers(self, target_domain):
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
         parser.parse(["--targets", target_domain])
         assert len(parser.enumerators) == len(open_providers)
         assert all(
@@ -77,7 +77,7 @@ class TestCLIArgumentsParser:
             arguments parser
         """
         sys.stdin = io.StringIO(target_domain)
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
 
         assert parser.parse(["--stdin"]) == Namespace(
             targets=(target_domain,),
@@ -85,7 +85,7 @@ class TestCLIArgumentsParser:
             stdin=True,
             providers=None,
             output=None,
-            max_threads=CLIArgumentsParser.max_threads,
+            max_threads=CLIParser.max_threads,
         )
 
     def test_parse_multiple_targets_from_stdin(self, target_domain):
@@ -98,7 +98,7 @@ class TestCLIArgumentsParser:
         """
         domains_str = "\n".join(d for d in itertools.repeat(target_domain, 3))
         sys.stdin = io.StringIO(domains_str)
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
 
         assert parser.parse(["--stdin"]) == Namespace(
             targets=tuple(domains_str.split("\n")),
@@ -106,7 +106,7 @@ class TestCLIArgumentsParser:
             stdin=True,
             providers=None,
             output=None,
-            max_threads=CLIArgumentsParser.max_threads,
+            max_threads=CLIParser.max_threads,
         )
 
     def test_parse_empty_stdin(self):
@@ -121,7 +121,7 @@ class TestCLIArgumentsParser:
         and file) as well"""
         sys.stdin = io.StringIO("")
         with pytest.raises(TargetSpecificationError) as e:
-            CLIArgumentsParser().parse(["--stdin"])
+            CLIParser().parse(["--stdin"])
         assert e  # <-- Add breakpoint to inspect exception
 
     def test_parse_single_target_from_cli(self, target_domain):
@@ -133,7 +133,7 @@ class TestCLIArgumentsParser:
             domain name as an attribute must be returned from the CLI
             arguments parser
         """
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
 
         assert parser.parse(["--targets", target_domain]) == Namespace(
             targets=(target_domain,),
@@ -141,7 +141,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             providers=None,
             output=None,
-            max_threads=CLIArgumentsParser.max_threads,
+            max_threads=CLIParser.max_threads,
         )
 
     def test_parse_multiple_targets_from_cli(self, target_domain):
@@ -154,7 +154,7 @@ class TestCLIArgumentsParser:
             tuple composed of each domain name must be returned from the
             CLI arguments parser as an attribute
         """
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
         domains_str = ", ".join(d for d in itertools.repeat(target_domain, 3))
 
         assert parser.parse(["--targets", domains_str]) == Namespace(
@@ -163,7 +163,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             providers=None,
             output=None,
-            max_threads=CLIArgumentsParser.max_threads,
+            max_threads=CLIParser.max_threads,
         )
 
     def test_parse_targets_from_file(self, targets_file):
@@ -176,7 +176,7 @@ class TestCLIArgumentsParser:
             tuple composed of each domain name must be returned from the
             CLI arguments parser as an attribute
         """
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
 
         with open(targets_file, encoding="utf_8") as file:
             file_targets = tuple(target.strip() for target in file.readlines())
@@ -187,7 +187,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             providers=None,
             output=None,
-            max_threads=CLIArgumentsParser.max_threads,
+            max_threads=CLIParser.max_threads,
         )
 
     def test_parse_targets_from_non_existent_file(self):
@@ -197,7 +197,7 @@ class TestCLIArgumentsParser:
             option
         THEN a FileNotFoundError exception must be raised
         """
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
         invalid_path = "/invalid/path/to/file"
 
         with pytest.raises(FileReadError) as e:
@@ -216,7 +216,7 @@ class TestCLIArgumentsParser:
             option
         THEN a PermissionError exception must be raised
         """
-        parser = CLIArgumentsParser()
+        parser = CLIParser()
 
         """Provoke a PermissionError when tests are run without root
         privileges"""

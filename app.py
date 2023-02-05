@@ -21,14 +21,14 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from subenum.cli_parser import CLIArgumentsParser
+from subenum.cli_parser import CLIParser
 from subenum.enumerator import Enumerator
 from subenum.output import FileOutput, ScreenOutput
 
 
 class App:
     def __init__(self):
-        self.cli_args = CLIArgumentsParser().parse()
+        self.cli_args = (cli_parser := CLIParser()).parse()
         self.subdomain_scanner = Enumerator(
             targets=self.cli_args.targets,
             output_file=self.cli_args.output,

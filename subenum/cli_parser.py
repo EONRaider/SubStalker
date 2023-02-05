@@ -34,7 +34,7 @@ from subenum.core.exceptions import (
 )
 
 
-class CLIArgumentsParser:
+class CLIParser:
     max_threads = 10
 
     def __init__(self):
