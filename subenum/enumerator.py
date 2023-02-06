@@ -21,37 +21,76 @@ Contact: https://www.twitter.com/eon_raider
 
 from collections.abc import Collection
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import suppress
 from pathlib import Path
 
-from reconlib import CRTShAPI, HackerTargetAPI, VirusTotalAPI
+from reconlib.core.base import ExternalService
 
-from subenum.output import EnumeratorSubscriber
+from subenum.core.types import EnumerationPublisher, EnumerationSubscriber
 
 
-class Enumerator:
+class Enumerator(EnumerationPublisher):
     def __init__(
-        self, targets: Collection[str], *, output_file: [str, Path], max_threads: int
+        self,
+        targets: Collection[str],
+        *,
+        enumerators: Collection[ExternalService],
+        max_threads: int,
+        output_file: [str, Path] = None
     ):
+        super().__init__()
         self.targets: Collection[str] = targets
+        self.enumerators: Collection[ExternalService] = enumerators
         self.output_file: [str, Path] = output_file
         self.max_threads: int = max_threads
-        self._observers: list[EnumeratorSubscriber] = []
 
-    def register(self, observer: EnumeratorSubscriber) -> None:
+    @property
+    def tasks(self) -> tuple:
+        return tuple(
+            (target, api) for target in self.targets for api in self.enumerators
+        )
+
+    def register(self, observer: EnumerationSubscriber) -> None:
+        """
+        Attach an observer to the enumerator for further processing
+        and/or output of results.
+
+        :param observer: An object implementing the interface of
+            EnumerationSubscriber
+        """
         self._observers.append(observer)
 
-    def _notify_all(self, result) -> None:
+    def unregister(self, observer: EnumerationSubscriber) -> None:
+        """
+        Remove an observer previously attached to the enumerator.
+
+        :param observer: An object implementing the interface of
+            EnumerationSubscriber
+        """
+        with suppress(ValueError):
+            # Supress exceptions raised by an attempt to unregister a
+            # non-existent observer
+            self._observers.remove(observer)
+
+    def _notify_all(self, result: set[str]) -> None:
+        """
+        Notify all registered observers of an enumeration result for
+        further processing and/or output.
+        :param result: A set of strings representing enumerated
+            subdomains
+        """
         [observer.update(result) for observer in self._observers]
 
     @staticmethod
-    def query_api(domain) -> set[str]:
-        apis = CRTShAPI(), HackerTargetAPI(), VirusTotalAPI()
-        return set().union(*(api.fetch_subdomains(target=domain) for api in apis))
+    def query_api(target: str, api: ExternalService) -> set[str]:
+        return api.fetch_subdomains(target)
 
     def execute(self) -> None:
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
             try:
-                for result in executor.map(self.query_api, self.targets):
+                for result in executor.map(
+                    lambda task: self.query_api(*task), self.tasks
+                ):
                     self._notify_all(result)
             except KeyboardInterrupt:
                 print("[!] Subdomain enumeration terminated by user. Exiting...")
