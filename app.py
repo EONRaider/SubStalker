@@ -39,12 +39,12 @@ class App:
             output_file=self.cli_args.output,
             max_threads=self.cli_args.max_threads,
         )
-        self.screen_output = ScreenOutput(self.subdomain_scanner)
-        if self.cli_args.output:
-            self.file_output = FileOutput(self.subdomain_scanner)
 
     def run(self):
         try:
+            ScreenOutput(self.subdomain_scanner)
+            if self.cli_args.output is not None:
+                FileOutput(self.subdomain_scanner)
             self.subdomain_scanner.execute()
         except KeyboardInterrupt:
             print("\n[-] Scan ended by user input")
