@@ -19,12 +19,36 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from enum import Enum
-
 from reconlib import CRTShAPI, HackerTargetAPI, VirusTotalAPI
 
 
-class AvailableAPIs(Enum):
-    CRTSH = CRTShAPI()
-    HACKERTARGET = HackerTargetAPI()
-    VIRUSTOTAL = VirusTotalAPI()
+open_providers = []  # APIs that respond to simple, unauthenticated requests
+auth_providers = []  # APIs that require keys to respond
+all_providers = []
+
+
+def register_provider(api_key_required: bool = False):
+    def wrapper(func):
+        if api_key_required is True:
+            auth_providers.append(func)
+        else:
+            open_providers.append(func)
+        all_providers.append(func)
+        return func
+
+    return wrapper
+
+
+@register_provider()
+def crtsh():
+    return CRTShAPI()
+
+
+@register_provider()
+def hackertarget():
+    return HackerTargetAPI()
+
+
+@register_provider(api_key_required=True)
+def virustotal(*, virustotal_api_key=None, **kwargs):
+    return VirusTotalAPI(api_key=virustotal_api_key)
