@@ -33,7 +33,7 @@ class App:
         self.config_args = (config_parser := ConfigurationParser()).parse(
             file_path=self.cli_args.config_file
         )
-        self.subdomain_scanner = Enumerator(
+        self.enumerator = Enumerator(
             targets=self.cli_args.targets,
             enumerators=cli_parser.enumerators | config_parser.enumerators,
             output_file=self.cli_args.output,
@@ -42,10 +42,10 @@ class App:
 
     def run(self) -> None:
         try:
-            ScreenOutput(self.subdomain_scanner)
+            ScreenOutput(self.enumerator)
             if self.cli_args.output is not None:
-                FileOutput(self.subdomain_scanner)
-            self.subdomain_scanner.execute()
+                FileOutput(self.enumerator)
+            self.enumerator.execute()
         except KeyboardInterrupt:
             print("\n[-] Scan ended by user input")
 
