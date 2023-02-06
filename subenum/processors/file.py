@@ -19,21 +19,7 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from subenum.core.types import EnumerationSubscriber, EnumerationPublisher, EnumResult
-
-
-class ScreenOutput(EnumerationSubscriber):
-    def __init__(self, subject: EnumerationPublisher):
-        super().__init__(subject)
-        self._known_domains = set()
-
-    def update(self, result: EnumResult) -> None:
-        self._known_domains |= result.subdomains
-        new_domains = self._known_domains - result.subdomains
-        print(*(domain for domain in new_domains), sep="\n")
-
-    def end_output(self) -> None:
-        pass
+from subenum.core.types import EnumerationSubscriber, EnumerationPublisher
 
 
 class FileOutput(EnumerationSubscriber):
