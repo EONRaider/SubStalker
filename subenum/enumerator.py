@@ -88,10 +88,10 @@ class Enumerator(EnumerationPublisher):
     def execute(self) -> None:
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
             try:
-                for result in executor.map(
+                for subdomains in executor.map(
                     lambda task: self.query_api(*task), self.tasks
                 ):
-                    self._notify_all(result)
+                    self._notify_all(subdomains)
             except KeyboardInterrupt:
                 print("[!] Subdomain enumeration terminated by user. Exiting...")
 
