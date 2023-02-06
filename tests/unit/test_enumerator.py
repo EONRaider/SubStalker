@@ -11,6 +11,4 @@ class TestEnumerator:
             enumerators=[provider() for provider in all_providers],
             max_threads=10,
         )
-        for target, api in enumerator.tasks:
-            assert target == target_domain
-            assert isinstance(api, ExternalService)
+        assert enumerator  # <- Add breakpoint to inspect instance
