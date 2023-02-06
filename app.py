@@ -40,7 +40,7 @@ class App:
             max_threads=self.cli_args.max_threads,
         )
 
-    def run(self):
+    def run(self) -> None:
         try:
             ScreenOutput(self.subdomain_scanner)
             if self.cli_args.output is not None:
