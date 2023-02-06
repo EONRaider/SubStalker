@@ -87,7 +87,6 @@ class CLIParser(Parser):
             "-p",
             "--providers",
             type=str,
-            default=None,
             help="A comma-separated list of external services to use when fetching "
             "subdomains. Uses all open data providers that do not require an API key "
             "for access by default. Check the online documentation for available "
@@ -109,7 +108,6 @@ class CLIParser(Parser):
         self.parser.add_argument(
             "--config-file",
             type=str,
-            default=None,
             help="Absolute path to an INI file containing the API keys to "
             "authenticated external services to be queried by the application, if any",
         )
