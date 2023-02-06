@@ -22,6 +22,7 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 from subenum.core.parsers.cli import CLIParser
+from subenum.core.parsers.configuration import ConfigurationParser
 from subenum.enumerator import Enumerator
 from subenum.output import FileOutput, ScreenOutput
 
@@ -29,9 +30,12 @@ from subenum.output import FileOutput, ScreenOutput
 class App:
     def __init__(self):
         self.cli_args = (cli_parser := CLIParser()).parse()
+        self.config_parser = (config_parser := ConfigurationParser()).parse(
+            file_path=self.cli_args.config_file
+        )
         self.subdomain_scanner = Enumerator(
             targets=self.cli_args.targets,
-            enumerators=cli_parser.enumerators,
+            enumerators=cli_parser.enumerators | config_parser.enumerators,
             output_file=self.cli_args.output,
             max_threads=self.cli_args.max_threads,
         )
