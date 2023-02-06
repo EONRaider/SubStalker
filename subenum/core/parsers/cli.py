@@ -106,6 +106,13 @@ class CLIParser(Parser):
             f"(defaults to {self.max_threads})",
             default=self.max_threads,
         )
+        self.parser.add_argument(
+            "--config-file",
+            type=str,
+            default=None,
+            help="Absolute path to an INI file containing the API keys to "
+            "authenticated external services to be queried by the application, if any",
+        )
         self.args = self.parser.parse_args(*args, **kwargs)
         self.args.targets = self._set_targets()
         return self.args
