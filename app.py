@@ -30,7 +30,7 @@ from subenum.output import FileOutput, ScreenOutput
 class App:
     def __init__(self):
         self.cli_args = (cli_parser := CLIParser()).parse()
-        self.config_parser = (config_parser := ConfigurationParser()).parse(
+        self.config_args = (config_parser := ConfigurationParser()).parse(
             file_path=self.cli_args.config_file
         )
         self.subdomain_scanner = Enumerator(
