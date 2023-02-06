@@ -24,8 +24,8 @@ Contact: https://www.twitter.com/eon_raider
 from subenum.core.parsers.cli import CLIParser
 from subenum.core.parsers.configuration import ConfigurationParser
 from subenum.enumerator import Enumerator
-from subenum.processors.file import FileOutput
-from subenum.processors.screen import ScreenOutput
+from subenum.core.processors.file import FileOutput
+from subenum.core.processors.screen import ScreenOutput
 
 
 class App:
