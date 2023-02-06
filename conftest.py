@@ -20,6 +20,11 @@ def targets_file(root_dir) -> Path:
 
 
 @pytest.fixture
+def config_file(root_dir) -> Path:
+    return root_dir.joinpath("tests/unit/parsers/sample_config.ini")
+
+
+@pytest.fixture
 def api_key() -> str:
     return "TOTALLY-LEGIT-API-KEY"
 
