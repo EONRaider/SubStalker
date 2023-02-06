@@ -19,25 +19,12 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from abc import ABC, abstractmethod
-
-
-class EnumerationSubscriber(ABC):
-    def __init__(self, subject):
-        subject.register(self)
-        self.subject = subject
-
-    @abstractmethod
-    def update(self, domains) -> None:
-        ...
-
-    @abstractmethod
-    def end_output(self) -> None:
-        ...
+from subenum.core.types import EnumerationSubscriber
+from subenum.enumerator import Enumerator
 
 
 class ScreenOutput(EnumerationSubscriber):
-    def __init__(self, subject):
+    def __init__(self, subject: Enumerator):
         super().__init__(subject)
 
     def update(self, domains) -> None:
@@ -49,7 +36,7 @@ class ScreenOutput(EnumerationSubscriber):
 
 
 class FileOutput(EnumerationSubscriber):
-    def __init__(self, subject):
+    def __init__(self, subject: Enumerator):
         super().__init__(subject)
         self.output_filepath = subject.output_file
         self.output_file = open(subject.output_file, mode="w", encoding="utf-8")
