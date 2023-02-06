@@ -32,16 +32,19 @@ from subenum.core.exceptions import (
     FileReadError,
     InvalidProviderError,
 )
+from subenum.core.parsers.base import Parser
 
 
-class CLIParser:
+class CLIParser(Parser):
     max_threads = 10
 
     def __init__(self):
-        self.parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description="Find subdomains belonging to given target hosts using active"
-            "and passive enumeration methods",
+        super().__init__(
+            parser=argparse.ArgumentParser(
+                formatter_class=argparse.RawDescriptionHelpFormatter,
+                description="Find subdomains belonging to given target hosts using "
+                "active and passive enumeration methods",
+            )
         )
         self.targeting = self.parser.add_mutually_exclusive_group(required=True)
         self.args = None
