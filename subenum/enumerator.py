@@ -18,7 +18,7 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
-
+from collections import defaultdict
 from collections.abc import Collection
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import suppress
@@ -26,7 +26,7 @@ from pathlib import Path
 
 from reconlib.core.base import ExternalService
 
-from subenum.core.types import EnumerationPublisher, EnumerationSubscriber
+from subenum.core.types import EnumerationPublisher, EnumerationSubscriber, EnumResult
 
 
 class Enumerator(EnumerationPublisher):
@@ -36,19 +36,14 @@ class Enumerator(EnumerationPublisher):
         *,
         enumerators: Collection[ExternalService],
         max_threads: int,
-        output_file: [str, Path] = None
+        output_file: [str, Path] = None,
     ):
         super().__init__()
         self.targets: Collection[str] = targets
         self.enumerators: Collection[ExternalService] = enumerators
         self.output_file: [str, Path] = output_file
         self.max_threads: int = max_threads
-
-    @property
-    def tasks(self) -> tuple:
-        return tuple(
-            (target, api) for target in self.targets for api in self.enumerators
-        )
+        self.found_domains = defaultdict(set)
 
     def register(self, observer: EnumerationSubscriber) -> None:
         """
@@ -72,26 +67,31 @@ class Enumerator(EnumerationPublisher):
             # non-existent observer
             self._observers.remove(observer)
 
-    def _notify_all(self, result: set[str]) -> None:
+    def _notify_all(self, result: EnumResult) -> None:
         """
         Notify all registered observers of an enumeration result for
         further processing and/or output.
-        :param result: A set of strings representing enumerated
-            subdomains
+        :param result: An instance of type EnumResult
         """
         [observer.update(result) for observer in self._observers]
 
     @staticmethod
-    def query_api(target: str, api: ExternalService) -> set[str]:
-        return api.fetch_subdomains(target)
+    def query_api(api: ExternalService, target: str) -> EnumResult:
+        return EnumResult(
+            provider=api.__class__.__name__,
+            domain=target,
+            subdomains=api.fetch_subdomains(target),
+        )
 
     def execute(self) -> None:
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
             try:
-                for subdomains in executor.map(
-                    lambda task: self.query_api(*task), self.tasks
-                ):
-                    self._notify_all(subdomains)
+                tasks = (
+                    (api, target) for target in self.targets for api in self.enumerators
+                )
+                for result in executor.map(lambda task: self.query_api(*task), tasks):
+                    self.found_domains[result.domain] |= result.subdomains
+                    self._notify_all(result)
             except KeyboardInterrupt:
                 print("[!] Subdomain enumeration terminated by user. Exiting...")
 
