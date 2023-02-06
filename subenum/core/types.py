@@ -20,6 +20,7 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import Any
 
 
@@ -46,9 +47,16 @@ class EnumerationSubscriber(ABC):
         self.subject = subject
 
     @abstractmethod
-    def update(self, domains) -> None:
+    def update(self, *args, **kwargs) -> None:
         ...
 
     @abstractmethod
     def end_output(self) -> None:
         ...
+
+
+@dataclass
+class EnumResult:
+    provider: str
+    domain: str
+    subdomains: set[str]
