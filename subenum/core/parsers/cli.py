@@ -99,6 +99,13 @@ class CLIParser(Parser):
             help="Absolute path to a file to which enumeration results will be written",
         )
         self.parser.add_argument(
+            "--silent",
+            action="store_true",
+            help="Suppress helper output from STDOUT. Only enumerated subdomains will "
+            "be shown. Useful for piping the output into another application or "
+            "redirecting to a file.",
+        )
+        self.parser.add_argument(
             "--max-threads",
             type=int,
             help=f"Maximum number of threads to use when enumerating subdomains "
