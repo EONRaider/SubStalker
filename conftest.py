@@ -56,6 +56,15 @@ def api_response_2(target_domain_2) -> EnumResult:
     )
 
 
+@pytest.fixture
+def api_response_3(target_domain_1) -> EnumResult:
+    return EnumResult(
+        provider="InstanceOfExternalService3",
+        domain=target_domain_1,
+        subdomains={f"sub{i}.{target_domain_1}" for i in range(1, 4)},
+    )
+
+
 @pytest.fixture()
 def setup_virustotal_api_key(api_key):
     os.environ["VIRUSTOTAL_API_KEY"] = api_key
