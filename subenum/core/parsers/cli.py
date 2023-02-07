@@ -54,13 +54,13 @@ class CLIParser(Parser):
         if self.args.providers is not None:
             user_options = self._read_from_cli_option(self.args.providers)
             try:
-                return {getattr(apis, api)() for api in user_options}
+                return {getattr(providers, api)() for api in user_options}
             except AttributeError:
                 raise InvalidProviderError(
                     "Unknown provider name was supplied as a CLI option. Cannot "
                     "proceed."
                 )
-        return {provider() for provider in apis.open_providers}
+        return {provider() for provider in providers.open_providers}
 
     def parse(self, *args, **kwargs) -> argparse.Namespace:
         self.targeting.add_argument(

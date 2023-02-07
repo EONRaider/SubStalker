@@ -40,7 +40,7 @@ class ConfigurationParser(Parser):
             }
         except configparser.NoSectionError:
             return set()
-        return {provider(**api_keys) for provider in apis.auth_providers}
+        return {provider(**api_keys) for provider in providers.auth_providers}
 
     def parse(self, file_path: [str, Path]) -> ConfigParser:
         with contextlib.suppress(TypeError):  # Ignore non-existent paths
