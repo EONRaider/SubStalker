@@ -38,11 +38,12 @@ class TestScreen:
         )
 
     def test_screen_update(
-        self, capsys, mock_enumerator, api_response_1, api_response_2
+        self, capsys, mock_enumerator, api_response_1, api_response_2, api_response_3
     ):
         screen = ScreenOutput(subject=mock_enumerator)
-        screen.update(api_response_1)
-        screen.update(api_response_2)
+        for response in api_response_1, api_response_2, api_response_3:
+            screen.update(response)
+
         captured = capsys.readouterr()
         assert captured.out == (
             "\tsub1.some-target-domain.com\n"
