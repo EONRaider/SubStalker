@@ -30,7 +30,8 @@ class ScreenOutput(EnumerationSubscriber):
     def startup(self, subject: EnumerationPublisher) -> None:
         print(
             f"[+] Subdomain enumerator started with {subject.max_threads} threads "
-            f"for {' | '.join(subject.targets)}"
+            f"for {' | '.join(subject.targets)}",
+            end="\n",
         )
 
     def update(self, result: EnumResult) -> None:
