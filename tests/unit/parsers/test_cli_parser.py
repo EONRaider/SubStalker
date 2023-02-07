@@ -85,6 +85,7 @@ class TestCLIArgumentsParser:
             stdin=True,
             providers=None,
             output=None,
+            silent=False,
             max_threads=CLIParser.max_threads,
             config_file=None,
         )
@@ -107,6 +108,7 @@ class TestCLIArgumentsParser:
             stdin=True,
             providers=None,
             output=None,
+            silent=False,
             max_threads=CLIParser.max_threads,
             config_file=None,
         )
@@ -143,6 +145,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             providers=None,
             output=None,
+            silent=False,
             max_threads=CLIParser.max_threads,
             config_file=None,
         )
@@ -166,6 +169,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             providers=None,
             output=None,
+            silent=False,
             max_threads=CLIParser.max_threads,
             config_file=None,
         )
@@ -191,6 +195,7 @@ class TestCLIArgumentsParser:
             stdin=False,
             providers=None,
             output=None,
+            silent=False,
             max_threads=CLIParser.max_threads,
             config_file=None,
         )

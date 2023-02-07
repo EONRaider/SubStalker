@@ -24,24 +24,27 @@ from subenum.core.processors.base import EnumerationPublisher, EnumerationSubscr
 
 
 class ScreenOutput(EnumerationSubscriber):
-    def __init__(self, subject: EnumerationPublisher):
+    def __init__(self, subject: EnumerationPublisher, silent_mode=False):
         super().__init__(subject)
+        self.silent = silent_mode
 
     def startup(self, subject: EnumerationPublisher) -> None:
-        print(
-            f"[+] Subdomain enumerator started with {subject.max_threads} threads "
-            f"for {' | '.join(subject.targets)}",
-            end="\n",
-        )
+        if not self.silent:
+            print(
+                f"[+] Subdomain enumerator started with {subject.max_threads} threads "
+                f"for {' | '.join(subject.targets)}",
+                end="\n",
+            )
 
     def update(self, result: EnumResult) -> None:
         self._known_domains |= (new_domains := self._get_new_domains(result))
-        [print(f"\t{domain}") for domain in sorted(new_domains)]
+        for domain in sorted(new_domains):
+            print(f"{domain}" if self.silent else f"\t{domain}")
 
     def cleanup(self, *args, **kwargs) -> None:
-        num_domains = len(self.subject.targets)
-        print(
-            f"[+] Enumeration of {num_domains} "
-            f"{'domain' if num_domains == 1 else 'domains'} completed in "
-            f"{self.subject.total_time:.2f} seconds"
-        )
+        if not self.silent:
+            print(
+                f"[+] Enumeration of {(num_domains := len(self.subject.targets))} "
+                f"{'domain' if num_domains == 1 else 'domains'} completed in "
+                f"{self.subject.total_time:.2f} seconds"
+            )

@@ -31,8 +31,7 @@ class TestScreen:
     def test_screen_startup(self, capsys, mock_enumerator):
         screen = ScreenOutput(subject=mock_enumerator)
         screen.startup(mock_enumerator)
-        captured = capsys.readouterr()
-        assert captured.out == (
+        assert capsys.readouterr().out == (
             f"[+] Subdomain enumerator started with {mock_enumerator.max_threads} "
             f"threads for {' | '.join(mock_enumerator.targets)}\n"
         )
@@ -44,8 +43,7 @@ class TestScreen:
         for response in api_response_1, api_response_2, api_response_3:
             screen.update(response)
 
-        captured = capsys.readouterr()
-        assert captured.out == (
+        assert capsys.readouterr().out == (
             "\tsub1.some-target-domain.com\n"
             "\tsub2.some-target-domain.com\n"
             "\tsub3.some-target-domain.com\n"
@@ -61,9 +59,22 @@ class TestScreen:
     def test_screen_cleanup(self, capsys, mock_enumerator):
         mock_enumerator.total_time = 1
         ScreenOutput(subject=mock_enumerator).cleanup()
-        captured = capsys.readouterr()
         assert (
-            captured.out
+            capsys.readouterr().out
             == f"[+] Enumeration of {len(mock_enumerator.targets)} domains completed "
             f"in {mock_enumerator.total_time:.2f} seconds\n"
+        )
+
+    def test_silent_mode(self, capsys, mock_enumerator, api_response_1):
+        screen = ScreenOutput(subject=mock_enumerator, silent_mode=True)
+        screen.startup(mock_enumerator)
+        screen.update(api_response_1)
+        screen.cleanup()
+
+        assert capsys.readouterr().out == (
+            "sub1.some-target-domain.com\n"
+            "sub2.some-target-domain.com\n"
+            "sub3.some-target-domain.com\n"
+            "sub4.some-target-domain.com\n"
+            "sub5.some-target-domain.com\n"
         )
