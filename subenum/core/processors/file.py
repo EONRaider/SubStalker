@@ -45,6 +45,6 @@ class FileOutput(EnumerationSubscriber):
         self._known_domains |= (new_domains := self._get_new_domains(result))
         [self.file.write(f"{domain}\n") for domain in sorted(new_domains)]
 
-    def cleanup(self) -> None:
+    def cleanup(self, *args, **kwargs) -> None:
         self.file.close()
         print(f"[+] Enumeration results successfully written to {self.file.name}")
