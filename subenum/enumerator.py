@@ -19,6 +19,7 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
+import time
 from collections import defaultdict
 from collections.abc import Collection
 from concurrent.futures import ThreadPoolExecutor
@@ -47,9 +48,11 @@ class Enumerator(EnumerationPublisher):
         self.found_domains = defaultdict(set)
 
     def __enter__(self) -> None:
+        self.start_time = time.perf_counter()
         [observer.startup(subject=self) for observer in self._observers]
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.total_time = time.perf_counter() - self.start_time
         [observer.cleanup(subject=self) for observer in self._observers]
 
     def register(self, observer: EnumerationSubscriber) -> None:
