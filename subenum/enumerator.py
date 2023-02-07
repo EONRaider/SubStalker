@@ -18,6 +18,7 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+
 from collections import defaultdict
 from collections.abc import Collection
 from concurrent.futures import ThreadPoolExecutor
@@ -44,6 +45,12 @@ class Enumerator(EnumerationPublisher):
         self.output_file: [str, Path] = output_file
         self.max_threads: int = max_threads
         self.found_domains = defaultdict(set)
+
+    def __enter__(self) -> None:
+        [observer.startup(subject=self) for observer in self._observers]
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        [observer.cleanup(subject=self) for observer in self._observers]
 
     def register(self, observer: EnumerationSubscriber) -> None:
         """
