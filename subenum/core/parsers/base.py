@@ -21,6 +21,8 @@ Contact: https://www.twitter.com/eon_raider
 
 from abc import ABC, abstractmethod
 
+from reconlib.core.base import ExternalService
+
 
 class Parser(ABC):
     def __init__(self, parser):
@@ -28,7 +30,7 @@ class Parser(ABC):
 
     @property
     @abstractmethod
-    def enumerators(self) -> set:
+    def enumerators(self) -> set[ExternalService]:
         ...
 
     @abstractmethod

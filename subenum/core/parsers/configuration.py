@@ -18,10 +18,13 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+
 import configparser
 import contextlib
 from configparser import ConfigParser
 from pathlib import Path
+
+from reconlib.core.base import ExternalService
 
 from subenum.core import providers
 from subenum.core.parsers.base import Parser
@@ -32,7 +35,7 @@ class ConfigurationParser(Parser):
         super().__init__(parser=ConfigParser())
 
     @property
-    def enumerators(self) -> set:
+    def enumerators(self) -> set[ExternalService]:
         try:
             api_keys = {
                 f"{provider}_api_key": api_key
