@@ -14,8 +14,13 @@ def root_dir() -> Path:
 
 
 @pytest.fixture
-def target_domain() -> str:
+def target_domain_1() -> str:
     return "some-target-domain.com"
+
+
+@pytest.fixture
+def target_domain_2() -> str:
+    return "other-target-domain.com.br"
 
 
 @pytest.fixture
@@ -34,11 +39,20 @@ def api_key() -> str:
 
 
 @pytest.fixture
-def api_response(target_domain) -> EnumResult:
+def api_response_1(target_domain_1) -> EnumResult:
     return EnumResult(
-        provider="InstanceOfExternalService",
-        domain=target_domain,
-        subdomains={f"sub{i}.{target_domain}" for i in range(1, 6)},
+        provider="InstanceOfExternalService1",
+        domain=target_domain_1,
+        subdomains={f"sub{i}.{target_domain_1}" for i in range(1, 6)},
+    )
+
+
+@pytest.fixture
+def api_response_2(target_domain_2) -> EnumResult:
+    return EnumResult(
+        provider="InstanceOfExternalService2",
+        domain=target_domain_2,
+        subdomains={f"sub{i}.{target_domain_2}" for i in range(1, 6)},
     )
 
 
@@ -50,9 +64,9 @@ def setup_virustotal_api_key(api_key):
 
 
 @pytest.fixture
-def mock_enumerator(target_domain):
+def mock_enumerator(target_domain_1, target_domain_2):
     return Enumerator(
-        targets=(target_domain,),
+        targets=(target_domain_1, target_domain_2),
         enumerators={provider() for provider in providers.open_providers},
         max_threads=10,
     )
