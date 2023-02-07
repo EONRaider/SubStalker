@@ -96,12 +96,9 @@ class Enumerator(EnumerationPublisher):
 
     def execute(self) -> None:
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
-            try:
-                tasks = (
-                    (api, target) for target in self.targets for api in self.enumerators
-                )
-                for result in executor.map(lambda task: self.query_api(*task), tasks):
-                    self.found_domains[result.domain] |= result.subdomains
-                    self._notify_all(result)
-            except KeyboardInterrupt:
-                print("[!] Subdomain enumeration terminated by user. Exiting...")
+            tasks = (
+                (api, target) for target in self.targets for api in self.enumerators
+            )
+            for result in executor.map(lambda task: self.query_api(*task), tasks):
+                self.found_domains[result.domain] |= result.subdomains
+                self._notify_all(result)
