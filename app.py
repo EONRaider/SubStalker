@@ -23,9 +23,9 @@ Contact: https://www.twitter.com/eon_raider
 
 from subenum.core.parsers.cli import CLIParser
 from subenum.core.parsers.configuration import ConfigurationParser
-from subenum.enumerator import Enumerator
 from subenum.core.processors.file import FileOutput
 from subenum.core.processors.screen import ScreenOutput
+from subenum.enumerator import Enumerator
 
 
 class App:
@@ -42,13 +42,14 @@ class App:
         )
 
     def run(self) -> None:
+        ScreenOutput(self.enumerator)
+        if self.cli_args.output is not None:
+            FileOutput(self.enumerator)
         try:
-            ScreenOutput(self.enumerator)
-            if self.cli_args.output is not None:
-                FileOutput(self.enumerator)
-            self.enumerator.execute()
+            with self.enumerator:
+                self.enumerator.execute()
         except KeyboardInterrupt:
-            print("\n[-] Scan ended by user input")
+            raise SystemExit("[!] Subdomain enumeration aborted by user. Exiting...")
 
 
 if __name__ == "__main__":
