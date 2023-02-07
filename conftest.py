@@ -3,7 +3,9 @@ from pathlib import Path
 
 import pytest
 
+from subenum.core import providers
 from subenum.core.types import EnumResult
+from subenum.enumerator import Enumerator
 
 
 @pytest.fixture
@@ -45,3 +47,12 @@ def setup_virustotal_api_key(api_key):
     os.environ["VIRUSTOTAL_API_KEY"] = api_key
     yield
     os.environ.pop("VIRUSTOTAL_API_KEY", None)
+
+
+@pytest.fixture
+def mock_enumerator(target_domain):
+    return Enumerator(
+        targets=(target_domain,),
+        enumerators={provider() for provider in providers.open_providers},
+        max_threads=10,
+    )
