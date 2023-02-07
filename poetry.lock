@@ -111,6 +111,24 @@ tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
+name = "pytest-mock"
+version = "3.10.0"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pytest-mock-3.10.0.tar.gz", hash = "sha256:fbbdb085ef7c252a326fd8cdcac0aa3b1333d8811f131bdcc701002e1be7ed4f"},
+    {file = "pytest_mock-3.10.0-py3-none-any.whl", hash = "sha256:f4c973eeae0282963eb293eb173ce91b091a79c1334455acfac9ddee8a1c784b"},
+]
+
+[package.dependencies]
+pytest = ">=5.0"
+
+[package.extras]
+dev = ["pre-commit", "pytest-asyncio", "tox"]
+
+[[package]]
 name = "python-dotenv"
 version = "0.21.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -127,14 +145,14 @@ cli = ["click (>=5.0)"]
 
 [[package]]
 name = "reconlib"
-version = "0.4.2"
+version = "0.4.3"
 description = "A collection of modules and helpers for active and passive reconnaissance of remote hosts"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "reconlib-0.4.2-py3-none-any.whl", hash = "sha256:dee20541f14578b891b1494dbd9fedf72ff3b2ee88c9fb5dced4e14560ad142b"},
-    {file = "reconlib-0.4.2.tar.gz", hash = "sha256:7a82c309932a2de232499b8f6bf4df443baca0faf7cc69863caf784a9a68d74f"},
+    {file = "reconlib-0.4.3-py3-none-any.whl", hash = "sha256:bed9e4ff7945e57a733acee3135e646d1f0a0adf7740cc7f3076d28a11f06451"},
+    {file = "reconlib-0.4.3.tar.gz", hash = "sha256:11afb9dbbfbf4a612fa90ec11b76f9541e55092014c536cae150bde82eaad7b9"},
 ]
 
 [package.dependencies]
@@ -155,4 +173,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5e39bae5825f277d6830ce787842c077d5aeb4330e2b6003aa88edc219c1eb73"
+content-hash = "8a766dd8151078b333d26fb65af7e31f04626932d73d890fe6516f6715c92858"

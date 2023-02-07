@@ -9,10 +9,11 @@ license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-reconlib = "^0.4.2"
+reconlib = "^0.4.3"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.1"
+pytest-mock = "^3.10.0"
 
 [build-system]
 requires = ["poetry-core"]
