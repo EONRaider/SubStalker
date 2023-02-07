@@ -24,6 +24,13 @@ from dataclasses import dataclass
 from typing import Any
 
 
+@dataclass
+class EnumResult:
+    provider: str
+    domain: str
+    subdomains: set[str]
+
+
 class EnumerationPublisher(ABC):
     def __init__(self):
         self._observers = []
@@ -45,6 +52,7 @@ class EnumerationSubscriber(ABC):
     def __init__(self, subject: EnumerationPublisher):
         subject.register(self)
         self.subject = subject
+        self._known_domains = set()
 
     @abstractmethod
     def startup(self, *args, **kwargs) -> None:
@@ -58,9 +66,5 @@ class EnumerationSubscriber(ABC):
     def cleanup(self, *args, **kwargs) -> None:
         ...
 
-
-@dataclass
-class EnumResult:
-    provider: str
-    domain: str
-    subdomains: set[str]
+    def _get_new_domains(self, result: EnumResult) -> set[str]:
+        return result.subdomains - self._known_domains
