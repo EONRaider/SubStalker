@@ -61,6 +61,6 @@ class TestApp:
             "\tsub3.some-target-domain.com\n"
             "\tsub4.some-target-domain.com\n"
             "\tsub5.some-target-domain.com\n"
-            "[+] Enumeration of 1 domains completed in 0.00 seconds\n"
+            "[+] Enumeration of 1 domain completed in 0.00 seconds\n"
             f"[+] Enumeration results successfully written to {output_file}\n"
         )

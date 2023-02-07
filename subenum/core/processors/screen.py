@@ -39,7 +39,9 @@ class ScreenOutput(EnumerationSubscriber):
         [print(f"\t{domain}") for domain in sorted(new_domains)]
 
     def cleanup(self, *args, **kwargs) -> None:
+        num_domains = len(self.subject.targets)
         print(
-            f"[+] Enumeration of {len(self.subject.targets)} domains completed in "
+            f"[+] Enumeration of {num_domains} "
+            f"{'domain' if num_domains == 1 else 'domains'} completed in "
             f"{self.subject.total_time:.2f} seconds"
         )
