@@ -19,18 +19,32 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from subenum.core.types import EnumerationSubscriber, EnumerationPublisher
+from pathlib import Path
+
+from subenum.core.exceptions import FileReadError
+from subenum.core.types import EnumResult
+from subenum.core.processors.base import EnumerationPublisher, EnumerationSubscriber
 
 
 class FileOutput(EnumerationSubscriber):
     def __init__(self, subject: EnumerationPublisher):
         super().__init__(subject)
-        self.output_filepath = subject.output_file
-        self.output_file = open(subject.output_file, mode="w", encoding="utf-8")
+        self.file = None
 
-    def update(self, domains) -> None:
-        for domain in domains:
-            self.output_file.write(f"{domain}\n")
+    def startup(self, *args, **kwargs) -> None:
+        path = Path(self.subject.output_file)
+        try:
+            self.file = path.open(mode="a", encoding="utf_8")
+        except OSError as e:
+            raise FileReadError(
+                f"{e.__class__.__name__}: Error accessing specified file path "
+                f'"{str(path)}"'
+            )
 
-    def end_output(self) -> None:
-        self.output_file.close()
+    def update(self, result: EnumResult) -> None:
+        self._known_domains |= (new_domains := self._get_new_domains(result))
+        [self.file.write(f"{domain}\n") for domain in sorted(new_domains)]
+
+    def cleanup(self) -> None:
+        self.file.close()
+        print(f"[+] Enumeration results successfully written to {self.file.name}")
