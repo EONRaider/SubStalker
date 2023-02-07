@@ -46,29 +46,29 @@ class TestCLIArgumentsParser:
         ],
     )
     def test_parse_single_open_provider(
-        self, api_key, target_domain, cli_option, class_name
+        self, api_key, target_domain_1, cli_option, class_name
     ):
         parser = CLIParser()
-        parser.parse(["--targets", target_domain, "--providers", cli_option])
+        parser.parse(["--targets", target_domain_1, "--providers", cli_option])
         assert len(parser.enumerators) == 1
         assert isinstance(parser.enumerators.pop(), class_name)
 
-    def test_parse_invalid_provider(self, target_domain):
+    def test_parse_invalid_provider(self, target_domain_1):
         parser = CLIParser()
-        parser.parse(["--targets", target_domain, "--providers", "invalid"])
+        parser.parse(["--targets", target_domain_1, "--providers", "invalid"])
 
         with pytest.raises(InvalidProviderError):
             assert parser.enumerators
 
-    def test_parse_all_open_providers(self, target_domain):
+    def test_parse_all_open_providers(self, target_domain_1):
         parser = CLIParser()
-        parser.parse(["--targets", target_domain])
+        parser.parse(["--targets", target_domain_1])
         assert len(parser.enumerators) == len(open_providers)
         assert all(
             [isinstance(service, ExternalService) for service in parser.enumerators]
         )
 
-    def test_parse_single_target_from_stdin(self, target_domain):
+    def test_parse_single_target_from_stdin(self, target_domain_1):
         """
         GIVEN a string representing a domain name
         WHEN this string is read from the STDIN
@@ -76,11 +76,11 @@ class TestCLIArgumentsParser:
             domain name as an attribute must be returned from the CLI
             arguments parser
         """
-        sys.stdin = io.StringIO(target_domain)
+        sys.stdin = io.StringIO(target_domain_1)
         parser = CLIParser()
 
         assert parser.parse(["--stdin"]) == Namespace(
-            targets=(target_domain,),
+            targets=(target_domain_1,),
             from_file=None,
             stdin=True,
             providers=None,
@@ -89,7 +89,7 @@ class TestCLIArgumentsParser:
             config_file=None,
         )
 
-    def test_parse_multiple_targets_from_stdin(self, target_domain):
+    def test_parse_multiple_targets_from_stdin(self, target_domain_1):
         """
         GIVEN a string representing line-separated domain names
         WHEN this string is read from the STDIN
@@ -97,7 +97,7 @@ class TestCLIArgumentsParser:
             tuple composed of each domain name must be returned from the
             CLI arguments parser as an attribute
         """
-        domains_str = "\n".join(d for d in itertools.repeat(target_domain, 3))
+        domains_str = "\n".join(d for d in itertools.repeat(target_domain_1, 3))
         sys.stdin = io.StringIO(domains_str)
         parser = CLIParser()
 
@@ -126,7 +126,7 @@ class TestCLIArgumentsParser:
             CLIParser().parse(["--stdin"])
         assert e  # <-- Add breakpoint to inspect exception
 
-    def test_parse_single_target_from_cli(self, target_domain):
+    def test_parse_single_target_from_cli(self, target_domain_1):
         """
         GIVEN a string representing a domain name
         WHEN this string is passed as an argument to the appropriate CLI
@@ -137,8 +137,8 @@ class TestCLIArgumentsParser:
         """
         parser = CLIParser()
 
-        assert parser.parse(["--targets", target_domain]) == Namespace(
-            targets=(target_domain,),
+        assert parser.parse(["--targets", target_domain_1]) == Namespace(
+            targets=(target_domain_1,),
             from_file=None,
             stdin=False,
             providers=None,
@@ -147,7 +147,7 @@ class TestCLIArgumentsParser:
             config_file=None,
         )
 
-    def test_parse_multiple_targets_from_cli(self, target_domain):
+    def test_parse_multiple_targets_from_cli(self, target_domain_1):
         """
         GIVEN a string representing a sequence of comma-separated domain
             names
@@ -158,7 +158,7 @@ class TestCLIArgumentsParser:
             CLI arguments parser as an attribute
         """
         parser = CLIParser()
-        domains_str = ", ".join(d for d in itertools.repeat(target_domain, 3))
+        domains_str = ", ".join(d for d in itertools.repeat(target_domain_1, 3))
 
         assert parser.parse(["--targets", domains_str]) == Namespace(
             targets=tuple(domains_str.split(", ")),
