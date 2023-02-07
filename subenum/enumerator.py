@@ -104,6 +104,3 @@ class Enumerator(EnumerationPublisher):
                     self._notify_all(result)
             except KeyboardInterrupt:
                 print("[!] Subdomain enumeration terminated by user. Exiting...")
-
-        for observer in self._observers:
-            observer.end_output()
