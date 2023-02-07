@@ -31,9 +31,7 @@ from subenum.enumerator import Enumerator
 class App:
     def __init__(self):
         self.cli_args = (cli_parser := CLIParser()).parse()
-        self.config_args = (config_parser := ConfigurationParser()).parse(
-            file_path=self.cli_args.config_file
-        )
+        config_parser = ConfigurationParser().parse(file_path=self.cli_args.config_file)
         self.enumerator = Enumerator(
             targets=self.cli_args.targets,
             enumerators=cli_parser.enumerators | config_parser.enumerators,
