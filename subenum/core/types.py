@@ -47,11 +47,15 @@ class EnumerationSubscriber(ABC):
         self.subject = subject
 
     @abstractmethod
+    def startup(self, *args, **kwargs) -> None:
+        ...
+
+    @abstractmethod
     def update(self, *args, **kwargs) -> None:
         ...
 
     @abstractmethod
-    def end_output(self) -> None:
+    def cleanup(self, *args, **kwargs) -> None:
         ...
 
 
