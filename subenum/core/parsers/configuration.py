@@ -23,7 +23,7 @@ import contextlib
 from configparser import ConfigParser
 from pathlib import Path
 
-from subenum.core import apis
+from subenum.core import providers
 from subenum.core.parsers.base import Parser
 
 

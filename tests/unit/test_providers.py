@@ -25,7 +25,7 @@ from reconlib.crtsh.api import CRTShAPI
 from reconlib.hackertarget.api import HackerTargetAPI
 from reconlib.virustotal.api import VirusTotalAPI
 
-from subenum.core.apis import crtsh, hackertarget, virustotal
+from subenum.core.providers import crtsh, hackertarget, virustotal
 
 
 class TestAPIs:

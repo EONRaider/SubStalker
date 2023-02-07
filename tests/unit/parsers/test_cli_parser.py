@@ -29,7 +29,7 @@ import reconlib
 from reconlib.core.base import ExternalService
 
 from subenum.core.parsers.cli import CLIParser
-from subenum.core.apis import open_providers
+from subenum.core.providers import open_providers
 from subenum.core.exceptions import (
     TargetSpecificationError,
     FileReadError,

@@ -26,7 +26,7 @@ from collections.abc import Iterator
 
 from reconlib.core.base import ExternalService
 
-from subenum.core import apis
+from subenum.core import providers
 from subenum.core.exceptions import (
     TargetSpecificationError,
     FileReadError,
