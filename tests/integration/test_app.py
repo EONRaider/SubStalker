@@ -42,7 +42,7 @@ class TestApp:
 
         enumerator = Enumerator(
             targets=(target_domain_1,),
-            enumerators=[provider() for provider in all_providers],
+            providers=[provider() for provider in all_providers],
             max_threads=10,
             output_file=output_file,
         )

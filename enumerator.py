@@ -36,7 +36,7 @@ class App:
         )
         self.enumerator = Enumerator(
             targets=self.cli_args.targets,
-            enumerators=cli_parser.enumerators | config_parser.enumerators,
+            providers=cli_parser.enumerators | config_parser.enumerators,
             output_file=self.cli_args.output,
             max_threads=self.cli_args.max_threads,
         )

@@ -37,13 +37,13 @@ class Enumerator(EnumerationPublisher):
         self,
         targets: Collection[str],
         *,
-        enumerators: Collection[ExternalService],
+        providers: Collection[ExternalService],
         max_threads: int,
         output_file: [str, Path] = None,
     ):
         super().__init__()
         self.targets: Collection[str] = targets
-        self.enumerators: Collection[ExternalService] = enumerators
+        self.providers: Collection[ExternalService] = providers
         self.output_file: [str, Path] = output_file
         self.max_threads: int = max_threads
         self.found_domains = defaultdict(set)
@@ -96,9 +96,7 @@ class Enumerator(EnumerationPublisher):
 
     def execute(self) -> None:
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
-            tasks = (
-                (api, target) for target in self.targets for api in self.enumerators
-            )
+            tasks = ((api, target) for target in self.targets for api in self.providers)
             for result in executor.map(lambda task: self.query_api(*task), tasks):
                 self.found_domains[result.domain] |= result.subdomains
                 self._notify_all(result)

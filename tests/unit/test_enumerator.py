@@ -27,7 +27,7 @@ class TestEnumerator:
     def test_get_tasks(self, target_domain_1, setup_virustotal_api_key):
         enumerator = Enumerator(
             targets=(target_domain_1,),
-            enumerators=[provider() for provider in all_providers],
+            providers=[provider() for provider in all_providers],
             max_threads=10,
         )
         assert enumerator  # <- Add breakpoint to inspect instance

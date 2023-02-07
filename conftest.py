@@ -76,6 +76,6 @@ def setup_virustotal_api_key(api_key):
 def mock_enumerator(target_domain_1, target_domain_2):
     return Enumerator(
         targets=(target_domain_1, target_domain_2),
-        enumerators={provider() for provider in providers.open_providers},
+        providers={provider() for provider in providers.open_providers},
         max_threads=10,
     )
