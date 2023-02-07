@@ -28,18 +28,21 @@ class TestScreen:
         screen = ScreenOutput(subject=mock_enumerator)
         assert isinstance(screen.subject, Enumerator)
 
-    def test_screen_startup(self, capsys, api_response, mock_enumerator):
+    def test_screen_startup(self, capsys, mock_enumerator):
         screen = ScreenOutput(subject=mock_enumerator)
         screen.startup(mock_enumerator)
         captured = capsys.readouterr()
         assert captured.out == (
-            "[+] Subdomain enumerator started with 10 threads for "
-            "some-target-domain.com | some-target-domain.com.br\n"
+            f"[+] Subdomain enumerator started with {mock_enumerator.max_threads} "
+            f"threads for {' | '.join(mock_enumerator.targets)}\n"
         )
 
-    def test_screen_update(self, capsys, mock_enumerator, api_response):
+    def test_screen_update(
+        self, capsys, mock_enumerator, api_response_1, api_response_2
+    ):
         screen = ScreenOutput(subject=mock_enumerator)
-        screen.update(api_response)
+        screen.update(api_response_1)
+        screen.update(api_response_2)
         captured = capsys.readouterr()
         assert captured.out == (
             "\tsub1.some-target-domain.com\n"
@@ -47,6 +50,11 @@ class TestScreen:
             "\tsub3.some-target-domain.com\n"
             "\tsub4.some-target-domain.com\n"
             "\tsub5.some-target-domain.com\n"
+            "\tsub1.other-target-domain.com.br\n"
+            "\tsub2.other-target-domain.com.br\n"
+            "\tsub3.other-target-domain.com.br\n"
+            "\tsub4.other-target-domain.com.br\n"
+            "\tsub5.other-target-domain.com.br\n"
         )
 
     def test_screen_cleanup(self, capsys, mock_enumerator):
