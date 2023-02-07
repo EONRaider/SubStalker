@@ -27,10 +27,19 @@ class ScreenOutput(EnumerationSubscriber):
         super().__init__(subject)
         self._known_domains = set()
 
-    def update(self, result: EnumResult) -> None:
-        self._known_domains |= result.subdomains
-        new_domains = self._known_domains - result.subdomains
-        print(*(domain for domain in new_domains), sep="\n")
+    def startup(self, subject: EnumerationPublisher) -> None:
+        print(
+            f"[+] Subdomain enumerator started with {subject.max_threads} threads "
+            f"for {' | '.join(subject.targets)}"
+        )
 
-    def end_output(self) -> None:
-        pass
+    def update(self, result: EnumResult) -> None:
+        new_domains = result.subdomains - self._known_domains
+        self._known_domains |= result.subdomains
+        print(*(f"\t{domain}" for domain in sorted(new_domains)), sep="\n")
+
+    def cleanup(self, *args, **kwargs) -> None:
+        print(
+            f"[+] Enumeration of {len(self.subject.targets)} domains completed in "
+            f"{self.subject.total_time:.2f} seconds"
+        )
