@@ -45,6 +45,7 @@ class ScreenOutput(EnumerationSubscriber):
         if not self.silent:
             print(
                 f"[+] Enumeration of {(num_domains := len(self.subject.targets))} "
-                f"{'domain' if num_domains == 1 else 'domains'} completed in "
-                f"{self.subject.total_time:.2f} seconds"
+                f"{'domain' if num_domains == 1 else 'domains'} was completed in "
+                f"{self.subject.total_time:.2f} seconds and found "
+                f"{len(self._known_domains)} domains"
             )

@@ -58,11 +58,12 @@ class TestScreen:
 
     def test_screen_cleanup(self, capsys, mock_enumerator):
         mock_enumerator.total_time = 1
-        ScreenOutput(subject=mock_enumerator).cleanup()
+        (screen := ScreenOutput(subject=mock_enumerator)).cleanup()
         assert (
             capsys.readouterr().out
-            == f"[+] Enumeration of {len(mock_enumerator.targets)} domains completed "
-            f"in {mock_enumerator.total_time:.2f} seconds\n"
+            == f"[+] Enumeration of {len(mock_enumerator.targets)} domains was "
+            f"completed in {mock_enumerator.total_time:.2f} seconds and found "
+            f"{len(screen._known_domains)} domains\n"
         )
 
     def test_silent_mode(self, capsys, mock_enumerator, api_response_1):

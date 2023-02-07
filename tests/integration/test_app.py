@@ -46,7 +46,7 @@ class TestApp:
             max_threads=10,
             output_file=output_file,
         )
-        ScreenOutput(subject=enumerator)
+        screen = ScreenOutput(subject=enumerator)
         FileOutput(subject=enumerator)
 
         with enumerator:
@@ -61,6 +61,7 @@ class TestApp:
             "\tsub3.some-target-domain.com\n"
             "\tsub4.some-target-domain.com\n"
             "\tsub5.some-target-domain.com\n"
-            "[+] Enumeration of 1 domain completed in 0.00 seconds\n"
+            f"[+] Enumeration of 1 domain was completed in 0.00 seconds and found "
+            f"{len(screen._known_domains)} domains\n"
             f"[+] Enumeration results successfully written to {output_file}\n"
         )
