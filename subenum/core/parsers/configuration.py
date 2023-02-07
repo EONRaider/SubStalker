@@ -35,7 +35,7 @@ class ConfigurationParser(Parser):
         super().__init__(parser=ConfigParser())
 
     @property
-    def enumerators(self) -> set[ExternalService]:
+    def providers(self) -> set[ExternalService]:
         try:
             api_keys = {
                 f"{provider}_api_key": api_key

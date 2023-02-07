@@ -50,22 +50,22 @@ class TestCLIArgumentsParser:
     ):
         parser = CLIParser()
         parser.parse(["--targets", target_domain_1, "--providers", cli_option])
-        assert len(parser.enumerators) == 1
-        assert isinstance(parser.enumerators.pop(), class_name)
+        assert len(parser.providers) == 1
+        assert isinstance(parser.providers.pop(), class_name)
 
     def test_parse_invalid_provider(self, target_domain_1):
         parser = CLIParser()
         parser.parse(["--targets", target_domain_1, "--providers", "invalid"])
 
         with pytest.raises(InvalidProviderError):
-            assert parser.enumerators
+            assert parser.providers
 
     def test_parse_all_open_providers(self, target_domain_1):
         parser = CLIParser()
         parser.parse(["--targets", target_domain_1])
-        assert len(parser.enumerators) == len(open_providers)
+        assert len(parser.providers) == len(open_providers)
         assert all(
-            [isinstance(service, ExternalService) for service in parser.enumerators]
+            [isinstance(service, ExternalService) for service in parser.providers]
         )
 
     def test_parse_single_target_from_stdin(self, target_domain_1):

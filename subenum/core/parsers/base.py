@@ -30,7 +30,7 @@ class Parser(ABC):
 
     @property
     @abstractmethod
-    def enumerators(self) -> set[ExternalService]:
+    def providers(self) -> set[ExternalService]:
         ...
 
     @abstractmethod

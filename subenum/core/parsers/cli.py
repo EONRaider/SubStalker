@@ -50,7 +50,7 @@ class CLIParser(Parser):
         self.args = None
 
     @property
-    def enumerators(self) -> set[ExternalService]:
+    def providers(self) -> set[ExternalService]:
         if self.args.providers is not None:
             user_options = self._read_from_cli_option(self.args.providers)
             try:

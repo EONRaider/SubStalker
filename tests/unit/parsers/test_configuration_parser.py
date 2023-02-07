@@ -12,7 +12,7 @@ class TestConfigurationParser:
     def test_parse_invalid_config(self):
         config = ConfigurationParser()
         config.parse(file_path=None)
-        assert config.enumerators == set()
+        assert config.providers == set()
 
     def test_parse_invalid_provider(self, config_file):
         """This test should pass regardless of the addition of any unknown
@@ -20,4 +20,4 @@ class TestConfigurationParser:
         config = ConfigurationParser()
         config.parse(file_path=config_file)
         config.parser["API_KEYS"]["unknown_provider"] = "Some-API-Key"
-        assert config.enumerators
+        assert config.providers
