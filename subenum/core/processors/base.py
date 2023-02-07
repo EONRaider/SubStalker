@@ -19,11 +19,46 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from dataclasses import dataclass
+from abc import ABC, abstractmethod
+from typing import Any
+
+from subenum.core.types import EnumResult
 
 
-@dataclass
-class EnumResult:
-    provider: str
-    domain: str
-    subdomains: set[str]
+class EnumerationPublisher(ABC):
+    def __init__(self):
+        self._observers = []
+
+    @abstractmethod
+    def register(self, observer) -> None:
+        ...
+
+    @abstractmethod
+    def unregister(self, observer) -> None:
+        ...
+
+    @abstractmethod
+    def _notify_all(self, result: Any) -> None:
+        ...
+
+
+class EnumerationSubscriber(ABC):
+    def __init__(self, subject: EnumerationPublisher):
+        subject.register(self)
+        self.subject = subject
+        self._known_domains = set()
+
+    @abstractmethod
+    def startup(self, *args, **kwargs) -> None:
+        ...
+
+    @abstractmethod
+    def update(self, *args, **kwargs) -> None:
+        ...
+
+    @abstractmethod
+    def cleanup(self, *args, **kwargs) -> None:
+        ...
+
+    def _get_new_domains(self, result: EnumResult) -> set[str]:
+        return result.subdomains - self._known_domains
