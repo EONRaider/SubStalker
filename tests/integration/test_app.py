@@ -36,7 +36,7 @@ class TestApp:
         setup_virustotal_api_key,
     ):
         mocker.patch(
-            "subenum.enumerator.Enumerator.query_api", return_value=api_response_1
+            "subenum.enumerator.Enumerator.query_provider", return_value=api_response_1
         )
         output_file = tmp_path / "test_file.txt"
 

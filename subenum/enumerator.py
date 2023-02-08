@@ -87,16 +87,24 @@ class Enumerator(EnumerationPublisher):
         [observer.update(result) for observer in self._observers]
 
     @staticmethod
-    def query_api(api: ExternalService, target: str) -> EnumResult:
+    def query_provider(provider: ExternalService, target: str) -> EnumResult:
+        """
+        Query a data provider about known subdomains of a given target domain
+
+        :param provider: An instance of type ExternalService to query
+        :param target: A string defining a target domain
+        :return: An instance of type EnumResult containing enumeration
+            results as its attributes
+        """
         return EnumResult(
-            provider=api.__class__.__name__,
+            provider=provider.__class__.__name__,
             domain=target,
-            subdomains=api.fetch_subdomains(target),
+            subdomains=provider.fetch_subdomains(target),
         )
 
     def execute(self) -> None:
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
             tasks = ((api, target) for target in self.targets for api in self.providers)
-            for result in executor.map(lambda task: self.query_api(*task), tasks):
+            for result in executor.map(lambda task: self.query_provider(*task), tasks):
                 self.found_domains[result.domain] |= result.subdomains
                 self._notify_all(result)
