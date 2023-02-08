@@ -19,8 +19,7 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from subenum.core.types import EnumResult
-from subenum.core.processors.base import EnumerationPublisher, EnumerationSubscriber
+from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
 
 
 class ScreenOutput(EnumerationSubscriber):

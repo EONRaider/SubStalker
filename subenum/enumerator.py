@@ -28,8 +28,7 @@ from pathlib import Path
 
 from reconlib.core.base import ExternalService
 
-from subenum.core.types import EnumResult
-from subenum.core.processors.base import EnumerationPublisher, EnumerationSubscriber
+from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
 
 
 class Enumerator(EnumerationPublisher):

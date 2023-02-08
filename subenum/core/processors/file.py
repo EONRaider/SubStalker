@@ -22,8 +22,7 @@ Contact: https://www.twitter.com/eon_raider
 from pathlib import Path
 
 from subenum.core.exceptions import FileReadError
-from subenum.core.types import EnumResult
-from subenum.core.processors.base import EnumerationPublisher, EnumerationSubscriber
+from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
 
 
 class FileOutput(EnumerationSubscriber):
