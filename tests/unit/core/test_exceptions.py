@@ -20,18 +20,11 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 import pytest
-
-from subenum.core.exceptions import (
-    TargetSpecificationError,
-    FileReadError,
-    InvalidProviderError,
-)
+from subenum.core.exceptions import EnumeratorException
 
 
 class TestExceptions:
-    @pytest.mark.parametrize(
-        "exception", [TargetSpecificationError, FileReadError, InvalidProviderError]
-    )
+    @pytest.mark.parametrize("exception", EnumeratorException.__subclasses__())
     def test_enumerator_exception(self, exception):
         message = "Something went wrong"
         with pytest.raises(exception) as e:
