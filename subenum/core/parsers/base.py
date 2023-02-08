@@ -26,13 +26,23 @@ from reconlib.core.base import ExternalService
 
 class Parser(ABC):
     def __init__(self, parser):
+        """
+        Base class for all parsers responsible for processing
+        configuration settings and/or options
+        """
         self.parser = parser
 
     @property
     @abstractmethod
     def providers(self) -> set[ExternalService]:
+        """
+        Get a set of properly initialized instances of ExternalService
+        """
         ...
 
     @abstractmethod
     def parse(self, *args, **kwargs):
+        """
+        Parse configuration settings and/or options
+        """
         ...

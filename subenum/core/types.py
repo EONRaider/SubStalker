@@ -21,11 +21,14 @@ Contact: https://www.twitter.com/eon_raider
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any
 
 
 @dataclass
 class EnumResult:
+    """
+    Representation of a subdomain enumeration result
+    """
+
     provider: str
     domain: str
     subdomains: set[str]
@@ -33,6 +36,9 @@ class EnumResult:
 
 class EnumerationPublisher(ABC):
     def __init__(self):
+        """
+        Base class for all enumerators that implement the observer pattern
+        """
         self._observers = []
 
     @abstractmethod
@@ -44,12 +50,18 @@ class EnumerationPublisher(ABC):
         ...
 
     @abstractmethod
-    def _notify_all(self, result: Any) -> None:
+    def _notify_all(self, result: EnumResult) -> None:
         ...
 
 
 class EnumerationSubscriber(ABC):
     def __init__(self, subject: EnumerationPublisher):
+        """
+        Base class for all observers responsible for further processing
+        and/or output of results produced by an EnumerationPublisher
+
+        :param subject: An instance of EnumerationPublisher to observe
+        """
         subject.register(self)
         self.subject = subject
         self._known_domains = set()
@@ -67,4 +79,11 @@ class EnumerationSubscriber(ABC):
         ...
 
     def _get_new_domains(self, result: EnumResult) -> set[str]:
+        """
+        Get which domains from a given result are yet unknown by the
+        observer
+
+        :param result: An instance of type EnumResult
+        :return: A set of strings defining which domains are new
+        """
         return result.subdomains - self._known_domains

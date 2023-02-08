@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 
 import time
 from collections import defaultdict
-from collections.abc import Collection
+from collections.abc import Collection, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import suppress
 from pathlib import Path
@@ -40,6 +40,20 @@ class Enumerator(EnumerationPublisher):
         max_threads: int,
         output_file: [str, Path] = None,
     ):
+        """
+        Enumerate subdomains of given targets by using available data
+        providers
+
+        :param targets: A collection of strings defining target domains
+        :param providers: A collection of instances of ExternalServices
+            to be queried during the enumeration of subdomains of
+            selected targets
+        :param max_threads: Maximum number of threads to use when
+            enumerating subdomains. A new thread will be spawned for
+            each combination of data provider and target domain
+        :param output_file: Absolute path to a file to which enumeration
+            results will be written
+        """
         super().__init__()
         self.targets: Collection[str] = targets
         self.providers: Collection[ExternalService] = providers
@@ -81,6 +95,7 @@ class Enumerator(EnumerationPublisher):
         """
         Notify all registered observers of an enumeration result for
         further processing and/or output.
+
         :param result: An instance of type EnumResult
         """
         [observer.update(result) for observer in self._observers]
@@ -103,7 +118,16 @@ class Enumerator(EnumerationPublisher):
 
     def execute(self) -> None:
         with ThreadPoolExecutor(max_workers=self.max_threads) as executor:
-            tasks = ((api, target) for target in self.targets for api in self.providers)
+            # Generate tuples containing combinations of available
+            # providers and targets to pass as tasks to spawned threads
+            tasks: Iterator[tuple[ExternalService, str]] = (
+                (provider, target)
+                for target in self.targets
+                for provider in self.providers
+            )
+            # Spawn a new thread for each combination of provider and target
             for result in executor.map(lambda task: self.query_provider(*task), tasks):
+                # Add results to known subdomains of a given target and
+                # notify all observers, if any, of new results
                 self.found_domains[result.domain] |= result.subdomains
                 self._notify_all(result)
