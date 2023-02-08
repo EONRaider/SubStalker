@@ -37,13 +37,13 @@ class ConfigurationParser(Parser):
     @property
     def providers(self) -> set[ExternalService]:
         try:
-            api_keys = {
-                f"{provider}_api_key": api_key
-                for provider, api_key in self.parser.items("API_KEYS")
+            auth_data = {
+                f"{provider}_auth": auth_value
+                for provider, auth_value in self.parser.items("API_KEYS")
             }
         except configparser.NoSectionError:
             return set()
-        return {provider(**api_keys) for provider in providers.auth_providers}
+        return {provider(**auth_data) for provider in providers.auth_providers}
 
     def parse(self, file_path: [str, Path]) -> ConfigParser:
         with contextlib.suppress(TypeError):  # Ignore non-existent paths

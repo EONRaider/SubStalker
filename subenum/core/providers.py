@@ -27,9 +27,9 @@ auth_providers = []  # APIs that require keys to respond
 all_providers = []
 
 
-def register_provider(api_key_required: bool = False):
+def register_provider(auth_required: bool = False):
     def wrapper(func):
-        if api_key_required is True:
+        if auth_required is True:
             auth_providers.append(func)
         else:
             open_providers.append(func)
@@ -49,6 +49,6 @@ def hackertarget():
     return HackerTargetAPI()
 
 
-@register_provider(api_key_required=True)
-def virustotal(*, virustotal_api_key=None, **kwargs):
-    return VirusTotalAPI(api_key=virustotal_api_key)
+@register_provider(auth_required=True)
+def virustotal(*, virustotal_auth=None, **kwargs):
+    return VirusTotalAPI(api_key=virustotal_auth)
