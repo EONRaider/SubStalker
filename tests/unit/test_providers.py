@@ -40,9 +40,7 @@ class TestAPIs:
         assert api.api_key == api_key
 
     def test_virustotal_init_key(self, api_key):
-        assert isinstance(
-            (api := virustotal(virustotal_auth=api_key)), VirusTotalAPI
-        )
+        assert isinstance((api := virustotal(virustotal_auth=api_key)), VirusTotalAPI)
         assert api.api_key == api_key
 
     def test_virustotal_invalid_key(self):
