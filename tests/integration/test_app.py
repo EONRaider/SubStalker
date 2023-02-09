@@ -44,10 +44,9 @@ class TestApp:
             targets=(target_domain_1,),
             providers=[provider() for provider in all_providers],
             max_threads=10,
-            output_file=output_file,
         )
         screen = ScreenOutput(subject=enumerator)
-        FileOutput(subject=enumerator)
+        FileOutput(subject=enumerator, path=output_file)
 
         with enumerator:
             enumerator.execute()
