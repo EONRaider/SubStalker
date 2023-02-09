@@ -26,24 +26,24 @@ from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubs
 
 
 class FileOutput(EnumerationSubscriber):
-    def __init__(self, subject: EnumerationPublisher):
+    def __init__(self, subject: EnumerationPublisher, path: [str, Path]):
         super().__init__(subject)
-        self.file = None
+        self.path = Path(path)
+        self.fd = None
 
     def startup(self, *args, **kwargs) -> None:
-        path = Path(self.subject.output_file)
         try:
-            self.file = path.open(mode="a", encoding="utf_8")
+            self.fd = self.path.open(mode="a", encoding="utf_8")
         except OSError as e:
             raise FileReadError(
                 f"{e.__class__.__name__}: Error accessing specified file path "
-                f'"{str(path)}"'
+                f'"{str(self.path)}"'
             )
 
     def update(self, result: EnumResult) -> None:
         self._known_domains |= (new_domains := self._get_new_domains(result))
-        [self.file.write(f"{domain}\n") for domain in sorted(new_domains)]
+        [self.fd.write(f"{domain}\n") for domain in sorted(new_domains)]
 
     def cleanup(self, *args, **kwargs) -> None:
-        self.file.close()
-        print(f"[+] Enumeration results successfully written to {self.file.name}")
+        self.fd.close()
+        print(f"[+] Enumeration results successfully written to {self.fd.name}")
