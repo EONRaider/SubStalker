@@ -43,7 +43,7 @@ class App:
     def run(self) -> None:
         ScreenOutput(self.enumerator)
         if self.cli_args.output is not None:
-            FileOutput(self.enumerator)
+            FileOutput(self.enumerator, path=self.cli_args.output)
         try:
             with self.enumerator:
                 self.enumerator.execute()
