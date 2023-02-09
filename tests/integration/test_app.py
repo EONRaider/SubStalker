@@ -49,7 +49,8 @@ class TestApp:
         FileOutput(subject=enumerator, path=output_file)
 
         with enumerator:
-            enumerator.execute()
+            for _ in enumerator.execute():
+                pass
 
         captured = capsys.readouterr()
 

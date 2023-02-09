@@ -20,7 +20,7 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
-
+from subenum.core.exceptions import EnumeratorException
 from subenum.core.parsers.cli import CLIParser
 from subenum.core.parsers.configuration import ConfigurationParser
 from subenum.core.processors.file import FileOutput
@@ -46,7 +46,9 @@ class App:
             FileOutput(self.enumerator, path=self.cli_args.output)
         try:
             with self.enumerator:
-                self.enumerator.execute()
+                for result in self.enumerator.execute():
+                    if isinstance(result, EnumeratorException):
+                        raise result
         except KeyboardInterrupt:
             raise SystemExit("[!] Subdomain enumeration aborted by user. Exiting...")
 
