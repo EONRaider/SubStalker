@@ -45,15 +45,24 @@ class TestCLIArgumentsParser:
             ("hackertarget", reconlib.HackerTargetAPI),
         ],
     )
-    def test_parse_single_open_provider(
-        self, api_key, target_domain_1, cli_option, class_name
-    ):
+    def test_parse_single_open_provider(self, target_domain_1, cli_option, class_name):
+        """
+        GIVEN a string representing a CLI option
+        WHEN this string is correctly named after a registered provider
+        THEN the CLI parser must return the provider instance as one of
+            the elements of its "providers" attribute
+        """
         parser = CLIParser()
         parser.parse(["--targets", target_domain_1, "--providers", cli_option])
         assert len(parser.providers) == 1
         assert isinstance(parser.providers.pop(), class_name)
 
     def test_parse_invalid_provider(self, target_domain_1):
+        """
+        GIVEN a string representing a CLI option
+        WHEN this string is incorrectly named after a registered provider
+        THEN an exception of type InvalidProviderError must be raised
+        """
         parser = CLIParser()
         parser.parse(["--targets", target_domain_1, "--providers", "invalid"])
 
@@ -61,6 +70,12 @@ class TestCLIArgumentsParser:
             assert parser.providers
 
     def test_parse_all_open_providers(self, target_domain_1):
+        """
+        GIVEN no strings representing providers were passed to the CLI
+        WHEN this CLI instance can be correctly parsed
+        THEN all registered open providers must be returned as elements
+            of the parser's "providers" attribute
+        """
         parser = CLIParser()
         parser.parse(["--targets", target_domain_1])
         assert len(parser.providers) == len(open_providers)

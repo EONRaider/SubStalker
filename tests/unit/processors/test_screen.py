@@ -25,10 +25,25 @@ from subenum.enumerator import Enumerator
 
 class TestScreen:
     def test_screen_init(self, mock_enumerator):
+        """
+        GIVEN a correctly initialized instance of EnumerationPublisher
+        WHEN this instance is passed as the subject to a ScreenOutput
+            observer
+        THEN the instance of ScreenOutput must be initialized without
+            exceptions
+        """
         screen = ScreenOutput(subject=mock_enumerator)
         assert isinstance(screen.subject, Enumerator)
 
     def test_screen_startup(self, capsys, mock_enumerator):
+        """
+        GIVEN a correctly initialized instance of EnumerationPublisher
+        WHEN this instance is passed as the subject to a ScreenOutput
+            observer
+        THEN the "startup" method of ScreenOutput must be able to access
+            the subject's attributes and display its output without
+            exceptions
+        """
         screen = ScreenOutput(subject=mock_enumerator)
         screen.startup(mock_enumerator)
         assert capsys.readouterr().out == (
@@ -39,6 +54,14 @@ class TestScreen:
     def test_screen_update(
         self, capsys, mock_enumerator, api_response_1, api_response_2, api_response_3
     ):
+        """
+        GIVEN a correctly initialized instance of EnumerationPublisher
+        WHEN this instance is passed as the subject to a ScreenOutput
+            observer
+        THEN the "update" method of ScreenOutput must be able to register
+            and display any domains passed as a result regardless of
+            their origin
+        """
         screen = ScreenOutput(subject=mock_enumerator)
         for response in api_response_1, api_response_2, api_response_3:
             screen.update(response)
@@ -57,6 +80,14 @@ class TestScreen:
         )
 
     def test_screen_cleanup(self, capsys, mock_enumerator):
+        """
+        GIVEN a correctly initialized instance of EnumerationPublisher
+        WHEN this instance is passed as the subject to a ScreenOutput
+            observer
+        THEN the "cleanup" method of ScreenOutput must be able to access
+            the subject's attributes and display its output without
+            exceptions
+        """
         mock_enumerator.total_time = 1
         (screen := ScreenOutput(subject=mock_enumerator)).cleanup()
         assert (
@@ -67,6 +98,13 @@ class TestScreen:
         )
 
     def test_silent_mode(self, capsys, mock_enumerator, api_response_1):
+        """
+        GIVEN a correctly initialized instance of EnumerationPublisher
+        WHEN this instance is passed as the subject to a ScreenOutput
+            observer
+        THEN the methods of ScreenOutput responsible for displaying
+            output must be able to correctly format their messages
+        """
         screen = ScreenOutput(subject=mock_enumerator, silent_mode=True)
         screen.startup(mock_enumerator)
         screen.update(api_response_1)
