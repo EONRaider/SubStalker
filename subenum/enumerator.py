@@ -24,7 +24,6 @@ from collections import defaultdict
 from collections.abc import Collection, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import suppress
-from pathlib import Path
 
 from reconlib.core.base import ExternalService
 
@@ -37,8 +36,7 @@ class Enumerator(EnumerationPublisher):
         targets: Collection[str],
         *,
         providers: Collection[ExternalService],
-        max_threads: int,
-        output_file: [str, Path] = None,
+        max_threads: int
     ):
         """
         Enumerate subdomains of given targets by using available data
@@ -51,13 +49,10 @@ class Enumerator(EnumerationPublisher):
         :param max_threads: Maximum number of threads to use when
             enumerating subdomains. A new thread will be spawned for
             each combination of data provider and target domain
-        :param output_file: Absolute path to a file to which enumeration
-            results will be written
         """
         super().__init__()
         self.targets: Collection[str] = targets
         self.providers: Collection[ExternalService] = providers
-        self.output_file: [str, Path] = output_file
         self.max_threads: int = max_threads
         self.found_domains = defaultdict(set)
 
