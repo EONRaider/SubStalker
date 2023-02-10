@@ -114,7 +114,15 @@ class CLIParser(Parser):
             "-o",
             "--output",
             type=str,
-            help="Absolute path to a file to which enumeration results will be written",
+            help="Absolute path of a file to which enumeration results will be written "
+            "in line-separated text format",
+        )
+        self.parser.add_argument(
+            "-j",
+            "--json",
+            type=str,
+            help="Absolute path of a file to which enumeration results will be written "
+            "in JSON format",
         )
         self.parser.add_argument(
             "--silent",
