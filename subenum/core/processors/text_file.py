@@ -26,22 +26,37 @@ from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubs
 
 
 class TextFileOutput(EnumerationSubscriber):
-    def __init__(self, subject: EnumerationPublisher, path: [str, Path]):
+    def __init__(
+        self,
+        subject: EnumerationPublisher,
+        path: [str, Path],
+        silent_mode: bool = False,
+    ):
         """
-        Output subdomain enumeration results to a file with a specified
-        path
+        Output line-separated subdomain enumeration results to a file
 
         :param subject: An instance of type EnumerationPublisher to
             subscribe to as an observer and extract results
         :param path: Absolute path to a file to which enumeration
             results will be written
+        :param silent_mode: Boolean that sets the level of verbosity of
+            output messages. Set to False by default to display
+            information such as the number of found domains and the
+            total time taken by the operation.
         """
         super().__init__(subject)
         self.path = Path(path)
+        self.silent = silent_mode
         self.fd = None
 
     def startup(self, *args, **kwargs) -> None:
         try:
+            """Opening, writing and closing of the file descriptor are
+            split between, respectively, startup, update and cleanup, in
+            order to ensure that a single file descriptor is used
+            throughout the entire lifetime of a single TextFileOutput
+            object, preventing unnecessary system calls each time a
+            write operation takes place"""
             self.fd = self.path.open(mode="a", encoding="utf_8")
         except OSError as e:
             raise FileReadError(
@@ -57,4 +72,8 @@ class TextFileOutput(EnumerationSubscriber):
 
     def cleanup(self, *args, **kwargs) -> None:
         self.fd.close()
-        print(f"[+] Enumeration results successfully written to {self.fd.name}")
+        if not self.silent:
+            print(
+                f"[+] Enumeration results successfully written in text format to "
+                f"{self.fd.name}"
+            )
