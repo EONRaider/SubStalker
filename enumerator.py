@@ -42,11 +42,20 @@ class App:
         )
 
     def run(self) -> None:
-        ScreenOutput(self.enumerator)
+        ScreenOutput(self.enumerator, silent_mode=self.cli_args.silent)
         if self.cli_args.output is not None:
-            TextFileOutput(self.enumerator, path=self.cli_args.output)
+            TextFileOutput(
+                self.enumerator,
+                path=self.cli_args.output,
+                silent_mode=self.cli_args.silent,
+            )
         if self.cli_args.json is not None:
-            JSONFileOutput(self.enumerator, path=self.cli_args.json)
+            JSONFileOutput(
+                self.enumerator,
+                path=self.cli_args.json,
+                silent_mode=self.cli_args.silent,
+            )
+
         try:
             with self.enumerator:
                 for result in self.enumerator.execute():
