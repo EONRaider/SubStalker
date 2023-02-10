@@ -25,7 +25,7 @@ from subenum.core.exceptions import FileReadError
 from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
 
 
-class FileOutput(EnumerationSubscriber):
+class TextFileOutput(EnumerationSubscriber):
     def __init__(self, subject: EnumerationPublisher, path: [str, Path]):
         """
         Output subdomain enumeration results to a file with a specified

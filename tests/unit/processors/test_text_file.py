@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 import pytest
 
 from subenum.core.exceptions import FileReadError
-from subenum.core.processors.file import FileOutput
+from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.types import EnumerationPublisher
 
 
@@ -34,7 +34,7 @@ class TestFile:
         THEN the FileOutput observer must accept that instance without
             exceptions
         """
-        file_output = FileOutput(
+        file_output = TextFileOutput(
             subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
         assert isinstance(file_output.subject, EnumerationPublisher)
@@ -47,7 +47,7 @@ class TestFile:
         THEN the FileOutput observer must be able to open and close the
             file descriptor without exceptions
         """
-        file_output = FileOutput(
+        file_output = TextFileOutput(
             subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
         file_output.startup()
@@ -64,7 +64,7 @@ class TestFile:
             results to the file without exceptions
         """
         test_file = tmp_path / "test_file.txt"
-        file_output = FileOutput(subject=mock_enumerator, path=test_file)
+        file_output = TextFileOutput(subject=mock_enumerator, path=test_file)
 
         file_output.fd = test_file.open(mode="a", encoding="utf_8")
         for response in api_response_1, api_response_2, api_response_3:
@@ -97,7 +97,7 @@ class TestFile:
             output without exceptions
         """
         test_file = tmp_path / "test_file.txt"
-        file_output = FileOutput(subject=mock_enumerator, path=test_file)
+        file_output = TextFileOutput(subject=mock_enumerator, path=test_file)
         file_output.fd = test_file.open(mode="a", encoding="utf_8")
         file_output.cleanup()
 
@@ -116,7 +116,7 @@ class TestFile:
         """
         test_file = "/root/some/file"
         with pytest.raises(FileReadError) as e:
-            FileOutput(subject=mock_enumerator, path=test_file).startup()
+            TextFileOutput(subject=mock_enumerator, path=test_file).startup()
         assert (
             e.value.args[0]
             == f"FileReadError: PermissionError: Error accessing specified file path "

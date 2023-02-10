@@ -19,7 +19,7 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-from subenum.core.processors.file import FileOutput
+from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.core.providers import all_providers
 from subenum.enumerator import Enumerator
@@ -46,7 +46,7 @@ class TestApp:
             max_threads=10,
         )
         screen = ScreenOutput(subject=enumerator)
-        FileOutput(subject=enumerator, path=output_file)
+        TextFileOutput(subject=enumerator, path=output_file)
 
         with enumerator:
             for _ in enumerator.execute():
