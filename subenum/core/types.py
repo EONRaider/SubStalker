@@ -64,7 +64,6 @@ class EnumerationSubscriber(ABC):
         """
         subject.register(self)
         self.subject = subject
-        self._known_domains = set()
 
     def startup(self, *args, **kwargs) -> None:
         ...
