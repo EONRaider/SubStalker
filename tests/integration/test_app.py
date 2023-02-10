@@ -62,6 +62,6 @@ class TestApp:
             "\tsub4.some-target-domain.com\n"
             "\tsub5.some-target-domain.com\n"
             f"[+] Enumeration of 1 domain was completed in 0.00 seconds and found "
-            f"{len(screen._known_domains)} domains\n"
+            f"{len(screen._known_domains)} subdomains\n"
             f"[+] Enumeration results successfully written to {output_file}\n"
         )
