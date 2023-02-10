@@ -23,6 +23,7 @@ Contact: https://www.twitter.com/eon_raider
 from subenum.core.exceptions import EnumeratorException
 from subenum.core.parsers.cli import CLIParser
 from subenum.core.parsers.configuration import ConfigurationParser
+from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.enumerator import Enumerator
@@ -44,6 +45,8 @@ class App:
         ScreenOutput(self.enumerator)
         if self.cli_args.output is not None:
             TextFileOutput(self.enumerator, path=self.cli_args.output)
+        if self.cli_args.json is not None:
+            JSONFileOutput(self.enumerator, path=self.cli_args.json)
         try:
             with self.enumerator:
                 for result in self.enumerator.execute():
