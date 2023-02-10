@@ -64,6 +64,14 @@ class Enumerator(EnumerationPublisher):
         self.total_time = time.perf_counter() - self.start_time
         [observer.cleanup(subject=self) for observer in self._observers]
 
+    @property
+    def num_found_domains(self) -> int:
+        """
+        Get the total number of subdomains found for all targets and
+        from all data providers
+        """
+        return sum(len(subdomains) for subdomains in self.found_domains.values())
+
     def register(self, observer: EnumerationSubscriber) -> None:
         """
         Attach an observer to the enumerator for further processing
