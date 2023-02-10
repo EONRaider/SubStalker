@@ -55,13 +55,14 @@ class TestApp:
         captured = capsys.readouterr()
 
         assert captured.out == (
-            f"[+] Subdomain enumerator started with 10 threads for {target_domain_1}\n"
-            "\tsub1.some-target-domain.com\n"
-            "\tsub2.some-target-domain.com\n"
-            "\tsub3.some-target-domain.com\n"
-            "\tsub4.some-target-domain.com\n"
-            "\tsub5.some-target-domain.com\n"
-            f"[+] Enumeration of 1 domain was completed in 0.00 seconds and found "
-            f"{len(screen._known_domains)} subdomains\n"
+            f"[+] Subdomain enumerator started with 10 threads for "
+            f"{target_domain_1}\n\n"
+            "[InstanceOfExternalService1] sub1.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub2.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub3.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub4.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub5.some-target-domain.com\n"
+            f"\n[+] Enumeration of 1 domain was completed in 0.00 seconds "
+            f"and found {len(screen._known_domains)} subdomains\n"
             f"[+] Enumeration results successfully written to {output_file}\n"
         )

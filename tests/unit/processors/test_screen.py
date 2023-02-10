@@ -48,7 +48,7 @@ class TestScreen:
         screen.startup(mock_enumerator)
         assert capsys.readouterr().out == (
             f"[+] Subdomain enumerator started with {mock_enumerator.max_threads} "
-            f"threads for {' | '.join(mock_enumerator.targets)}\n"
+            f"threads for {' | '.join(mock_enumerator.targets)}\n\n"
         )
 
     def test_screen_update(
@@ -67,16 +67,16 @@ class TestScreen:
             screen.update(response)
 
         assert capsys.readouterr().out == (
-            "\tsub1.some-target-domain.com\n"
-            "\tsub2.some-target-domain.com\n"
-            "\tsub3.some-target-domain.com\n"
-            "\tsub4.some-target-domain.com\n"
-            "\tsub5.some-target-domain.com\n"
-            "\tsub1.other-target-domain.com.br\n"
-            "\tsub2.other-target-domain.com.br\n"
-            "\tsub3.other-target-domain.com.br\n"
-            "\tsub4.other-target-domain.com.br\n"
-            "\tsub5.other-target-domain.com.br\n"
+            "[InstanceOfExternalService1] sub1.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub2.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub3.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub4.some-target-domain.com\n"
+            "[InstanceOfExternalService1] sub5.some-target-domain.com\n"
+            "[InstanceOfExternalService2] sub1.other-target-domain.com.br\n"
+            "[InstanceOfExternalService2] sub2.other-target-domain.com.br\n"
+            "[InstanceOfExternalService2] sub3.other-target-domain.com.br\n"
+            "[InstanceOfExternalService2] sub4.other-target-domain.com.br\n"
+            "[InstanceOfExternalService2] sub5.other-target-domain.com.br\n"
         )
 
     def test_screen_cleanup(self, capsys, mock_enumerator):
@@ -92,7 +92,7 @@ class TestScreen:
         (screen := ScreenOutput(subject=mock_enumerator)).cleanup()
         assert (
             capsys.readouterr().out
-            == f"[+] Enumeration of {len(mock_enumerator.targets)} domains was "
+            == f"\n[+] Enumeration of {len(mock_enumerator.targets)} domains was "
             f"completed in {mock_enumerator.total_time:.2f} seconds and found "
             f"{len(screen._known_domains)} subdomains\n"
         )

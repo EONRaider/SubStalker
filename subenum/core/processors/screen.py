@@ -42,18 +42,18 @@ class ScreenOutput(EnumerationSubscriber):
             print(
                 f"[+] Subdomain enumerator started with {subject.max_threads} threads "
                 f"for {' | '.join(subject.targets)}",
-                end="\n",
+                end="\n\n",
             )
 
     def update(self, result: EnumResult) -> None:
         self._known_domains |= (new_domains := self._get_new_domains(result))
         for domain in sorted(new_domains):
-            print(f"{domain}" if self.silent else f"\t{domain}")
+            print(f"[{result.provider}] {domain}" if not self.silent else f"{domain}")
 
     def cleanup(self, *args, **kwargs) -> None:
         if not self.silent:
             print(
-                f"[+] Enumeration of {(num_domains := len(self.subject.targets))} "
+                f"\n[+] Enumeration of {(num_domains := len(self.subject.targets))} "
                 f"{'domain' if num_domains == 1 else 'domains'} was completed in "
                 f"{self.subject.total_time:.2f} seconds and found "
                 f"{len(self._known_domains)} subdomains"
