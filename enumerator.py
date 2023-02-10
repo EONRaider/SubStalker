@@ -23,7 +23,7 @@ Contact: https://www.twitter.com/eon_raider
 from subenum.core.exceptions import EnumeratorException
 from subenum.core.parsers.cli import CLIParser
 from subenum.core.parsers.configuration import ConfigurationParser
-from subenum.core.processors.file import FileOutput
+from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.enumerator import Enumerator
 
@@ -43,7 +43,7 @@ class App:
     def run(self) -> None:
         ScreenOutput(self.enumerator)
         if self.cli_args.output is not None:
-            FileOutput(self.enumerator, path=self.cli_args.output)
+            TextFileOutput(self.enumerator, path=self.cli_args.output)
         try:
             with self.enumerator:
                 for result in self.enumerator.execute():
