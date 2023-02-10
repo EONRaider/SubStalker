@@ -77,13 +77,3 @@ class EnumerationSubscriber(ABC):
     @abstractmethod
     def cleanup(self, *args, **kwargs) -> None:
         ...
-
-    def _get_new_domains(self, result: EnumResult) -> set[str]:
-        """
-        Get which domains from a given result are yet unknown by the
-        observer
-
-        :param result: An instance of type EnumResult
-        :return: A set of strings defining which domains are new
-        """
-        return result.subdomains - self._known_domains
