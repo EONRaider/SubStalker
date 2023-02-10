@@ -27,6 +27,15 @@ from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubs
 
 class FileOutput(EnumerationSubscriber):
     def __init__(self, subject: EnumerationPublisher, path: [str, Path]):
+        """
+        Output subdomain enumeration results to a file with a specified
+        path
+
+        :param subject: An instance of type EnumerationPublisher to
+            subscribe to as an observer and extract results
+        :param path: Absolute path to a file to which enumeration
+            results will be written
+        """
         super().__init__(subject)
         self.path = Path(path)
         self.fd = None

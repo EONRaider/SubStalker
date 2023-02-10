@@ -39,6 +39,9 @@ class CLIParser(Parser):
     max_threads = 10
 
     def __init__(self):
+        """
+        Parser of Command Line Interface options for the application
+        """
         super().__init__(
             parser=argparse.ArgumentParser(
                 formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -51,7 +54,14 @@ class CLIParser(Parser):
 
     @property
     def providers(self) -> set[ExternalService]:
+        """
+        Get instances of data providers specified by a CLI option
+
+        :return: A set of instances of non-authenticated data providers
+            of type ExternalService as defined by the CLI parser
+        """
         if self.args.providers is not None:
+            # Return all providers specified through the CLI
             user_options = self._read_from_cli_option(self.args.providers)
             try:
                 return {getattr(providers, api)() for api in user_options}
@@ -60,6 +70,8 @@ class CLIParser(Parser):
                     "Unknown provider name was supplied as a CLI option. Cannot "
                     "proceed."
                 )
+        """Return all available non-authenticated data providers if
+        no specification was made through the CLI"""
         return {provider() for provider in providers.open_providers}
 
     def parse(self, *args, **kwargs) -> argparse.Namespace:
@@ -124,9 +136,19 @@ class CLIParser(Parser):
 
     @staticmethod
     def _read_from_stdin() -> Iterator[str]:
+        """
+        Read strings passed in from standard input
+
+        :return: An iterator of line-separated strings from STDIN
+        """
         yield from (line.strip() for line in sys.stdin.readlines())
 
     def _read_from_file(self) -> Iterator[str]:
+        """
+        Read strings from a file
+
+        :return: An iterator of line-separated strings from a file
+        """
         try:
             with open(self.args.from_file, encoding="utf_8") as file:
                 yield from (line.strip() for line in file.readlines())
@@ -138,9 +160,21 @@ class CLIParser(Parser):
 
     @staticmethod
     def _read_from_cli_option(option: str) -> Iterator[str]:
+        """
+        Read strings derived from a single string captured by the CLI
+        parser
+
+        :param option: A string containing comma-separated domain names
+            to target
+        """
         yield from re.split(r"\s*,\s*", option)
 
     def _parse_targets(self) -> Iterator[str]:
+        """
+        Parse targets defined by specific input options
+
+        :return: An iterator of strings
+        """
         if self.args.stdin is True:
             yield from self._read_from_stdin()
         elif self.args.from_file is not None:
@@ -149,6 +183,11 @@ class CLIParser(Parser):
             yield from self._read_from_cli_option(self.args.targets)
 
     def _set_targets(self) -> tuple[str]:
+        """
+        Set the "target" attribute of the CLI parser
+
+        :return: A tuple of strings containing domain names to target
+        """
         if len(targets := tuple(self._parse_targets())) == 0:
             raise TargetSpecificationError(
                 "No targets were specified. Cannot proceed with subdomain "

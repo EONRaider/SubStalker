@@ -23,11 +23,19 @@ from reconlib import CRTShAPI, HackerTargetAPI, VirusTotalAPI
 
 
 open_providers = []  # APIs that respond to simple, unauthenticated requests
-auth_providers = []  # APIs that require keys to respond
+auth_providers = []  # APIs that require authentication parameters to respond
 all_providers = []
 
 
 def register_provider(auth_required: bool = False):
+    """
+    Register a function that returns a provider as a member of the
+    corresponding collection
+
+    :param auth_required: Boolean that sets the function as a member of
+        either the "open_providers" or "auth_providers" list
+    """
+
     def wrapper(func):
         if auth_required is True:
             auth_providers.append(func)
