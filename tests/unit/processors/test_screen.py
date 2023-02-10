@@ -95,7 +95,7 @@ class TestScreen:
             capsys.readouterr().out
             == f"\n[+] Enumeration of {len(mock_enumerator.targets)} domains was "
             f"completed in {mock_enumerator.total_time:.2f} seconds and found "
-            f"{len(screen._known_domains)} subdomains\n"
+            f"{screen.subject.num_found_domains} subdomains\n"
         )
 
     def test_silent_mode(self, capsys, mock_enumerator, api_response_1):

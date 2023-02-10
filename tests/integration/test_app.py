@@ -63,6 +63,7 @@ class TestApp:
             "[InstanceOfExternalService1] sub4.some-target-domain.com\n"
             "[InstanceOfExternalService1] sub5.some-target-domain.com\n"
             f"\n[+] Enumeration of 1 domain was completed in 0.00 seconds "
-            f"and found {len(screen._known_domains)} subdomains\n"
-            f"[+] Enumeration results successfully written to {output_file}\n"
+            f"and found {screen.subject.num_found_domains} subdomains\n"
+            f"[+] Enumeration results successfully written in text format "
+            f"to {output_file}\n"
         )

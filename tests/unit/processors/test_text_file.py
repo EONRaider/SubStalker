@@ -104,7 +104,8 @@ class TestFile:
         captured = capsys.readouterr()
 
         assert captured.out == (
-            f"[+] Enumeration results successfully written to {file_output.fd.name}\n"
+            f"[+] Enumeration results successfully written in text format to "
+            f"{file_output.fd.name}\n"
         )
 
     def test_inaccessible_file_path(self, mock_enumerator):
