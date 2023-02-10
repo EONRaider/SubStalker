@@ -20,6 +20,7 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 import argparse
+import importlib.metadata
 import re
 import sys
 from collections.abc import Iterator
@@ -95,6 +96,11 @@ class CLIParser(Parser):
             "piping directly from the output of another application or the redirected "
             "output of a file.",
         )
+        self.targeting.add_argument(
+            "--version",
+            action="store_true",
+            help="Display the version of SubdomainEnumerator",
+        )
         self.parser.add_argument(
             "-p",
             "--providers",
@@ -131,6 +137,10 @@ class CLIParser(Parser):
             "authenticated external services to be queried by the application, if any",
         )
         self.args = self.parser.parse_args(*args, **kwargs)
+
+        if self.args.version:
+            raise SystemExit(importlib.metadata.version("subenum"))
+
         self.args.targets = self._set_targets()
         return self.args
 
