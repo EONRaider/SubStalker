@@ -66,7 +66,6 @@ class EnumerationSubscriber(ABC):
         self.subject = subject
         self._known_domains = set()
 
-    @abstractmethod
     def startup(self, *args, **kwargs) -> None:
         ...
 
@@ -74,6 +73,5 @@ class EnumerationSubscriber(ABC):
     def update(self, *args, **kwargs) -> None:
         ...
 
-    @abstractmethod
     def cleanup(self, *args, **kwargs) -> None:
         ...
