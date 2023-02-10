@@ -50,8 +50,10 @@ class FileOutput(EnumerationSubscriber):
             )
 
     def update(self, result: EnumResult) -> None:
-        self._known_domains |= (new_domains := self._get_new_domains(result))
-        [self.fd.write(f"{domain}\n") for domain in sorted(new_domains)]
+        for domain in sorted(result.subdomains):
+            # Write only de-duplicated results to file
+            if domain not in self.subject.found_domains[result.domain]:
+                self.fd.write(f"{domain}\n")
 
     def cleanup(self, *args, **kwargs) -> None:
         self.fd.close()

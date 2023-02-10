@@ -65,6 +65,7 @@ class TestScreen:
         screen = ScreenOutput(subject=mock_enumerator)
         for response in api_response_1, api_response_2, api_response_3:
             screen.update(response)
+            mock_enumerator.found_domains[response.domain] |= response.subdomains
 
         assert capsys.readouterr().out == (
             "[InstanceOfExternalService1] sub1.some-target-domain.com\n"

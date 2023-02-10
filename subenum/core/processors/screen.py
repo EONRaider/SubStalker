@@ -46,9 +46,12 @@ class ScreenOutput(EnumerationSubscriber):
             )
 
     def update(self, result: EnumResult) -> None:
-        self._known_domains |= (new_domains := self._get_new_domains(result))
-        for domain in sorted(new_domains):
-            print(f"[{result.provider}] {domain}" if not self.silent else f"{domain}")
+        for domain in sorted(result.subdomains):
+            # Display only de-duplicated results on STDOUT
+            if domain not in self.subject.found_domains[result.domain]:
+                print(
+                    f"[{result.provider}] {domain}" if not self.silent else f"{domain}"
+                )
 
     def cleanup(self, *args, **kwargs) -> None:
         if not self.silent:

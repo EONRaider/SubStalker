@@ -69,6 +69,7 @@ class TestFile:
         file_output.fd = test_file.open(mode="a", encoding="utf_8")
         for response in api_response_1, api_response_2, api_response_3:
             file_output.update(response)
+            mock_enumerator.found_domains[response.domain] |= response.subdomains
         file_output.fd.close()
 
         with open(test_file) as file:
