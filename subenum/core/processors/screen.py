@@ -19,11 +19,13 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
+import logging
+
 from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
 
 
 class ScreenOutput(EnumerationSubscriber):
-    def __init__(self, subject: EnumerationPublisher, silent_mode=False):
+    def __init__(self, subject: EnumerationPublisher, *, silent_mode=False):
         """
         Output subdomain enumeration results on STDOUT
 
@@ -32,32 +34,28 @@ class ScreenOutput(EnumerationSubscriber):
         :param silent_mode: Boolean that sets the level of verbosity of
             output messages. Set to False by default to display
             information such as the number of found domains and the
-            total time taken by the operation.
+            total time taken by the operation, among others.
         """
-        super().__init__(subject)
-        self.silent = silent_mode
+        super().__init__(subject, silent_mode, logger=logging.getLogger("ScreenOutput"))
 
     def startup(self, subject: EnumerationPublisher) -> None:
-        if not self.silent:
-            print(
-                f"[+] Subdomain enumerator started with {subject.max_threads} threads "
-                f"for {' | '.join(subject.targets)}",
-                end="\n\n",
-            )
+        self.logger.info(
+            f"Subdomain enumerator started with {subject.max_threads} threads for "
+            f"{' | '.join(subject.targets)}",
+        )
 
     def update(self, result: EnumResult) -> None:
         for domain in sorted(result.subdomains):
             # Display only de-duplicated results on STDOUT
             if domain not in self.subject.found_domains[result.domain]:
-                print(
-                    f"[{result.provider}] {domain}" if not self.silent else f"{domain}"
+                self.logger.warning(
+                    f"{domain}" if self.silent else f"\t[{result.provider}] {domain}"
                 )
 
     def cleanup(self, *args, **kwargs) -> None:
-        if not self.silent:
-            print(
-                f"\n[+] Enumeration of {(num_domains := len(self.subject.targets))} "
-                f"{'domain' if num_domains == 1 else 'domains'} was completed in "
-                f"{self.subject.total_time:.2f} seconds and found "
-                f"{self.subject.num_found_domains} subdomains"
-            )
+        self.logger.info(
+            f"Enumeration of {(num_domains := len(self.subject.targets))} "
+            f"{'domain' if num_domains == 1 else 'domains'} was completed in "
+            f"{self.subject.total_time:.2f} seconds and found "
+            f"{self.subject.num_found_domains} subdomains"
+        )

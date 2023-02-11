@@ -19,6 +19,7 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
+import logging
 from pathlib import Path
 
 from subenum.core.exceptions import FileReadError
@@ -44,10 +45,11 @@ class TextFileOutput(EnumerationSubscriber):
             information such as the number of found domains and the
             total time taken by the operation.
         """
-        super().__init__(subject)
         self.path = Path(path)
-        self.silent = silent_mode
-        self.fd = None
+        self._fd = None
+        super().__init__(
+            subject, silent_mode, logger=logging.getLogger("TextFileOutput")
+        )
 
     def startup(self, *args, **kwargs) -> None:
         try:
@@ -57,7 +59,7 @@ class TextFileOutput(EnumerationSubscriber):
             throughout the entire lifetime of a single TextFileOutput
             object, preventing unnecessary system calls each time a
             write operation takes place"""
-            self.fd = self.path.open(mode="a", encoding="utf_8")
+            self._fd = self.path.open(mode="a", encoding="utf_8")
         except OSError as e:
             raise FileReadError(
                 f"{e.__class__.__name__}: Error accessing specified file path "
@@ -68,12 +70,11 @@ class TextFileOutput(EnumerationSubscriber):
         for domain in sorted(result.subdomains):
             # Write only de-duplicated results to file
             if domain not in self.subject.found_domains[result.domain]:
-                self.fd.write(f"{domain}\n")
+                self._fd.write(f"{domain}\n")
 
     def cleanup(self, *args, **kwargs) -> None:
-        self.fd.close()
-        if not self.silent:
-            print(
-                f"[+] Enumeration results successfully written in text format to "
-                f"{self.fd.name}"
-            )
+        self._fd.close()
+        self.logger.info(
+            f"Enumeration results successfully written in text format to "
+            f"{self._fd.name}"
+        )

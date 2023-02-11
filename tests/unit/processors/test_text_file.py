@@ -18,6 +18,8 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+import logging
+
 import pytest
 
 from subenum.core.exceptions import FileReadError
@@ -51,7 +53,7 @@ class TestFile:
             subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
         file_output.startup()
-        file_output.fd.close()
+        file_output._fd.close()
 
     def test_file_update(
         self, tmp_path, mock_enumerator, api_response_1, api_response_2, api_response_3
@@ -66,11 +68,11 @@ class TestFile:
         test_file = tmp_path / "test_file.txt"
         file_output = TextFileOutput(subject=mock_enumerator, path=test_file)
 
-        file_output.fd = test_file.open(mode="a", encoding="utf_8")
+        file_output._fd = test_file.open(mode="a", encoding="utf_8")
         for response in api_response_1, api_response_2, api_response_3:
             file_output.update(response)
             mock_enumerator.found_domains[response.domain] |= response.subdomains
-        file_output.fd.close()
+        file_output._fd.close()
 
         with open(test_file) as file:
             written_results = file.readlines()
@@ -88,7 +90,7 @@ class TestFile:
             "sub5.other-target-domain.com.br\n",
         ]
 
-    def test_file_cleanup(self, capsys, tmp_path, mock_enumerator):
+    def test_file_cleanup(self, caplog, tmp_path, mock_enumerator):
         """
         GIVEN a valid path to a file
         WHEN this path is passed as the output file of an instance of
@@ -96,17 +98,16 @@ class TestFile:
         THEN the FileOutput observer's "cleanup" method must return its
             output without exceptions
         """
+        caplog.set_level(logging.INFO)
         test_file = tmp_path / "test_file.txt"
         file_output = TextFileOutput(subject=mock_enumerator, path=test_file)
-        file_output.fd = test_file.open(mode="a", encoding="utf_8")
+        file_output._fd = test_file.open(mode="a", encoding="utf_8")
         file_output.cleanup()
 
-        captured = capsys.readouterr()
-
-        assert captured.out == (
-            f"[+] Enumeration results successfully written in text format to "
-            f"{file_output.fd.name}\n"
-        )
+        assert (
+            f"Enumeration results successfully written in text format to "
+            f"{file_output._fd.name}"
+        ) in caplog.messages
 
     def test_inaccessible_file_path(self, mock_enumerator):
         """

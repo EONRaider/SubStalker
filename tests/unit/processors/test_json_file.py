@@ -18,7 +18,9 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+
 import json
+import logging
 
 import pytest
 
@@ -86,7 +88,13 @@ class TestJSONFile:
         }
 
     def test_json_cleanup(
-        self, tmp_path, mock_enumerator, api_response_1, api_response_2, api_response_3
+        self,
+        tmp_path,
+        caplog,
+        mock_enumerator,
+        api_response_1,
+        api_response_2,
+        api_response_3,
     ):
         """
         GIVEN a valid path to a file
@@ -95,6 +103,7 @@ class TestJSONFile:
         THEN the JSONFileOutput observer's "cleanup" method must write
             the contents of the enumeration results without exceptions
         """
+        caplog.set_level(logging.INFO)
         json_output = JSONFileOutput(
             subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
@@ -103,6 +112,11 @@ class TestJSONFile:
             json_output.update(response)
 
         json_output.cleanup()
+
+        assert (
+            f"Enumeration results successfully written in JSON format to "
+            f"{str(json_output.path)}" in caplog.messages
+        )
 
         with open(json_output.path) as file:
             assert json.load(file) == {
@@ -149,3 +163,31 @@ class TestJSONFile:
             f'path "{file_path}"'
         )
         assert e.value.code == 1
+
+    def test_json_cleanup_silent_mode(
+        self,
+        tmp_path,
+        caplog,
+        mock_enumerator,
+        api_response_1,
+    ):
+        """
+        GIVEN a valid path to a file
+        WHEN this path is passed as an initialization argument to an
+            instance of JSONFileOutput and silent mode is enabled
+        THEN the JSONFileOutput observer's "cleanup" method must write
+            the contents of the enumeration results without exceptions,
+            but supress all output to STDOUT
+        """
+        caplog.set_level(logging.WARNING)
+        json_output = JSONFileOutput(
+            subject=mock_enumerator,
+            path=tmp_path.joinpath("test_file.txt"),
+            silent_mode=True,
+        )
+
+        json_output.update(api_response_1)
+
+        json_output.cleanup()
+
+        assert len(caplog.messages) == 0

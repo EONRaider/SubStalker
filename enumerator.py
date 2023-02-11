@@ -20,6 +20,9 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+
+import logging
+
 from subenum.core.exceptions import EnumeratorException
 from subenum.core.parsers.cli import CLIParser
 from subenum.core.parsers.configuration import ConfigurationParser
@@ -40,6 +43,7 @@ class App:
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,
         )
+        logging.getLogger().setLevel(logging.DEBUG)
 
     def run(self) -> None:
         ScreenOutput(self.enumerator, silent_mode=self.cli_args.silent)

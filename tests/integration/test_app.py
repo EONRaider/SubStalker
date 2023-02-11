@@ -18,7 +18,9 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+import logging
 
+from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.core.providers import all_providers
@@ -28,7 +30,7 @@ from subenum.enumerator import Enumerator
 class TestApp:
     def test_run_enumerator(
         self,
-        capsys,
+        caplog,
         tmp_path,
         mocker,
         target_domain_1,
@@ -38,7 +40,11 @@ class TestApp:
         mocker.patch(
             "subenum.enumerator.Enumerator.query_provider", return_value=api_response_1
         )
-        output_file = tmp_path / "test_file.txt"
+
+        caplog.set_level(logging.INFO)
+
+        text_file = tmp_path.joinpath("text_file.txt")
+        json_file = tmp_path.joinpath("json_file.txt")
 
         enumerator = Enumerator(
             targets=(target_domain_1,),
@@ -46,24 +52,23 @@ class TestApp:
             max_threads=10,
         )
         screen = ScreenOutput(subject=enumerator)
-        TextFileOutput(subject=enumerator, path=output_file)
+        TextFileOutput(subject=enumerator, path=text_file)
+        JSONFileOutput(subject=enumerator, path=json_file)
 
         with enumerator:
             for _ in enumerator.execute():
                 pass
 
-        captured = capsys.readouterr()
-
-        assert captured.out == (
-            f"[+] Subdomain enumerator started with 10 threads for "
-            f"{target_domain_1}\n\n"
-            "[InstanceOfExternalService1] sub1.some-target-domain.com\n"
-            "[InstanceOfExternalService1] sub2.some-target-domain.com\n"
-            "[InstanceOfExternalService1] sub3.some-target-domain.com\n"
-            "[InstanceOfExternalService1] sub4.some-target-domain.com\n"
-            "[InstanceOfExternalService1] sub5.some-target-domain.com\n"
-            f"\n[+] Enumeration of 1 domain was completed in 0.00 seconds "
-            f"and found {screen.subject.num_found_domains} subdomains\n"
-            f"[+] Enumeration results successfully written in text format "
-            f"to {output_file}\n"
-        )
+        assert caplog.messages == [
+            f"Subdomain enumerator started with 10 threads for {target_domain_1}",
+            "\t[InstanceOfExternalService1] sub1.some-target-domain.com",
+            "\t[InstanceOfExternalService1] sub2.some-target-domain.com",
+            "\t[InstanceOfExternalService1] sub3.some-target-domain.com",
+            "\t[InstanceOfExternalService1] sub4.some-target-domain.com",
+            "\t[InstanceOfExternalService1] sub5.some-target-domain.com",
+            f"Enumeration of 1 domain was completed in "
+            f"{enumerator.total_time:.2f} seconds and found "
+            f"{screen.subject.num_found_domains} subdomains",
+            f"Enumeration results successfully written in text format to {text_file}",
+            f"Enumeration results successfully written in JSON format to {json_file}",
+        ]

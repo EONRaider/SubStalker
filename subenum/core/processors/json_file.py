@@ -20,6 +20,7 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 import json
+import logging
 from collections import defaultdict
 from pathlib import Path
 
@@ -45,16 +46,17 @@ class JSONFileOutput(EnumerationSubscriber):
             output messages. Set to False by default to display status
             information.
         """
-        super().__init__(subject)
         self.path = Path(path)
-        self.silent = silent_mode
         self.results = defaultdict(dict)
+        super().__init__(
+            subject, silent_mode, logger=logging.getLogger("JSONFileOutput")
+        )
 
     def update(self, result: EnumResult) -> None:
         provider_response = {result.provider: [*sorted(result.subdomains)]}
         self.results[result.domain].update(provider_response)
 
-    def cleanup(self) -> None:
+    def cleanup(self, *args, **kwargs) -> None:
         try:
             with open(self.path, mode="a", encoding="utf_8") as file:
                 json.dump(self.results, fp=file)
@@ -63,8 +65,7 @@ class JSONFileOutput(EnumerationSubscriber):
                 f"{e.__class__.__name__}: Error accessing specified file path "
                 f'"{str(self.path)}"'
             )
-        if not self.silent:
-            print(
-                f"[+] Enumeration results successfully written in JSON format to "
-                f"{str(self.path)}"
-            )
+        self.logger.info(
+            f"Enumeration results successfully written in JSON format to "
+            f"{str(self.path)}"
+        )
