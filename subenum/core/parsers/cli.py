@@ -144,6 +144,9 @@ class CLIParser(Parser):
             help="Absolute path to an INI file containing the API keys to "
             "authenticated external services to be queried by the application, if any",
         )
+        self.parser.add_argument(
+            "--debug", action="store_true", help="Display debugging messages on STDOUT"
+        )
         self.args = self.parser.parse_args(*args, **kwargs)
 
         if self.args.version:

@@ -43,7 +43,9 @@ class App:
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,
         )
-        logging.getLogger().setLevel(logging.DEBUG)
+        logging.getLogger().setLevel(
+            logging.DEBUG if self.cli_args.debug else logging.INFO
+        )
 
     def run(self) -> None:
         ScreenOutput(self.enumerator, silent_mode=self.cli_args.silent)
