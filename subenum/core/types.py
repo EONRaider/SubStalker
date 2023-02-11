@@ -101,7 +101,6 @@ class EnumerationSubscriber(ABC):
         """
         Set up StreamHandler loggers and add them to the main logger
         """
-        # self.logger.propagate = False  # Prevent root logger from duplicating messages
         stdout = logging.StreamHandler()
 
         """Messages logged on "startup" and "cleanup" use the INFO level,
