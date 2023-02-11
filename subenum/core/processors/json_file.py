@@ -56,7 +56,7 @@ class JSONFileOutput(EnumerationSubscriber):
         provider_response = {result.provider: [*sorted(result.subdomains)]}
         self.results[result.domain].update(provider_response)
 
-    def cleanup(self, *args, **kwargs) -> None:
+    def _dump_results_to_file(self) -> None:
         try:
             with open(self.path, mode="a", encoding="utf_8") as file:
                 json.dump(self.results, fp=file)
@@ -65,6 +65,9 @@ class JSONFileOutput(EnumerationSubscriber):
                 f"{e.__class__.__name__}: Error accessing specified file path "
                 f'"{str(self.path)}"'
             )
+
+    def cleanup(self, *args, **kwargs) -> None:
+        self._dump_results_to_file()
         self.logger.info(
             f"Enumeration results successfully written in JSON format to "
             f"{str(self.path)}"
