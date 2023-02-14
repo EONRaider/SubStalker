@@ -40,10 +40,11 @@ class LogFormatter(logging.Formatter):
     yellow = "\x1b[93m"
     red = "\x1b[91m"
     green = "\x1b[92m"
+    blue = "\x1b[94m"
     reset = "\x1b[0m"
 
     FORMATS = {
-        logging.DEBUG: f"{red}[%(levelname)s] - %(name)s - %(asctime)s - %(message)s"
+        logging.DEBUG: f"{blue}[%(levelname)s] - %(name)s - %(asctime)s - %(message)s"
         f"{reset}",
         logging.INFO: f"{grey}[{yellow}%(levelname)s{reset}{grey}] %(message)s{reset}",
         logging.WARNING: f"{grey}%(message)s{reset}",
