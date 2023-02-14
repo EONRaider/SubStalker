@@ -32,6 +32,7 @@ class TextFileOutput(EnumerationSubscriber):
         subject: EnumerationPublisher,
         path: [str, Path],
         silent_mode: bool = False,
+        debug: bool = False,
     ):
         """
         Output line-separated subdomain enumeration results to a file
@@ -44,11 +45,17 @@ class TextFileOutput(EnumerationSubscriber):
             output messages. Set to False by default to display
             information such as the number of found domains and the
             total time taken by the operation.
+        :param debug: Allow displaying of debug messages. Overrides the
+            value set by "silent_mode".
         """
         self.path = Path(path)
         self._fd = None
+        self._class_name = self.__class__.__name__
         super().__init__(
-            subject, silent_mode, logger=logging.getLogger("TextFileOutput")
+            subject,
+            silent_mode,
+            logger=logging.getLogger(self._class_name),
+            debug=debug,
         )
 
     def startup(self, *args, **kwargs) -> None:
@@ -60,6 +67,10 @@ class TextFileOutput(EnumerationSubscriber):
             object, preventing unnecessary system calls each time a
             write operation takes place"""
             self._fd = self.path.open(mode="a", encoding="utf_8")
+            self.logger.debug(
+                f'File "{self._fd.name}" has been successfully opened/created for '
+                f"logging of enumeration results by {self._class_name}"
+            )
         except OSError as e:
             raise FileReadError(
                 f"{e.__class__.__name__}: Error accessing specified file path "
@@ -77,4 +88,8 @@ class TextFileOutput(EnumerationSubscriber):
         self.logger.info(
             f"Enumeration results successfully written in text format to "
             f"{self._fd.name}"
+        )
+        self.logger.debug(
+            f"Logging of results by {self._class_name} observer was finished "
+            f"successfully"
         )

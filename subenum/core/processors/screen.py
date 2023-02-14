@@ -25,7 +25,13 @@ from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubs
 
 
 class ScreenOutput(EnumerationSubscriber):
-    def __init__(self, subject: EnumerationPublisher, *, silent_mode=False):
+    def __init__(
+        self,
+        subject: EnumerationPublisher,
+        *,
+        silent_mode: bool = False,
+        debug: bool = False,
+    ):
         """
         Output subdomain enumeration results on STDOUT
 
@@ -35,8 +41,16 @@ class ScreenOutput(EnumerationSubscriber):
             output messages. Set to False by default to display
             information such as the number of found domains and the
             total time taken by the operation, among others.
+        :param debug: Allow displaying of debug messages. Overrides the
+            value set by "silent_mode".
         """
-        super().__init__(subject, silent_mode, logger=logging.getLogger("ScreenOutput"))
+        self._class_name = self.__class__.__name__
+        super().__init__(
+            subject,
+            silent_mode,
+            logger=logging.getLogger(self._class_name),
+            debug=debug,
+        )
 
     def startup(self, subject: EnumerationPublisher) -> None:
         self.logger.info(
@@ -45,6 +59,7 @@ class ScreenOutput(EnumerationSubscriber):
         )
 
     def update(self, result: EnumResult) -> None:
+        self.logger.debug(f"{self._class_name} logging results from {result.provider}")
         for domain in sorted(result.subdomains):
             # Display only de-duplicated results on STDOUT
             if domain not in self.subject.found_domains[result.domain]:
@@ -58,4 +73,8 @@ class ScreenOutput(EnumerationSubscriber):
             f"{'domain' if num_domains == 1 else 'domains'} was completed in "
             f"{self.subject.total_time:.2f} seconds and found "
             f"{self.subject.num_found_domains} subdomains"
+        )
+        self.logger.debug(
+            f"Logging of results by {self._class_name} observer was finished "
+            f"successfully"
         )

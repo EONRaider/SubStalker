@@ -34,6 +34,7 @@ class JSONFileOutput(EnumerationSubscriber):
         subject: EnumerationPublisher,
         path: [str, Path],
         silent_mode: bool = False,
+        debug: bool = False,
     ):
         """
         Output JSON-formatted subdomain enumeration results to a file
@@ -45,11 +46,17 @@ class JSONFileOutput(EnumerationSubscriber):
         :param silent_mode: Boolean that sets the level of verbosity of
             output messages. Set to False by default to display status
             information.
+        :param debug: Allow displaying of debug messages. Overrides the
+            value set by "silent_mode".
         """
         self.path = Path(path)
         self.results = defaultdict(dict)
+        self._class_name = self.__class__.__name__
         super().__init__(
-            subject, silent_mode, logger=logging.getLogger("JSONFileOutput")
+            subject,
+            silent_mode,
+            logger=logging.getLogger(self._class_name),
+            debug=debug,
         )
 
     def update(self, result: EnumResult) -> None:
@@ -60,6 +67,10 @@ class JSONFileOutput(EnumerationSubscriber):
         try:
             with open(self.path, mode="a", encoding="utf_8") as file:
                 json.dump(self.results, fp=file)
+            self.logger.debug(
+                f'File "{str(self.path)}" has been successfully opened/created for '
+                f"logging of enumeration results by {self._class_name}"
+            )
         except OSError as e:
             raise FileReadError(
                 f"{e.__class__.__name__}: Error accessing specified file path "
@@ -71,4 +82,8 @@ class JSONFileOutput(EnumerationSubscriber):
         self.logger.info(
             f"Enumeration results successfully written in JSON format to "
             f"{str(self.path)}"
+        )
+        self.logger.debug(
+            f"Logging of results by {self._class_name} observer was finished "
+            f"successfully"
         )

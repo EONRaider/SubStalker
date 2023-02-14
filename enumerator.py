@@ -49,18 +49,24 @@ class App:
         )
 
     def run(self) -> None:
-        ScreenOutput(subject=self.enumerator, silent_mode=self.cli_args.silent)
+        ScreenOutput(
+            subject=self.enumerator,
+            silent_mode=self.cli_args.silent,
+            debug=self.cli_args.debug,
+        )
         if self.cli_args.output is not None:
             TextFileOutput(
                 subject=self.enumerator,
                 path=self.cli_args.output,
                 silent_mode=self.cli_args.silent,
+                debug=self.cli_args.debug,
             )
         if self.cli_args.json is not None:
             JSONFileOutput(
                 subject=self.enumerator,
                 path=self.cli_args.json,
                 silent_mode=self.cli_args.silent,
+                debug=self.cli_args.debug,
             )
 
         try:

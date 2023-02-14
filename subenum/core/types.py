@@ -78,7 +78,12 @@ class EnumerationPublisher(ABC):
 
 class EnumerationSubscriber(ABC):
     def __init__(
-        self, subject: EnumerationPublisher, silent_mode: bool, logger: logging.Logger
+        self,
+        subject: EnumerationPublisher,
+        silent_mode: bool,
+        *,
+        logger: logging.Logger,
+        debug: bool,
     ):
         """
         Base class for all observers responsible for further processing
@@ -91,12 +96,19 @@ class EnumerationSubscriber(ABC):
             total time taken by the operation, among others.
         :param logger: Instance of Logger that will be used for
             displaying status messages
+        :param debug: Allow displaying of debug messages. Overrides the
+            value set by "silent_mode".
         """
         subject.register(self)
-        self.silent = silent_mode
         self.subject = subject
+        self.silent = silent_mode
         self.logger = logger
+        self.debug = debug
         self._add_logging_handlers()
+        self.logger.debug(
+            f"{self.__class__.__name__} observer successfully attached to instance of "
+            f"{subject.__class__.__name__}"
+        )
 
     def _add_logging_handlers(self) -> None:
         """
@@ -104,11 +116,17 @@ class EnumerationSubscriber(ABC):
         """
         stdout = logging.StreamHandler()
 
-        """Messages logged on "startup" and "cleanup" use the INFO level,
-        so they will be suppressed if "silent" is True (since WARNING 
-        stands at a higher level)"""
-        stdout.setLevel(logging.WARNING if self.silent else logging.INFO)
+        if self.debug:
+            level = logging.DEBUG
+        elif self.silent:
+            """Messages logged on "startup" and "cleanup" must use the
+            INFO level, so they will be suppressed if "silent" is True
+            (since WARNING stands at a higher level)"""
+            level = logging.WARNING
+        else:
+            level = logging.INFO
 
+        stdout.setLevel(level)
         stdout.setFormatter(LogFormatter())
         self.logger.addHandler(stdout)
 
