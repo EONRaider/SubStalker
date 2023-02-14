@@ -43,21 +43,22 @@ class App:
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,
         )
+        # Set the global minimum level for all loggers
         logging.getLogger().setLevel(
             logging.DEBUG if self.cli_args.debug else logging.INFO
         )
 
     def run(self) -> None:
-        ScreenOutput(self.enumerator, silent_mode=self.cli_args.silent)
+        ScreenOutput(subject=self.enumerator, silent_mode=self.cli_args.silent)
         if self.cli_args.output is not None:
             TextFileOutput(
-                self.enumerator,
+                subject=self.enumerator,
                 path=self.cli_args.output,
                 silent_mode=self.cli_args.silent,
             )
         if self.cli_args.json is not None:
             JSONFileOutput(
-                self.enumerator,
+                subject=self.enumerator,
                 path=self.cli_args.json,
                 silent_mode=self.cli_args.silent,
             )
