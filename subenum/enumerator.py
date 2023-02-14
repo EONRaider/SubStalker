@@ -36,7 +36,8 @@ class Enumerator(EnumerationPublisher):
         targets: Collection[str],
         *,
         providers: Collection[ExternalService],
-        max_threads: int
+        max_threads: int,
+        retry_time: int,
     ):
         """
         Enumerate subdomains of given targets by using available data
@@ -49,11 +50,14 @@ class Enumerator(EnumerationPublisher):
         :param max_threads: Maximum number of threads to use when
             enumerating subdomains. A new thread will be spawned for
             each combination of data provider and target domain
+        :param retry_time: Time to wait before attempting a new request
+            to a data provider whose usage quota has been exceeded
         """
         super().__init__()
         self.targets: Collection[str] = targets
         self.providers: Collection[ExternalService] = providers
         self.max_threads: int = max_threads
+        self.retry_time: int = retry_time
         self.found_domains = defaultdict(set)
 
     def __enter__(self) -> None:
