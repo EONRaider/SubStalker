@@ -43,32 +43,29 @@ class App:
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,
         )
-        # Set the global minimum level for all loggers
+        # Set the minimum global level for all loggers
         logging.getLogger().setLevel(
             logging.DEBUG if self.cli_args.debug else logging.INFO
         )
 
-    def run(self) -> None:
-        ScreenOutput(
-            subject=self.enumerator,
-            silent_mode=self.cli_args.silent,
-            debug=self.cli_args.debug,
-        )
+    def _attach_observers(self) -> None:
+        """
+        Instantiate all observers selected for output/processing of
+        subdomain enumeration results
+        """
+        observer_args = {
+            "subject": self.enumerator,
+            "silent_mode": self.cli_args.silent,
+            "debug": self.cli_args.debug,
+        }
+        ScreenOutput(**observer_args)
         if self.cli_args.output is not None:
-            TextFileOutput(
-                subject=self.enumerator,
-                path=self.cli_args.output,
-                silent_mode=self.cli_args.silent,
-                debug=self.cli_args.debug,
-            )
+            TextFileOutput(path=self.cli_args.output, **observer_args)
         if self.cli_args.json is not None:
-            JSONFileOutput(
-                subject=self.enumerator,
-                path=self.cli_args.json,
-                silent_mode=self.cli_args.silent,
-                debug=self.cli_args.debug,
-            )
+            JSONFileOutput(path=self.cli_args.json, **observer_args)
 
+    def run(self) -> None:
+        self._attach_observers()
         try:
             with self.enumerator:
                 for result in self.enumerator.execute():
