@@ -42,6 +42,7 @@ class App:
             targets=self.cli_args.targets,
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,
+            retry_time=self.cli_args.retry,
         )
         # Set the minimum global level for all loggers
         logging.getLogger().setLevel(
