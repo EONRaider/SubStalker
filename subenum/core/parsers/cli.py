@@ -147,6 +147,13 @@ class CLIParser(Parser):
         self.parser.add_argument(
             "--debug", action="store_true", help="Display debugging messages on STDOUT"
         )
+        self.parser.add_argument(
+            "--retry",
+            type=int,
+            help="Time to wait before attempting a new request to a data provider "
+            "whose usage quota has been exceeded (defaults to 60 seconds)",
+            default=60,
+        )
         self.args = self.parser.parse_args(*args, **kwargs)
 
         if self.args.version:
