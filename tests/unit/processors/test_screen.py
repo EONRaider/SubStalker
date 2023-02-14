@@ -36,6 +36,18 @@ class TestScreen:
         screen = ScreenOutput(mock_enumerator)
         assert isinstance(screen.subject, Enumerator)
 
+    def test_screen_debug_logger(self, caplog, mock_enumerator):
+        caplog.set_level(logging.DEBUG)
+        message = "Debug message"
+        screen = ScreenOutput(mock_enumerator)
+        screen.logger.debug(message)
+
+        assert caplog.messages == [
+            f"{screen._class_name} observer successfully attached to instance of "
+            f"{mock_enumerator.__class__.__name__}",
+            message,
+        ]
+
     def test_screen_startup(self, caplog, mock_enumerator):
         """
         GIVEN a correctly initialized instance of EnumerationPublisher
