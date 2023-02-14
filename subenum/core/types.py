@@ -35,7 +35,7 @@ class EnumResult:
     subdomains: set[str]
 
 
-class CustomFormatter(logging.Formatter):
+class LogFormatter(logging.Formatter):
     grey = "\x1b[2m"
     yellow = "\x1b[93m"
     red = "\x1b[91m"
@@ -108,7 +108,7 @@ class EnumerationSubscriber(ABC):
         stands at a higher level)"""
         stdout.setLevel(logging.WARNING if self.silent else logging.INFO)
 
-        stdout.setFormatter(CustomFormatter())
+        stdout.setFormatter(LogFormatter())
         self.logger.addHandler(stdout)
 
     def startup(self, *args, **kwargs) -> None:
