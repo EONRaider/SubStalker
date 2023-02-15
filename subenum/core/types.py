@@ -81,6 +81,7 @@ class EnumerationPublisher(ABC):
         Base class for all enumerators that implement the observer pattern
         """
         self._observers = []
+        self._class_name = self.__class__.__name__
 
     @abstractmethod
     def register(self, observer) -> None:
