@@ -18,7 +18,9 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+
 import logging
+import random
 
 from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
@@ -49,9 +51,11 @@ class TestApp:
         enumerator = Enumerator(
             targets=(target_domain_1,),
             providers=[provider() for provider in all_providers],
-            max_threads=10,
+            max_threads=(num_threads := random.randint(1, 10)),
+            retry_time=15,
         )
         screen = ScreenOutput(subject=enumerator)
+
         TextFileOutput(subject=enumerator, path=text_file)
         JSONFileOutput(subject=enumerator, path=json_file)
 
@@ -60,7 +64,8 @@ class TestApp:
                 pass
 
         assert caplog.messages == [
-            f"Subdomain enumerator started with 10 threads for {target_domain_1}",
+            f"Subdomain enumerator started with {num_threads} "
+            f"thread{'s' if num_threads > 1 else ''} for {target_domain_1}",
             "\t[InstanceOfExternalService1] sub1.some-target-domain.com",
             "\t[InstanceOfExternalService1] sub2.some-target-domain.com",
             "\t[InstanceOfExternalService1] sub3.some-target-domain.com",
