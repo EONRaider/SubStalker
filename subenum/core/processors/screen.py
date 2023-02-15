@@ -19,30 +19,20 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
+import logging
+
 from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
 
 
 class ScreenOutput(EnumerationSubscriber):
-    def __init__(
-        self,
-        subject: EnumerationPublisher,
-        *,
-        silent_mode: bool = False,
-        debug: bool = False,
-    ):
+    def __init__(self, subject: EnumerationPublisher):
         """
         Output subdomain enumeration results on STDOUT
 
         :param subject: An instance of type EnumerationPublisher to
             subscribe to as an observer and extract results
-        :param silent_mode: Boolean that sets the level of verbosity of
-            output messages. Set to False by default to display
-            information such as the number of found domains and the
-            total time taken by the operation, among others.
-        :param debug: Allow displaying of debug messages. Overrides the
-            value set by "silent_mode".
         """
-        super().__init__(subject, silent_mode=silent_mode, debug=debug)
+        super().__init__(subject)
 
     def startup(self, subject: EnumerationPublisher) -> None:
         self.logger.info(
@@ -56,7 +46,9 @@ class ScreenOutput(EnumerationSubscriber):
             # Display only de-duplicated results on STDOUT
             if domain not in self.subject.found_domains[result.domain]:
                 self.logger.warning(
-                    f"{domain}" if self.silent else f"\t[{result.provider}] {domain}"
+                    f"\t[{result.provider}] {domain}"
+                    if logging.getLogger().isEnabledFor(logging.INFO)
+                    else f"{domain}"
                 )
 
     def cleanup(self, *args, **kwargs) -> None:

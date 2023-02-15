@@ -96,30 +96,16 @@ class EnumerationPublisher(ABC):
 
 
 class EnumerationSubscriber(ABC):
-    def __init__(
-        self,
-        subject: EnumerationPublisher,
-        *,
-        silent_mode: bool,
-        debug: bool,
-    ):
+    def __init__(self, subject: EnumerationPublisher):
         """
         Base class for all observers responsible for further processing
         and/or output of results produced by an EnumerationPublisher
 
         :param subject: An instance of EnumerationPublisher to observe
-        :param silent_mode: Boolean that sets the level of verbosity of
-            output messages. Set to False by default to display
-            information such as the number of found domains and the
-            total time taken by the operation, among others.
-        :param debug: Allow displaying of debug messages. Overrides the
-            value set by "silent_mode".
         """
         subject.register(self)
         self._class_name = self.__class__.__name__
         self.subject = subject
-        self.silent = silent_mode
-        self.debug = debug
         self.logger = EnumLogger(name=self._class_name)
         self.logger.debug(
             f"{self._class_name} observer successfully attached to instance of "

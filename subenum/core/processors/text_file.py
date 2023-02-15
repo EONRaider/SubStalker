@@ -26,13 +26,7 @@ from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubs
 
 
 class TextFileOutput(EnumerationSubscriber):
-    def __init__(
-        self,
-        subject: EnumerationPublisher,
-        path: [str, Path],
-        silent_mode: bool = False,
-        debug: bool = False,
-    ):
+    def __init__(self, subject: EnumerationPublisher, path: [str, Path]):
         """
         Output line-separated subdomain enumeration results to a file
 
@@ -40,16 +34,10 @@ class TextFileOutput(EnumerationSubscriber):
             subscribe to as an observer and extract results
         :param path: Absolute path to a file to which enumeration
             results will be written
-        :param silent_mode: Boolean that sets the level of verbosity of
-            output messages. Set to False by default to display
-            information such as the number of found domains and the
-            total time taken by the operation.
-        :param debug: Allow displaying of debug messages. Overrides the
-            value set by "silent_mode".
         """
         self.path = Path(path)
         self._fd = None
-        super().__init__(subject, silent_mode=silent_mode, debug=debug)
+        super().__init__(subject)
 
     def startup(self, *args, **kwargs) -> None:
         try:

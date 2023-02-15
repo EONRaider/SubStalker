@@ -20,7 +20,6 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 import json
-import logging
 from collections import defaultdict
 from pathlib import Path
 
@@ -29,13 +28,7 @@ from subenum.core.types import EnumerationSubscriber, EnumerationPublisher, Enum
 
 
 class JSONFileOutput(EnumerationSubscriber):
-    def __init__(
-        self,
-        subject: EnumerationPublisher,
-        path: [str, Path],
-        silent_mode: bool = False,
-        debug: bool = False,
-    ):
+    def __init__(self, subject: EnumerationPublisher, path: [str, Path]):
         """
         Output JSON-formatted subdomain enumeration results to a file
 
@@ -43,15 +36,10 @@ class JSONFileOutput(EnumerationSubscriber):
             subscribe to as an observer and extract results
         :param path: Absolute path to a file to which JSON-formatted
             enumeration results will be written
-        :param silent_mode: Boolean that sets the level of verbosity of
-            output messages. Set to False by default to display status
-            information.
-        :param debug: Allow displaying of debug messages. Overrides the
-            value set by "silent_mode".
         """
         self.path = Path(path)
         self.results = defaultdict(dict)
-        super().__init__(subject, silent_mode=silent_mode, debug=debug)
+        super().__init__(subject)
 
     def update(self, result: EnumResult) -> None:
         provider_response = {result.provider: [*sorted(result.subdomains)]}
