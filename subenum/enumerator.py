@@ -143,6 +143,7 @@ class Enumerator(EnumerationPublisher):
                 time.sleep(self.retry_time)
 
     def execute(self) -> Iterator[EnumResult]:
+        self.logger.debug("Subdomain enumeration started")
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_threads) as ex:
             """Generate tuples containing combinations of available
             providers and targets to pass as tasks to spawned threads"""
@@ -161,3 +162,4 @@ class Enumerator(EnumerationPublisher):
                     self._notify_all(result)
                     self.found_domains[result.domain] |= result.subdomains
                     yield result
+        self.logger.debug("Subdomain enumeration finished")
