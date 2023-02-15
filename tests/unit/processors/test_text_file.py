@@ -18,6 +18,7 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+
 import logging
 
 import pytest
@@ -103,6 +104,8 @@ class TestFile:
         file_output = TextFileOutput(subject=mock_enumerator, path=test_file)
         file_output._fd = test_file.open(mode="a", encoding="utf_8")
         file_output.cleanup()
+
+        assert file_output.logger.level == logging.INFO
 
         assert (
             f"Enumeration results successfully written in text format to "

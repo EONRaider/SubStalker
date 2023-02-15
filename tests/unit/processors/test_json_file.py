@@ -113,6 +113,8 @@ class TestJSONFile:
 
         json_output.cleanup()
 
+        assert json_output.logger.level == logging.INFO
+
         assert (
             f"Enumeration results successfully written in JSON format to "
             f"{str(json_output.path)}" in caplog.messages

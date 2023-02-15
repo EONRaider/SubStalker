@@ -39,7 +39,10 @@ class TestScreen:
     def test_screen_debug_logger(self, caplog, mock_enumerator):
         caplog.set_level(logging.DEBUG)
         message = "Debug message"
-        screen = ScreenOutput(mock_enumerator)
+        screen = ScreenOutput(mock_enumerator, debug=True)
+
+        assert screen.logger.level == logging.DEBUG
+
         screen.logger.debug(message)
 
         assert caplog.messages == [
