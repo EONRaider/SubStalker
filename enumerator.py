@@ -38,32 +38,39 @@ class App:
         (config_parser := ConfigurationParser()).parse(
             file_path=self.cli_args.config_file
         )
+
+        # Set the minimum global level for all loggers
+        logging.getLogger().setLevel(self.logger_level)
+
         self.enumerator = Enumerator(
             targets=self.cli_args.targets,
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,
             retry_time=self.cli_args.retry,
         )
-        # Set the minimum global level for all loggers
-        logging.getLogger().setLevel(
-            logging.DEBUG if self.cli_args.debug else logging.INFO
-        )
+
+    @property
+    def logger_level(self) -> logging:
+        """
+        Set the logging level based on user-defined verbosity settings
+        """
+        if self.cli_args.debug:
+            return logging.DEBUG
+        elif self.cli_args.silent:
+            return logging.WARNING
+        else:
+            return logging.INFO
 
     def _attach_observers(self) -> None:
         """
         Instantiate all observers selected for output/processing of
         subdomain enumeration results
         """
-        observer_args = {
-            "subject": self.enumerator,
-            "silent_mode": self.cli_args.silent,
-            "debug": self.cli_args.debug,
-        }
-        ScreenOutput(**observer_args)
+        ScreenOutput(subject=self.enumerator)
         if self.cli_args.output is not None:
-            TextFileOutput(path=self.cli_args.output, **observer_args)
+            TextFileOutput(subject=self.enumerator, path=self.cli_args.output)
         if self.cli_args.json is not None:
-            JSONFileOutput(path=self.cli_args.json, **observer_args)
+            JSONFileOutput(subject=self.enumerator, path=self.cli_args.json)
 
     def run(self) -> None:
         self._attach_observers()
