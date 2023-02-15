@@ -36,7 +36,8 @@ class ScreenOutput(EnumerationSubscriber):
 
     def startup(self, subject: EnumerationPublisher) -> None:
         self.logger.info(
-            f"Subdomain enumerator started with {subject.max_threads} threads for "
+            f"Subdomain enumerator started with {subject.max_threads} "
+            f"thread{'s' if subject.max_threads > 1 else ''} for "
             f"{' | '.join(subject.targets)}",
         )
 
