@@ -105,8 +105,6 @@ class TestFile:
         file_output._fd = test_file.open(mode="a", encoding="utf_8")
         file_output.cleanup()
 
-        assert file_output.logger.level == logging.INFO
-
         assert (
             f"Enumeration results successfully written in text format to "
             f"{file_output._fd.name}"

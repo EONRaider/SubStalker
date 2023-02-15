@@ -39,9 +39,7 @@ class TestScreen:
     def test_screen_debug_logger(self, caplog, mock_enumerator):
         caplog.set_level(logging.DEBUG)
         message = "Debug message"
-        screen = ScreenOutput(mock_enumerator, debug=True)
-
-        assert screen.logger.level == logging.DEBUG
+        screen = ScreenOutput(mock_enumerator)
 
         screen.logger.debug(message)
 
@@ -137,7 +135,7 @@ class TestScreen:
         caplog.set_level(logging.WARNING)
         mock_enumerator.total_time = 1
 
-        screen = ScreenOutput(mock_enumerator, silent_mode=True)
+        screen = ScreenOutput(mock_enumerator)
         screen.startup(mock_enumerator)
         screen.update(api_response_1)
         screen.cleanup()

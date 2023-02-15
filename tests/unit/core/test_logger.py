@@ -33,6 +33,6 @@ class TestEnumLogger:
         """
         message = "Debug message"
         caplog.set_level(logging.DEBUG)
-        logger = EnumLogger(name="ExternalService", level=logging.DEBUG)
+        logger = EnumLogger(name="ExternalService")
         logger.debug(message)
         assert caplog.messages == [message]

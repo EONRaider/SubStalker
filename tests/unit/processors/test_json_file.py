@@ -113,8 +113,6 @@ class TestJSONFile:
 
         json_output.cleanup()
 
-        assert json_output.logger.level == logging.INFO
-
         assert (
             f"Enumeration results successfully written in JSON format to "
             f"{str(json_output.path)}" in caplog.messages
@@ -183,9 +181,7 @@ class TestJSONFile:
         """
         caplog.set_level(logging.WARNING)
         json_output = JSONFileOutput(
-            subject=mock_enumerator,
-            path=tmp_path.joinpath("test_file.txt"),
-            silent_mode=True,
+            subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
 
         json_output.update(api_response_1)
