@@ -19,7 +19,6 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-import logging
 from pathlib import Path
 
 from subenum.core.exceptions import FileReadError
@@ -50,13 +49,7 @@ class TextFileOutput(EnumerationSubscriber):
         """
         self.path = Path(path)
         self._fd = None
-        self._class_name = self.__class__.__name__
-        super().__init__(
-            subject,
-            silent_mode,
-            logger=logging.getLogger(self._class_name),
-            debug=debug,
-        )
+        super().__init__(subject, silent_mode=silent_mode, debug=debug)
 
     def startup(self, *args, **kwargs) -> None:
         try:
@@ -64,7 +57,7 @@ class TextFileOutput(EnumerationSubscriber):
             split between, respectively, startup, update and cleanup, in
             order to ensure that a single file descriptor is used
             throughout the entire lifetime of a single TextFileOutput
-            object, preventing unnecessary system calls each time a
+            object, preventing unnecessary system calls every time a
             write operation takes place"""
             self._fd = self.path.open(mode="a", encoding="utf_8")
             self.logger.debug(

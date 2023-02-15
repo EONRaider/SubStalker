@@ -51,13 +51,7 @@ class JSONFileOutput(EnumerationSubscriber):
         """
         self.path = Path(path)
         self.results = defaultdict(dict)
-        self._class_name = self.__class__.__name__
-        super().__init__(
-            subject,
-            silent_mode,
-            logger=logging.getLogger(self._class_name),
-            debug=debug,
-        )
+        super().__init__(subject, silent_mode=silent_mode, debug=debug)
 
     def update(self, result: EnumResult) -> None:
         provider_response = {result.provider: [*sorted(result.subdomains)]}

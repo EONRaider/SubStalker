@@ -19,8 +19,6 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-import logging
-
 from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
 
 
@@ -44,13 +42,7 @@ class ScreenOutput(EnumerationSubscriber):
         :param debug: Allow displaying of debug messages. Overrides the
             value set by "silent_mode".
         """
-        self._class_name = self.__class__.__name__
-        super().__init__(
-            subject,
-            silent_mode,
-            logger=logging.getLogger(self._class_name),
-            debug=debug,
-        )
+        super().__init__(subject, silent_mode=silent_mode, debug=debug)
 
     def startup(self, subject: EnumerationPublisher) -> None:
         self.logger.info(

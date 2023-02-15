@@ -56,6 +56,25 @@ class LogFormatter(logging.Formatter):
         return formatter.format(record)
 
 
+class EnumLogger:
+    def __init__(self, name: str, level: logging):
+        self.name = name
+        self.level = level
+        self._logger = logging.getLogger(self.name)
+        self._add_stream_handler()
+
+    def __getattr__(self, item):
+        if item in self.__dict__:
+            return getattr(self, item)
+        return getattr(self._logger, item)
+
+    def _add_stream_handler(self):
+        stdout = logging.StreamHandler()
+        stdout.setLevel(self.level)
+        stdout.setFormatter(LogFormatter())
+        self._logger.addHandler(stdout)
+
+
 class EnumerationPublisher(ABC):
     def __init__(self):
         """
@@ -80,9 +99,8 @@ class EnumerationSubscriber(ABC):
     def __init__(
         self,
         subject: EnumerationPublisher,
-        silent_mode: bool,
         *,
-        logger: logging.Logger,
+        silent_mode: bool,
         debug: bool,
     ):
         """
@@ -94,41 +112,31 @@ class EnumerationSubscriber(ABC):
             output messages. Set to False by default to display
             information such as the number of found domains and the
             total time taken by the operation, among others.
-        :param logger: Instance of Logger that will be used for
-            displaying status messages
         :param debug: Allow displaying of debug messages. Overrides the
             value set by "silent_mode".
         """
         subject.register(self)
+        self._class_name = self.__class__.__name__
         self.subject = subject
         self.silent = silent_mode
-        self.logger = logger
         self.debug = debug
-        self._add_logging_handlers()
+        self.logger = EnumLogger(name=self._class_name, level=self.logger_level)
         self.logger.debug(
-            f"{self.__class__.__name__} observer successfully attached to instance of "
+            f"{self._class_name} observer successfully attached to instance of "
             f"{subject.__class__.__name__}"
         )
 
-    def _add_logging_handlers(self) -> None:
+    @property
+    def logger_level(self) -> logging:
         """
-        Set up StreamHandler loggers and add them to the main logger
+        Set the logging level based on user-defined verbosity settings
         """
-        stdout = logging.StreamHandler()
-
         if self.debug:
-            level = logging.DEBUG
+            return logging.DEBUG
         elif self.silent:
-            """Messages logged on "startup" and "cleanup" must use the
-            INFO level, so they will be suppressed if "silent" is True
-            (since WARNING stands at a higher level)"""
-            level = logging.WARNING
+            return logging.WARNING
         else:
-            level = logging.INFO
-
-        stdout.setLevel(level)
-        stdout.setFormatter(LogFormatter())
-        self.logger.addHandler(stdout)
+            return logging.INFO
 
     def startup(self, *args, **kwargs) -> None:
         ...
