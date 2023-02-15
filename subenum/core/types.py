@@ -126,18 +126,6 @@ class EnumerationSubscriber(ABC):
             f"{subject.__class__.__name__}"
         )
 
-    @property
-    def logger_level(self) -> logging:
-        """
-        Set the logging level based on user-defined verbosity settings
-        """
-        if self.debug:
-            return logging.DEBUG
-        elif self.silent:
-            return logging.WARNING
-        else:
-            return logging.INFO
-
     def startup(self, *args, **kwargs) -> None:
         ...
 
