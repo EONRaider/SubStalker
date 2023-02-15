@@ -25,9 +25,15 @@ from collections import defaultdict
 from collections.abc import Collection, Iterator
 from contextlib import suppress
 
+import reconlib
 from reconlib.core.base import ExternalService
 
-from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
+from subenum.core.types import (
+    EnumResult,
+    EnumerationPublisher,
+    EnumerationSubscriber,
+    EnumLogger,
+)
 
 
 class Enumerator(EnumerationPublisher):
@@ -59,6 +65,7 @@ class Enumerator(EnumerationPublisher):
         self.max_threads: int = max_threads
         self.retry_time: int = retry_time
         self.found_domains = defaultdict(set)
+        self.logger = EnumLogger(name=self._class_name)
 
     def __enter__(self) -> None:
         self.start_time = time.perf_counter()
@@ -107,21 +114,33 @@ class Enumerator(EnumerationPublisher):
         """
         [observer.update(result) for observer in self._observers]
 
-    @staticmethod
-    def query_provider(provider: ExternalService, target: str) -> EnumResult:
+    def query_provider(self, provider: ExternalService, target: str) -> EnumResult:
         """
-        Query a data provider about known subdomains of a given target domain
+        Query a data provider about known subdomains of a given target
+        domain
 
         :param provider: An instance of type ExternalService to query
         :param target: A string defining a target domain
         :return: An instance of type EnumResult containing enumeration
             results as its attributes
         """
-        return EnumResult(
-            provider=provider.__class__.__name__,
-            domain=target,
-            subdomains=provider.fetch_subdomains(target),
-        )
+        while True:
+            try:
+                self.logger.debug(
+                    f"Querying subdomain information for {target} from "
+                    f"{provider.service_name}"
+                )
+                return EnumResult(
+                    provider=provider.service_name,
+                    domain=target,
+                    subdomains=provider.fetch_subdomains(target),
+                )
+            except reconlib.core.exceptions.APIQuotaUsageError:
+                self.logger.debug(
+                    f"Received HTTP response code 403 from {provider.service_name}! "
+                    f"Retrying in {self.retry_time} seconds..."
+                )
+                time.sleep(self.retry_time)
 
     def execute(self) -> Iterator[EnumResult]:
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_threads) as ex:
