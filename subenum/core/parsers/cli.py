@@ -151,8 +151,8 @@ class CLIParser(Parser):
             "--retry",
             type=int,
             help="Time to wait before attempting a new request to a data provider "
-            "whose usage quota has been exceeded (defaults to 60 seconds)",
-            default=60,
+            "whose usage quota has been exceeded (defaults to 15 seconds)",
+            default=15,
         )
         self.args = self.parser.parse_args(*args, **kwargs)
 
