@@ -57,7 +57,7 @@ class LogFormatter(logging.Formatter):
 
 
 class EnumLogger:
-    def __init__(self, name: str, level: logging):
+    def __init__(self, name: str, level: logging = logging.DEBUG):
         self.name = name
         self.level = level
         self._logger = logging.getLogger(self.name)
@@ -68,7 +68,7 @@ class EnumLogger:
             return getattr(self, item)
         return getattr(self._logger, item)
 
-    def _add_stream_handler(self):
+    def _add_stream_handler(self) -> None:
         stdout = logging.StreamHandler()
         stdout.setLevel(self.level)
         stdout.setFormatter(LogFormatter())
@@ -120,7 +120,7 @@ class EnumerationSubscriber(ABC):
         self.subject = subject
         self.silent = silent_mode
         self.debug = debug
-        self.logger = EnumLogger(name=self._class_name, level=self.logger_level)
+        self.logger = EnumLogger(name=self._class_name)
         self.logger.debug(
             f"{self._class_name} observer successfully attached to instance of "
             f"{subject.__class__.__name__}"
