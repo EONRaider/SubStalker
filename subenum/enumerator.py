@@ -32,7 +32,7 @@ from subenum.core.types import (
     EnumResult,
     EnumerationPublisher,
     EnumerationSubscriber,
-    EnumLogger,
+    Logger,
 )
 
 
@@ -65,7 +65,7 @@ class Enumerator(EnumerationPublisher):
         self.max_threads: int = max_threads
         self.retry_time: int = retry_time
         self.found_domains = defaultdict(set)
-        self.logger = EnumLogger(name=self._class_name)
+        self.logger = Logger(name=self._class_name)
 
     def __enter__(self) -> None:
         self.start_time = time.perf_counter()

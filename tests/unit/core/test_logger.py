@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 
 import logging
 
-from subenum.core.types import EnumLogger
+from subenum.core.types import Logger
 
 
 class TestEnumLogger:
@@ -33,6 +33,6 @@ class TestEnumLogger:
         """
         message = "Debug message"
         caplog.set_level(logging.DEBUG)
-        logger = EnumLogger(name="ExternalService")
+        logger = Logger(name="ExternalService")
         logger.debug(message)
         assert caplog.messages == [message]

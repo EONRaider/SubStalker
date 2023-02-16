@@ -56,7 +56,7 @@ class LogFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-class EnumLogger:
+class Logger:
     def __init__(self, name: str, level: logging = logging.DEBUG):
         self.name = name
         self.level = level
@@ -112,7 +112,7 @@ class EnumerationSubscriber(ABC):
         subject.register(self)
         self._class_name = self.__class__.__name__
         self.subject = subject
-        self.logger = EnumLogger(name=self._class_name)
+        self.logger = Logger(name=self._class_name)
         self.logger.debug(
             f"{self._class_name} observer successfully attached to instance of "
             f"{subject.__class__.__name__}"
