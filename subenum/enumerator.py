@@ -28,12 +28,12 @@ from contextlib import suppress
 import reconlib
 from reconlib.core.base import ExternalService
 
-from subenum.core.types import (
+from subenum.core.types.base import (
     EnumerationResult,
     EnumerationPublisher,
     EnumerationSubscriber,
-    Logger,
 )
+from subenum.core.types.log import Logger
 
 
 class Enumerator(EnumerationPublisher):

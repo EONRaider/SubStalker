@@ -26,7 +26,7 @@ import pytest
 
 from subenum.core.exceptions import FileReadError
 from subenum.core.processors.json_file import JSONFileOutput
-from subenum.core.types import EnumerationPublisher
+from subenum.core.types.base import EnumerationPublisher
 
 
 class TestJSONFile:

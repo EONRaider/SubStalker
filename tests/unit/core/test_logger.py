@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 
 import logging
 
-from subenum.core.types import Logger
+from subenum.core.types.log import Logger
 
 
 class TestEnumLogger:

@@ -25,7 +25,7 @@ import pytest
 
 from subenum.core.exceptions import FileReadError
 from subenum.core.processors.text_file import TextFileOutput
-from subenum.core.types import EnumerationPublisher
+from subenum.core.types.base import EnumerationPublisher
 
 
 class TestFile:

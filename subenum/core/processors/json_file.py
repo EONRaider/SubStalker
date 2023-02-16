@@ -24,7 +24,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from subenum.core.exceptions import FileReadError
-from subenum.core.types import (
+from subenum.core.types.base import (
     EnumerationSubscriber,
     EnumerationPublisher,
     EnumerationResult,

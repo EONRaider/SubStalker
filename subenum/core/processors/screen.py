@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 
 import logging
 
-from subenum.core.types import (
+from subenum.core.types.base import (
     EnumerationResult,
     EnumerationPublisher,
     EnumerationSubscriber,

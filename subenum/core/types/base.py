@@ -19,9 +19,10 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+
+from subenum.core.types.log import Logger
 
 
 @dataclass
@@ -33,59 +34,6 @@ class EnumerationResult:
     provider: str
     domain: str
     subdomains: set[str]
-
-
-class LogFormatter(logging.Formatter):
-    grey = "\x1b[2m"
-    yellow = "\x1b[93m"
-    red = "\x1b[91m"
-    green = "\x1b[92m"
-    blue = "\x1b[94m"
-    reset = "\x1b[0m"
-
-    FORMATS = {
-        logging.DEBUG: f"{blue}[%(levelname)s] - %(name)s - %(asctime)s - %(message)s"
-        f"{reset}",
-        logging.INFO: f"{grey}[{yellow}%(levelname)s{reset}{grey}] %(message)s{reset}",
-        logging.WARNING: f"{grey}%(message)s{reset}",
-    }
-
-    def format(self, record: logging.LogRecord) -> str:
-        log_fmt = self.FORMATS.get(record.levelno)
-        formatter = logging.Formatter(log_fmt)
-        return formatter.format(record)
-
-
-class Logger:
-    def __init__(self, name: str, level: logging = logging.DEBUG):
-        """
-        Set up a standard output logger with pre-configured output
-        formatting
-
-        :param name: A string representing the logger name to be
-            displayed on standard output
-        :param level: Minimum level to set for the logger
-        """
-        self.name = name
-        self.level = level
-        self._logging = logging.getLogger(self.name)
-
-    def __getattr__(self, item):
-        if item in self.__dict__:
-            return getattr(self, item)
-        return getattr(self._logging, item)
-
-    @property
-    def _logging(self) -> logging.Logger:
-        return self._logger
-
-    @_logging.setter
-    def _logging(self, value: logging.Logger) -> None:
-        self._logger = value
-        stdout = logging.StreamHandler()
-        stdout.setLevel(self.level)
-        stdout.setFormatter(LogFormatter())
-        self._logger.addHandler(stdout)
 
 
 class EnumerationPublisher(ABC):

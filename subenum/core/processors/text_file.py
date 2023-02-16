@@ -22,7 +22,7 @@ Contact: https://www.twitter.com/eon_raider
 from pathlib import Path
 
 from subenum.core.exceptions import FileReadError
-from subenum.core.types import (
+from subenum.core.types.base import (
     EnumerationResult,
     EnumerationPublisher,
     EnumerationSubscriber,
