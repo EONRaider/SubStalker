@@ -60,15 +60,20 @@ class EnumLogger:
     def __init__(self, name: str, level: logging = logging.DEBUG):
         self.name = name
         self.level = level
-        self._logger = logging.getLogger(self.name)
-        self._add_stream_handler()
+        self._logging = logging.getLogger(self.name)
 
     def __getattr__(self, item):
         if item in self.__dict__:
             return getattr(self, item)
-        return getattr(self._logger, item)
+        return getattr(self._logging, item)
 
-    def _add_stream_handler(self) -> None:
+    @property
+    def _logging(self) -> logging.Logger:
+        return self._logger
+
+    @_logging.setter
+    def _logging(self, value: logging.Logger) -> None:
+        self._logger = value
         stdout = logging.StreamHandler()
         stdout.setLevel(self.level)
         stdout.setFormatter(LogFormatter())
