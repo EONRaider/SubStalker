@@ -58,6 +58,14 @@ class LogFormatter(logging.Formatter):
 
 class Logger:
     def __init__(self, name: str, level: logging = logging.DEBUG):
+        """
+        Set up a standard output logger with pre-configured output
+        formatting
+
+        :param name: A string representing the logger name to be
+            displayed on standard output
+        :param level: Minimum level to set for the logger
+        """
         self.name = name
         self.level = level
         self._logging = logging.getLogger(self.name)
