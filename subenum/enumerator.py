@@ -21,11 +21,11 @@ Contact: https://www.twitter.com/eon_raider
 
 import concurrent.futures
 import time
+import urllib.error
 from collections import defaultdict
 from collections.abc import Collection, Iterator
 from contextlib import suppress
 
-import reconlib
 from reconlib.core.base import ExternalService
 
 from subenum.core.types.base import (
@@ -137,10 +137,10 @@ class Enumerator(EnumerationPublisher):
                     domain=target,
                     subdomains=provider.fetch_subdomains(target),
                 )
-            except reconlib.core.exceptions.APIQuotaUsageError:
+            except urllib.error.HTTPError as e:
                 self.logger.debug(
-                    f"Received HTTP response code 403 from {provider.service_name}! "
-                    f"Retrying in {self.retry_time} seconds..."
+                    f'Received "{e.reason}" error message with code {e.code} from '
+                    f"{provider.service_name}! Retrying in {self.retry_time} seconds..."
                 )
                 time.sleep(self.retry_time)
 
