@@ -29,7 +29,7 @@ import reconlib
 from reconlib.core.base import ExternalService
 
 from subenum.core.types import (
-    EnumResult,
+    EnumerationResult,
     EnumerationPublisher,
     EnumerationSubscriber,
     Logger,
@@ -105,7 +105,7 @@ class Enumerator(EnumerationPublisher):
             # non-existent observer
             self._observers.remove(observer)
 
-    def _notify_all(self, result: EnumResult) -> None:
+    def _notify_all(self, result: EnumerationResult) -> None:
         """
         Notify all registered observers of an enumeration result for
         further processing and/or output.
@@ -114,7 +114,9 @@ class Enumerator(EnumerationPublisher):
         """
         [observer.update(result) for observer in self._observers]
 
-    def query_provider(self, provider: ExternalService, target: str) -> EnumResult:
+    def query_provider(
+        self, provider: ExternalService, target: str
+    ) -> EnumerationResult:
         """
         Query a data provider about known subdomains of a given target
         domain
@@ -130,7 +132,7 @@ class Enumerator(EnumerationPublisher):
                     f"Querying subdomain information for {target} from "
                     f"{provider.service_name}"
                 )
-                return EnumResult(
+                return EnumerationResult(
                     provider=provider.service_name,
                     domain=target,
                     subdomains=provider.fetch_subdomains(target),
@@ -142,7 +144,7 @@ class Enumerator(EnumerationPublisher):
                 )
                 time.sleep(self.retry_time)
 
-    def execute(self) -> Iterator[EnumResult]:
+    def execute(self) -> Iterator[EnumerationResult]:
         self.logger.debug("Subdomain enumeration started")
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_threads) as ex:
             """Generate tuples containing combinations of available

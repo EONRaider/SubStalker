@@ -22,7 +22,11 @@ Contact: https://www.twitter.com/eon_raider
 from pathlib import Path
 
 from subenum.core.exceptions import FileReadError
-from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
+from subenum.core.types import (
+    EnumerationResult,
+    EnumerationPublisher,
+    EnumerationSubscriber,
+)
 
 
 class TextFileOutput(EnumerationSubscriber):
@@ -58,7 +62,7 @@ class TextFileOutput(EnumerationSubscriber):
                 f'"{str(self.path)}"'
             )
 
-    def update(self, result: EnumResult) -> None:
+    def update(self, result: EnumerationResult) -> None:
         for domain in sorted(result.subdomains):
             # Write only de-duplicated results to file
             if domain not in self.subject.found_domains[result.domain]:

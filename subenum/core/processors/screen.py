@@ -21,7 +21,11 @@ Contact: https://www.twitter.com/eon_raider
 
 import logging
 
-from subenum.core.types import EnumResult, EnumerationPublisher, EnumerationSubscriber
+from subenum.core.types import (
+    EnumerationResult,
+    EnumerationPublisher,
+    EnumerationSubscriber,
+)
 
 
 class ScreenOutput(EnumerationSubscriber):
@@ -41,7 +45,7 @@ class ScreenOutput(EnumerationSubscriber):
             f"{' | '.join(subject.targets)}",
         )
 
-    def update(self, result: EnumResult) -> None:
+    def update(self, result: EnumerationResult) -> None:
         self.logger.debug(f"{self._class_name} logging results from {result.provider}")
         for domain in sorted(result.subdomains):
             # Display only de-duplicated results on STDOUT

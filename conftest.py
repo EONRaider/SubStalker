@@ -25,7 +25,7 @@ from pathlib import Path
 import pytest
 
 from subenum.core import providers
-from subenum.core.types import EnumResult
+from subenum.core.types import EnumerationResult
 from subenum.enumerator import Enumerator
 
 
@@ -60,8 +60,8 @@ def api_key() -> str:
 
 
 @pytest.fixture
-def api_response_1(target_domain_1) -> EnumResult:
-    return EnumResult(
+def api_response_1(target_domain_1) -> EnumerationResult:
+    return EnumerationResult(
         provider="InstanceOfExternalService1",
         domain=target_domain_1,
         subdomains={f"sub{i}.{target_domain_1}" for i in range(1, 6)},
@@ -69,8 +69,8 @@ def api_response_1(target_domain_1) -> EnumResult:
 
 
 @pytest.fixture
-def api_response_2(target_domain_2) -> EnumResult:
-    return EnumResult(
+def api_response_2(target_domain_2) -> EnumerationResult:
+    return EnumerationResult(
         provider="InstanceOfExternalService2",
         domain=target_domain_2,
         subdomains={f"sub{i}.{target_domain_2}" for i in range(1, 6)},
@@ -78,8 +78,8 @@ def api_response_2(target_domain_2) -> EnumResult:
 
 
 @pytest.fixture
-def api_response_3(target_domain_1) -> EnumResult:
-    return EnumResult(
+def api_response_3(target_domain_1) -> EnumerationResult:
+    return EnumerationResult(
         provider="InstanceOfExternalService3",
         domain=target_domain_1,
         subdomains={f"sub{i}.{target_domain_1}" for i in range(1, 4)},

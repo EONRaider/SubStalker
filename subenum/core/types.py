@@ -25,7 +25,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class EnumResult:
+class EnumerationResult:
     """
     Representation of a subdomain enumeration result
     """
@@ -105,7 +105,7 @@ class EnumerationPublisher(ABC):
         ...
 
     @abstractmethod
-    def _notify_all(self, result: EnumResult) -> None:
+    def _notify_all(self, result: EnumerationResult) -> None:
         ...
 
 

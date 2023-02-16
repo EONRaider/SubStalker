@@ -24,7 +24,11 @@ from collections import defaultdict
 from pathlib import Path
 
 from subenum.core.exceptions import FileReadError
-from subenum.core.types import EnumerationSubscriber, EnumerationPublisher, EnumResult
+from subenum.core.types import (
+    EnumerationSubscriber,
+    EnumerationPublisher,
+    EnumerationResult,
+)
 
 
 class JSONFileOutput(EnumerationSubscriber):
@@ -41,7 +45,7 @@ class JSONFileOutput(EnumerationSubscriber):
         self.results = defaultdict(dict)
         super().__init__(subject)
 
-    def update(self, result: EnumResult) -> None:
+    def update(self, result: EnumerationResult) -> None:
         provider_response = {result.provider: [*sorted(result.subdomains)]}
         self.results[result.domain].update(provider_response)
 
