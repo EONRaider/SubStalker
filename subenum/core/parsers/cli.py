@@ -154,6 +154,14 @@ class CLIParser(Parser):
             "whose usage quota has been exceeded (defaults to 15 seconds)",
             default=15,
         )
+        self.parser.add_argument(
+            "--max-retries",
+            type=int,
+            default=3,
+            help="Maximum number of times the application should retry fetching "
+            "results from any given data provider whenever error responses are "
+            "returned from it (defaults to 3 attempts)",
+        )
         self.args = self.parser.parse_args(*args, **kwargs)
 
         if self.args.version:
