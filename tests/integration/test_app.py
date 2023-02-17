@@ -26,7 +26,7 @@ from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.core.providers import all_providers
-from subenum.enumerator import PassiveEnumerator
+from subenum.enumerators.passive import PassiveEnumerator
 
 
 class TestApp:
@@ -40,7 +40,8 @@ class TestApp:
         setup_virustotal_api_key,
     ):
         mocker.patch(
-            "subenum.enumerator.Enumerator.query_provider", return_value=api_response_1
+            "subenum.enumerators.passive.PassiveEnumerator.query_provider",
+            return_value=api_response_1,
         )
 
         caplog.set_level(logging.INFO)
