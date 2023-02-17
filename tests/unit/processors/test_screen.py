@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 import logging
 
 from subenum.core.processors.screen import ScreenOutput
-from subenum.enumerator import PassiveEnumerator
+from subenum.enumerators.passive import PassiveEnumerator
 
 
 class TestScreen:

@@ -26,7 +26,7 @@ import pytest
 
 from subenum.core import providers
 from subenum.core.types.base import EnumerationResult
-from subenum.enumerator import PassiveEnumerator
+from subenum.enumerators.passive import PassiveEnumerator
 
 
 @pytest.fixture
