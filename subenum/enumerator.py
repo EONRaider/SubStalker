@@ -36,7 +36,7 @@ from subenum.core.types.base import (
 from subenum.core.types.log import Logger
 
 
-class Enumerator(EnumerationPublisher):
+class PassiveEnumerator(EnumerationPublisher):
     def __init__(
         self,
         targets: Collection[str],

@@ -29,7 +29,7 @@ from subenum.core.parsers.configuration import ConfigurationParser
 from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
-from subenum.enumerator import Enumerator
+from subenum.enumerator import PassiveEnumerator
 
 
 class App:
@@ -42,7 +42,7 @@ class App:
         # Set the minimum global level for all loggers
         logging.getLogger().setLevel(self.logger_level)
 
-        self.enumerator = Enumerator(
+        self.enumerator = PassiveEnumerator(
             targets=self.cli_args.targets,
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,

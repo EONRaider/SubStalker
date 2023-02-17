@@ -26,7 +26,7 @@ from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.core.providers import all_providers
-from subenum.enumerator import Enumerator
+from subenum.enumerator import PassiveEnumerator
 
 
 class TestApp:
@@ -48,7 +48,7 @@ class TestApp:
         text_file = tmp_path.joinpath("text_file.txt")
         json_file = tmp_path.joinpath("json_file.txt")
 
-        enumerator = Enumerator(
+        enumerator = PassiveEnumerator(
             targets=(target_domain_1,),
             providers=[provider() for provider in all_providers],
             max_threads=(num_threads := random.randint(1, 10)),
