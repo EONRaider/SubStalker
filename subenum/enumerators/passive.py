@@ -72,9 +72,10 @@ class PassiveEnumerator(EnumerationPublisher):
         self.found_domains = defaultdict(set)
         self.logger = Logger(name=self._class_name)
 
-    def __enter__(self) -> None:
+    def __enter__(self) -> "PassiveEnumerator":
         self.start_time = time.perf_counter()
         [observer.startup(subject=self) for observer in self._observers]
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.total_time = time.perf_counter() - self.start_time
