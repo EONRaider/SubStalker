@@ -54,7 +54,7 @@ class TextFileOutput(EnumerationSubscriber):
             self._fd = self.path.open(mode="a", encoding="utf_8")
             self.logger.debug(
                 f'File "{self._fd.name}" has been successfully opened/created for '
-                f"logging of enumeration results by {self._class_name}"
+                f"logging of enumeration results"
             )
         except OSError as e:
             raise FileReadError(
@@ -74,7 +74,4 @@ class TextFileOutput(EnumerationSubscriber):
             f"Enumeration results successfully written in text format to "
             f"{self._fd.name}"
         )
-        self.logger.debug(
-            f"Logging of results by {self._class_name} observer was finished "
-            f"successfully"
-        )
+        self.logger.debug(f"Logging of results was finished successfully")

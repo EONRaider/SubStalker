@@ -46,7 +46,7 @@ class ScreenOutput(EnumerationSubscriber):
         )
 
     def update(self, result: EnumerationResult) -> None:
-        self.logger.debug(f"{self._class_name} logging results from {result.provider}")
+        self.logger.debug(f"Logging results from {result.provider}")
         for domain in sorted(result.subdomains):
             # Display only de-duplicated results on STDOUT
             if domain not in self.subject.found_domains[result.domain]:
@@ -63,7 +63,4 @@ class ScreenOutput(EnumerationSubscriber):
             f"{self.subject.total_time:.2f} seconds and found "
             f"{self.subject.num_found_domains} subdomains"
         )
-        self.logger.debug(
-            f"Logging of results by {self._class_name} observer was finished "
-            f"successfully"
-        )
+        self.logger.debug(f"Logging of results was finished successfully")

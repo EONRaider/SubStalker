@@ -55,7 +55,7 @@ class JSONFileOutput(EnumerationSubscriber):
                 json.dump(self.results, fp=file)
             self.logger.debug(
                 f'File "{str(self.path)}" has been successfully opened/created for '
-                f"logging of enumeration results by {self._class_name}"
+                f"logging of enumeration results"
             )
         except OSError as e:
             raise FileReadError(
@@ -69,7 +69,4 @@ class JSONFileOutput(EnumerationSubscriber):
             f"Enumeration results successfully written in JSON format to "
             f"{str(self.path)}"
         )
-        self.logger.debug(
-            f"Logging of results by {self._class_name} observer was finished "
-            f"successfully"
-        )
+        self.logger.debug(f"Logging of results was finished successfully")
