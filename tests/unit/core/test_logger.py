@@ -24,10 +24,10 @@ import logging
 from subenum.core.types.log import Logger
 
 
-class TestEnumLogger:
-    def test_enum_logger_debug(self, caplog):
+class TestLogger:
+    def test_logger_debug(self, caplog):
         """
-        GIVEN a correctly instantiated object of type EnumLogger
+        GIVEN a correctly instantiated object of type Logger
         WHEN the logging level is set to DEBUG
         THEN all messages must be correctly displayed
         """
