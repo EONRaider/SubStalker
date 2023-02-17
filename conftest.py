@@ -100,4 +100,5 @@ def mock_enumerator(target_domain_1, target_domain_2):
         providers={provider() for provider in providers.open_providers},
         max_threads=10,
         retry_time=60,
+        max_retries=3,
     )

@@ -47,6 +47,7 @@ class App:
             providers=cli_parser.providers | config_parser.providers,
             max_threads=self.cli_args.max_threads,
             retry_time=self.cli_args.retry,
+            max_retries=self.cli_args.max_retries,
         )
 
     @property

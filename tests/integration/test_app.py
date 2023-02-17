@@ -53,6 +53,7 @@ class TestApp:
             providers=[provider() for provider in all_providers],
             max_threads=(num_threads := random.randint(1, 10)),
             retry_time=15,
+            max_retries=3,
         )
         screen = ScreenOutput(subject=enumerator)
 
