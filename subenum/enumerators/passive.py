@@ -149,7 +149,7 @@ class PassiveEnumerator(EnumerationPublisher):
                     f"(attempt {attempt}/{self.max_retries})..."
                 )
                 time.sleep(self.retry_time)
-        self.logger.info(
+        self.logger.error(
             f"Could not fetch subdomain enumeration results from "
             f"{provider.service_name} after {self.max_retries} failed attempts. "
             f"Continuing..."
