@@ -19,9 +19,8 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-import configparser
 import contextlib
-from configparser import ConfigParser
+from configparser import ConfigParser, NoSectionError
 from pathlib import Path
 
 from reconlib.core.base import ExternalService
@@ -52,7 +51,7 @@ class ConfigurationParser(Parser):
                 f"{provider}_auth": auth_value
                 for provider, auth_value in self.parser.items("API_KEYS")
             }
-        except configparser.NoSectionError:
+        except NoSectionError:
             # Return an empty set if no authentication data was provided
             return set()
         """Return all available authenticated data providers if the 
