@@ -33,7 +33,7 @@ from subenum.core.types.base import EnumerationPublisher
 from subenum.enumerators.passive import PassiveEnumerator
 
 
-class App:
+class Enumerator:
     def __init__(self, *, cli_parser: CLIParser, config_parser: ConfigurationParser):
         self.cli_parser = cli_parser
         self.config_parser = config_parser
