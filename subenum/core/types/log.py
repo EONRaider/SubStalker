@@ -24,9 +24,9 @@ import logging
 
 class LogFormatter(logging.Formatter):
     grey = "\x1b[2m"
-    yellow = "\x1b[93m"
     red = "\x1b[91m"
     green = "\x1b[92m"
+    yellow = "\x1b[93m"
     blue = "\x1b[94m"
     reset = "\x1b[0m"
 
@@ -35,6 +35,8 @@ class LogFormatter(logging.Formatter):
         f"{reset}",
         logging.INFO: f"{grey}[{yellow}%(levelname)s{reset}{grey}] %(message)s{reset}",
         logging.WARNING: f"{grey}%(message)s{reset}",
+        logging.ERROR: f"{red}[%(levelname)s] - %(name)s - %(asctime)s - %(message)s"
+        f"{reset}",
     }
 
     def format(self, record: logging.LogRecord) -> str:
