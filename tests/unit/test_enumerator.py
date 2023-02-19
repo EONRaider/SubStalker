@@ -20,14 +20,20 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 
-class TestEnumerator:
-    def test_num_found_domains(self, mock_enumerator, api_response_1, api_response_2):
+class TestPassiveEnumerator:
+    def test_num_found_domains(
+        self, passive_enumerator, api_response_1, api_response_2
+    ):
         """
         GIVEN a correctly initialized instance of EnumerationPublisher
         WHEN this instance has registered found subdomains
         THEN the "num_found_subdomains" property must return the correct
             value of known subdomains
         """
-        mock_enumerator.found_domains[api_response_1.domain] = api_response_1.subdomains
-        mock_enumerator.found_domains[api_response_2.domain] = api_response_2.subdomains
-        assert mock_enumerator.num_found_domains == 10
+        passive_enumerator.found_domains[
+            api_response_1.domain
+        ] = api_response_1.subdomains
+        passive_enumerator.found_domains[
+            api_response_2.domain
+        ] = api_response_2.subdomains
+        assert passive_enumerator.num_found_domains == 10

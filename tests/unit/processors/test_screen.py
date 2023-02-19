@@ -25,7 +25,7 @@ from subenum.enumerators.passive import PassiveEnumerator
 
 
 class TestScreen:
-    def test_screen_init(self, mock_enumerator):
+    def test_screen_init(self, passive_enumerator):
         """
         GIVEN a correctly initialized instance of EnumerationPublisher
         WHEN this instance is passed as the subject to a ScreenOutput
@@ -33,23 +33,23 @@ class TestScreen:
         THEN the instance of ScreenOutput must be initialized without
             exceptions
         """
-        screen = ScreenOutput(mock_enumerator)
+        screen = ScreenOutput(passive_enumerator)
         assert isinstance(screen.subject, PassiveEnumerator)
 
-    def test_screen_debug_logger(self, caplog, mock_enumerator):
+    def test_screen_debug_logger(self, caplog, passive_enumerator):
         caplog.set_level(logging.DEBUG)
         message = "Debug message"
-        screen = ScreenOutput(mock_enumerator)
+        screen = ScreenOutput(passive_enumerator)
 
         screen.logger.debug(message)
 
         assert caplog.messages == [
             f"{screen._class_name} observer successfully attached to instance of "
-            f"{mock_enumerator.__class__.__name__}",
+            f"{passive_enumerator.__class__.__name__}",
             message,
         ]
 
-    def test_screen_startup(self, caplog, mock_enumerator):
+    def test_screen_startup(self, caplog, passive_enumerator):
         """
         GIVEN a correctly initialized instance of EnumerationPublisher
         WHEN this instance is passed as the subject to a ScreenOutput
@@ -60,8 +60,8 @@ class TestScreen:
         """
         caplog.set_level(logging.INFO)
 
-        screen = ScreenOutput(mock_enumerator)
-        screen.startup(mock_enumerator)
+        screen = ScreenOutput(passive_enumerator)
+        screen.startup(passive_enumerator)
 
         assert (
             "Subdomain enumerator started with 10 threads for "
@@ -71,7 +71,7 @@ class TestScreen:
     def test_screen_update(
         self,
         caplog,
-        mock_enumerator,
+        passive_enumerator,
         api_response_1,
         api_response_2,
         api_response_3,
@@ -85,11 +85,11 @@ class TestScreen:
             their origin
         """
         caplog.set_level(logging.INFO)
-        screen = ScreenOutput(mock_enumerator)
+        screen = ScreenOutput(passive_enumerator)
 
         for response in api_response_1, api_response_2, api_response_3:
             screen.update(response)
-            mock_enumerator.found_domains[response.domain] |= response.subdomains
+            passive_enumerator.found_domains[response.domain] |= response.subdomains
 
         assert caplog.messages == [
             "\t[InstanceOfExternalService1] sub1.some-target-domain.com",
@@ -104,7 +104,7 @@ class TestScreen:
             "\t[InstanceOfExternalService2] sub5.other-target-domain.com.br",
         ]
 
-    def test_screen_cleanup(self, caplog, mock_enumerator):
+    def test_screen_cleanup(self, caplog, passive_enumerator):
         """
         GIVEN a correctly initialized instance of EnumerationPublisher
         WHEN this instance is passed as the subject to a ScreenOutput
@@ -114,17 +114,17 @@ class TestScreen:
             exceptions
         """
         caplog.set_level(logging.INFO)
-        mock_enumerator.total_time = 1
+        passive_enumerator.total_time = 1
 
-        (screen := ScreenOutput(mock_enumerator)).cleanup()
+        (screen := ScreenOutput(passive_enumerator)).cleanup()
 
         assert (
-            f"Enumeration of {len(mock_enumerator.targets)} domains was "
-            f"completed in {mock_enumerator.total_time:.2f} seconds and found "
+            f"Enumeration of {len(passive_enumerator.targets)} domains was "
+            f"completed in {passive_enumerator.total_time:.2f} seconds and found "
             f"{screen.subject.num_found_domains} subdomains" in caplog.messages
         )
 
-    def test_silent_mode(self, caplog, mock_enumerator, api_response_1):
+    def test_silent_mode(self, caplog, passive_enumerator, api_response_1):
         """
         GIVEN a correctly initialized instance of EnumerationPublisher
         WHEN this instance is passed as the subject to a ScreenOutput
@@ -133,10 +133,10 @@ class TestScreen:
             output must be able to correctly format their messages
         """
         caplog.set_level(logging.WARNING)
-        mock_enumerator.total_time = 1
+        passive_enumerator.total_time = 1
 
-        screen = ScreenOutput(mock_enumerator)
-        screen.startup(mock_enumerator)
+        screen = ScreenOutput(passive_enumerator)
+        screen.startup(passive_enumerator)
         screen.update(api_response_1)
         screen.cleanup()
 

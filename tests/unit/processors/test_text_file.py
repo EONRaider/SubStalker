@@ -29,7 +29,7 @@ from subenum.core.types.base import EnumerationPublisher
 
 
 class TestFile:
-    def test_file_init(self, tmp_path, mock_enumerator):
+    def test_file_init(self, tmp_path, passive_enumerator):
         """
         GIVEN a valid path to a file
         WHEN this path is passed as the output file of an instance of
@@ -38,11 +38,11 @@ class TestFile:
             exceptions
         """
         file_output = TextFileOutput(
-            subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
+            subject=passive_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
         assert isinstance(file_output.subject, EnumerationPublisher)
 
-    def test_file_startup(self, tmp_path, mock_enumerator):
+    def test_file_startup(self, tmp_path, passive_enumerator):
         """
         GIVEN a valid path to a file
         WHEN this path is passed as the output file of an instance of
@@ -51,13 +51,18 @@ class TestFile:
             file descriptor without exceptions
         """
         file_output = TextFileOutput(
-            subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
+            subject=passive_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
         file_output.startup()
         file_output._fd.close()
 
     def test_file_update(
-        self, tmp_path, mock_enumerator, api_response_1, api_response_2, api_response_3
+        self,
+        tmp_path,
+        passive_enumerator,
+        api_response_1,
+        api_response_2,
+        api_response_3,
     ):
         """
         GIVEN a valid path to a file
@@ -67,12 +72,12 @@ class TestFile:
             results to the file without exceptions
         """
         test_file = tmp_path / "test_file.txt"
-        file_output = TextFileOutput(subject=mock_enumerator, path=test_file)
+        file_output = TextFileOutput(subject=passive_enumerator, path=test_file)
 
         file_output._fd = test_file.open(mode="a", encoding="utf_8")
         for response in api_response_1, api_response_2, api_response_3:
             file_output.update(response)
-            mock_enumerator.found_domains[response.domain] |= response.subdomains
+            passive_enumerator.found_domains[response.domain] |= response.subdomains
         file_output._fd.close()
 
         with open(test_file) as file:
@@ -91,7 +96,7 @@ class TestFile:
             "sub5.other-target-domain.com.br\n",
         ]
 
-    def test_file_cleanup(self, caplog, tmp_path, mock_enumerator):
+    def test_file_cleanup(self, caplog, tmp_path, passive_enumerator):
         """
         GIVEN a valid path to a file
         WHEN this path is passed as the output file of an instance of
@@ -101,7 +106,7 @@ class TestFile:
         """
         caplog.set_level(logging.INFO)
         test_file = tmp_path / "test_file.txt"
-        file_output = TextFileOutput(subject=mock_enumerator, path=test_file)
+        file_output = TextFileOutput(subject=passive_enumerator, path=test_file)
         file_output._fd = test_file.open(mode="a", encoding="utf_8")
         file_output.cleanup()
 
@@ -110,7 +115,7 @@ class TestFile:
             f"{file_output._fd.name}"
         ) in caplog.messages
 
-    def test_inaccessible_file_path(self, mock_enumerator):
+    def test_inaccessible_file_path(self, passive_enumerator):
         """
         GIVEN a valid but inaccessible path to a file
         WHEN this path is passed as the output file of an instance of
@@ -119,7 +124,7 @@ class TestFile:
         """
         test_file = "/root/some/file"
         with pytest.raises(FileReadError) as e:
-            TextFileOutput(subject=mock_enumerator, path=test_file).startup()
+            TextFileOutput(subject=passive_enumerator, path=test_file).startup()
         assert (
             e.value.args[0]
             == f"FileReadError: PermissionError: Error accessing specified file path "

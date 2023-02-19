@@ -30,7 +30,7 @@ from subenum.core.types.base import EnumerationPublisher
 
 
 class TestJSONFile:
-    def test_file_init(self, tmp_path, mock_enumerator):
+    def test_file_init(self, tmp_path, passive_enumerator):
         """
         GIVEN a valid path to a file
         WHEN this path is passed as an initialization argument to an
@@ -39,12 +39,17 @@ class TestJSONFile:
             without exceptions
         """
         json_output = JSONFileOutput(
-            subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
+            subject=passive_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
         assert isinstance(json_output.subject, EnumerationPublisher)
 
     def test_json_update(
-        self, tmp_path, mock_enumerator, api_response_1, api_response_2, api_response_3
+        self,
+        tmp_path,
+        passive_enumerator,
+        api_response_1,
+        api_response_2,
+        api_response_3,
     ):
         """
         GIVEN a valid path to a file
@@ -55,7 +60,7 @@ class TestJSONFile:
             exceptions
         """
         json_output = JSONFileOutput(
-            subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
+            subject=passive_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
 
         for response in api_response_1, api_response_2, api_response_3:
@@ -91,7 +96,7 @@ class TestJSONFile:
         self,
         tmp_path,
         caplog,
-        mock_enumerator,
+        passive_enumerator,
         api_response_1,
         api_response_2,
         api_response_3,
@@ -105,7 +110,7 @@ class TestJSONFile:
         """
         caplog.set_level(logging.INFO)
         json_output = JSONFileOutput(
-            subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
+            subject=passive_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
 
         for response in api_response_1, api_response_2, api_response_3:
@@ -145,14 +150,14 @@ class TestJSONFile:
                 },
             }
 
-    def test_json_cleanup_invalid_file(self, tmp_path, mock_enumerator):
+    def test_json_cleanup_invalid_file(self, tmp_path, passive_enumerator):
         """
         GIVEN a path to a file
         WHEN this path is invalid
         THEN a FileReadError exception must be raised
         """
         file_path = "/invalid/path/to/file"
-        json_output = JSONFileOutput(subject=mock_enumerator, path=file_path)
+        json_output = JSONFileOutput(subject=passive_enumerator, path=file_path)
 
         with pytest.raises(FileReadError) as e:
             json_output.cleanup()
@@ -168,7 +173,7 @@ class TestJSONFile:
         self,
         tmp_path,
         caplog,
-        mock_enumerator,
+        passive_enumerator,
         api_response_1,
     ):
         """
@@ -181,7 +186,7 @@ class TestJSONFile:
         """
         caplog.set_level(logging.WARNING)
         json_output = JSONFileOutput(
-            subject=mock_enumerator, path=tmp_path.joinpath("test_file.txt")
+            subject=passive_enumerator, path=tmp_path.joinpath("test_file.txt")
         )
 
         json_output.update(api_response_1)

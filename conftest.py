@@ -94,7 +94,7 @@ def setup_virustotal_api_key(api_key):
 
 
 @pytest.fixture
-def mock_enumerator(target_domain_1, target_domain_2):
+def passive_enumerator(target_domain_1, target_domain_2):
     return PassiveEnumerator(
         targets=(target_domain_1, target_domain_2),
         providers={provider() for provider in providers.open_providers},
