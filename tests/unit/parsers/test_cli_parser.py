@@ -108,6 +108,7 @@ class TestCLIArgumentsParser:
             debug=False,
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
+            schedule=None,
         )
 
     def test_parse_multiple_targets_from_stdin(self, target_domain_1):
@@ -136,6 +137,7 @@ class TestCLIArgumentsParser:
             debug=False,
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
+            schedule=None,
         )
 
     def test_parse_empty_stdin(self):
@@ -178,6 +180,7 @@ class TestCLIArgumentsParser:
             debug=False,
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
+            schedule=None,
         )
 
     def test_parse_multiple_targets_from_cli(self, target_domain_1):
@@ -207,6 +210,7 @@ class TestCLIArgumentsParser:
             debug=False,
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
+            schedule=None,
         )
 
     def test_parse_targets_from_file(self, targets_file):
@@ -238,6 +242,7 @@ class TestCLIArgumentsParser:
             debug=False,
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
+            schedule=None,
         )
 
     def test_parse_targets_from_non_existent_file(self):

@@ -162,6 +162,12 @@ class CLIParser(Parser):
             "results from any given data provider whenever error responses are "
             "returned from it (defaults to 3 attempts)",
         )
+        self.parser.add_argument(
+            "--schedule",
+            type=int,
+            help="Number of seconds to wait between periodic executions of the "
+            "application",
+        )
         self.args = self.parser.parse_args(*args, **kwargs)
 
         if self.args.version:
