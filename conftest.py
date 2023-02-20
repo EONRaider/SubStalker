@@ -26,7 +26,7 @@ import pytest
 
 from subenum.core import providers
 from subenum.core.types.base import EnumerationResult
-from subenum.enumerators.passive import PassiveEnumerator
+from subenum.enumerators.passive import PassiveSubdomainEnumerator
 
 
 @pytest.fixture
@@ -95,7 +95,7 @@ def setup_virustotal_api_key(api_key):
 
 @pytest.fixture
 def passive_enumerator(target_domain_1, target_domain_2):
-    return PassiveEnumerator(
+    return PassiveSubdomainEnumerator(
         targets=(target_domain_1, target_domain_2),
         providers={provider() for provider in providers.open_providers},
         max_threads=10,

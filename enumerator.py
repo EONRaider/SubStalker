@@ -31,7 +31,7 @@ from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.core.scheduler import Scheduler
 from subenum.core.types.base import EnumerationPublisher
-from subenum.enumerators.passive import PassiveEnumerator
+from subenum.enumerators.passive import PassiveSubdomainEnumerator
 
 
 class SubdomainEnumerator:
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     )
 
     enumerator.add_enumeration_module(
-        PassiveEnumerator(
+        PassiveSubdomainEnumerator(
             targets=enumerator.cli_args.targets,
             providers=enumerator.cli_parser.providers
             | enumerator.config_parser.providers,

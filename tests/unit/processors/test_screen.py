@@ -21,7 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 import logging
 
 from subenum.core.processors.screen import ScreenOutput
-from subenum.enumerators.passive import PassiveEnumerator
+from subenum.enumerators.passive import PassiveSubdomainEnumerator
 
 
 class TestScreen:
@@ -34,7 +34,7 @@ class TestScreen:
             exceptions
         """
         screen = ScreenOutput(passive_enumerator)
-        assert isinstance(screen.subject, PassiveEnumerator)
+        assert isinstance(screen.subject, PassiveSubdomainEnumerator)
 
     def test_screen_debug_logger(self, caplog, passive_enumerator):
         caplog.set_level(logging.DEBUG)

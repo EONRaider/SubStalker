@@ -36,7 +36,7 @@ from subenum.core.types.base import (
 from subenum.core.types.log import Logger
 
 
-class PassiveEnumerator(EnumerationPublisher):
+class PassiveSubdomainEnumerator(EnumerationPublisher):
     def __init__(
         self,
         targets: Collection[str],
@@ -72,7 +72,7 @@ class PassiveEnumerator(EnumerationPublisher):
         self.found_domains = defaultdict(set)
         self.logger = Logger(name=self._class_name)
 
-    def __enter__(self) -> "PassiveEnumerator":
+    def __enter__(self) -> "PassiveSubdomainEnumerator":
         self.start_time = time.perf_counter()
         [observer.startup(subject=self) for observer in self._observers]
         return self
