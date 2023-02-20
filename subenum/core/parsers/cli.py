@@ -21,6 +21,7 @@ Contact: https://www.twitter.com/eon_raider
 
 import argparse
 import importlib.metadata
+import logging
 import re
 import sys
 from collections.abc import Iterator
@@ -174,6 +175,8 @@ class CLIParser(Parser):
             raise SystemExit(importlib.metadata.version("subenum"))
 
         self.args.targets = self._set_targets()
+        self.args.logger_level = self._set_logger_level()
+
         return self.args
 
     @staticmethod
@@ -236,3 +239,14 @@ class CLIParser(Parser):
                 "enumeration. Review input settings and try again."
             )
         return targets
+
+    def _set_logger_level(self) -> logging:
+        """
+        Set the logging level based on user-defined verbosity settings
+        """
+        if self.args.debug:
+            return logging.DEBUG
+        elif self.args.silent:
+            return logging.WARNING
+        else:
+            return logging.INFO
