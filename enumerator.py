@@ -29,14 +29,16 @@ from subenum.core.parsers.configuration import ConfigurationParser
 from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
+from subenum.core.scheduler import Scheduler
 from subenum.core.types.base import EnumerationPublisher
 from subenum.enumerators.passive import PassiveEnumerator
 
 
-class Enumerator:
+class SubdomainEnumerator:
     def __init__(self, *, cli_parser: CLIParser, config_parser: ConfigurationParser):
         self.cli_parser = cli_parser
         self.config_parser = config_parser
+        self.modules: list[EnumerationPublisher] = []
         # Set the minimum global level for all loggers
         logging.getLogger().setLevel(self.logger_level)
 
@@ -47,7 +49,7 @@ class Enumerator:
     @cli_parser.setter
     def cli_parser(self, parser: CLIParser):
         self._cli_parser = parser
-        self._cli_args = parser.parse()
+        self.cli_args = parser.parse()
 
     @property
     def config_parser(self) -> ConfigurationParser:
@@ -56,19 +58,23 @@ class Enumerator:
     @config_parser.setter
     def config_parser(self, parser: ConfigurationParser):
         self._config_parser = parser
-        self._config_args = parser.parse(file_path=self._cli_args.config_file)
+        self.config_args = parser.parse(file_path=self.cli_args.config_file)
 
     @property
     def logger_level(self) -> logging:
         """
         Set the logging level based on user-defined verbosity settings
         """
-        if self._cli_args.debug:
+        if self.cli_args.debug:
             return logging.DEBUG
-        elif self._cli_args.silent:
+        elif self.cli_args.silent:
             return logging.WARNING
         else:
             return logging.INFO
+
+    def add_enumeration_module(self, module: EnumerationPublisher) -> None:
+        self.modules.append(module)
+        self._attach_observers(module)
 
     def _attach_observers(self, subject: EnumerationPublisher) -> None:
         """
@@ -76,31 +82,36 @@ class Enumerator:
         subdomain enumeration results
         """
         ScreenOutput(subject)
-        if self._cli_args.output is not None:
-            TextFileOutput(subject, path=self._cli_args.output)
-        if self._cli_args.json is not None:
-            JSONFileOutput(subject, path=self._cli_args.json)
+        if self.cli_args.output is not None:
+            TextFileOutput(subject, path=self.cli_args.output)
+        if self.cli_args.json is not None:
+            JSONFileOutput(subject, path=self.cli_args.json)
 
-    def run(self) -> None:
-        passive_enum = PassiveEnumerator(
-            targets=self._cli_args.targets,
-            providers=self.cli_parser.providers | self.config_parser.providers,
-            max_threads=self._cli_args.max_threads,
-            retry_time=self._cli_args.retry,
-            max_retries=self._cli_args.max_retries,
-        )
-
-        self._attach_observers(passive_enum)
-
-        try:
-            with passive_enum as enumerator:
-                for result in enumerator.execute():
+    def execute(self) -> None:
+        for module in self.modules:
+            with module:
+                for result in module.execute():
                     if isinstance(result, EnumeratorException):
                         raise result
-        except KeyboardInterrupt:
-            raise SystemExit("[!] Subdomain enumeration aborted by user. Exiting...")
 
 
 if __name__ == "__main__":
-    app = App(cli_parser=CLIParser(), config_parser=ConfigurationParser())
-    app.run()
+    enumerator = SubdomainEnumerator(
+        cli_parser=CLIParser(), config_parser=ConfigurationParser()
+    )
+
+    enumerator.add_enumeration_module(
+        PassiveEnumerator(
+            targets=enumerator.cli_args.targets,
+            providers=enumerator.cli_parser.providers
+            | enumerator.config_parser.providers,
+            max_threads=enumerator.cli_args.max_threads,
+            retry_time=enumerator.cli_args.retry,
+            max_retries=enumerator.cli_args.max_retries,
+        )
+    )
+
+    try:
+        Scheduler(enumerator.execute, interval=enumerator.cli_args.schedule).execute()
+    except KeyboardInterrupt:
+        raise SystemExit("[!] Subdomain enumeration aborted by user. Exiting...")
