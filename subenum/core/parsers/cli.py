@@ -166,6 +166,7 @@ class CLIParser(Parser):
         self.parser.add_argument(
             "--schedule",
             type=int,
+            default=0,
             help="Number of seconds to wait between periodic executions of the "
             "application",
         )
