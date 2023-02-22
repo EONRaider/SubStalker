@@ -19,7 +19,6 @@ Contact: https://www.twitter.com/eon_raider
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
 
-import itertools
 import time
 
 import schedule
@@ -32,6 +31,7 @@ class Scheduler:
         self.logger = Logger(name=self.__class__.__name__)
         self.task = task
         self.interval = interval
+        self.tasks_completed: int = 0
 
     @property
     def interval(self):
@@ -44,23 +44,26 @@ class Scheduler:
                 f"Cannot set the scheduler's time interval to non-integer value {value}"
             )
         self._interval = value
-        schedule.every(value).seconds.do(self.task)
+        schedule.every(value).seconds.do(self._run_task, forever=bool(value))
         self.logger.debug(
             f"Scheduled task {self.task} for execution every {value} second"
             f"{'' if value == 1 else 's'}"
         )
 
-    def execute(self, repeat: int = 1):
-        for i in itertools.count(1):
-            self.logger.debug(
-                f"Executing task {self.task} "
-                f"(run {i}/{'infinite' if repeat == 0 else repeat})"
-            )
+    def _run_task(self, forever: bool = False):
+        self.logger.info(
+            f"Executing subdomain enumeration task #{self.tasks_completed + 1}"
+        )
+        self.task()
+        if not forever:
+            return schedule.CancelJob
+
+    def execute(self):
+        schedule.run_all()
+        while schedule.get_jobs():
             schedule.run_pending()
             time.sleep(1)
-            if i == repeat:
-                self.logger.debug(
-                    f"Execution of {i} task{'' if i == 1 else 's'} was finished "
-                    f"successfully"
-                )
-                break
+        self.logger.info(
+            f"Finished executing {self.tasks_completed} subdomain enumeration "
+            f"task{'' if self.tasks_completed == 1 else 's'}"
+        )
