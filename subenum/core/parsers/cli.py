@@ -174,13 +174,17 @@ class CLIParser(Parser):
             "--repeat",
             type=int,
             default=1,
-            help="Maximum number of times to repeat the execution of the application",
+            help="Maximum number of times to repeat the execution of the application. "
+            'Set to "forever" for an unlimited number of executions at every N '
+            'seconds, where N is set by the "--interval" option (defaults to 1 '
+            '"execution).',
         )
         self.args = self.parser.parse_args(*args, **kwargs)
 
         if self.args.version:
             raise SystemExit(importlib.metadata.version("subenum"))
 
+        self.args.repeat = 0 if self.args.repeat == "forever" else self.args.repeat
         self.args.targets = self._set_targets()
         self.args.logger_level = self._set_logger_level()
 
