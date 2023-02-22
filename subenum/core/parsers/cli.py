@@ -173,7 +173,7 @@ class CLIParser(Parser):
         self.parser.add_argument(
             "--repeat",
             type=int,
-            default=0,
+            default=1,
             help="Maximum number of times to repeat the execution of the application",
         )
         self.args = self.parser.parse_args(*args, **kwargs)
