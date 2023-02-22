@@ -39,15 +39,12 @@ class SubdomainEnumerator:
     def __init__(
         self,
         *,
-        logger_level: logging,
         file_path: [str, Path] = None,
         json_path: [str, Path] = None,
     ):
-        self.logger_level = logger_level
         self.file_path = file_path
         self.json_path = json_path
         self.modules: list[EnumerationPublisher] = []
-        logging.getLogger().setLevel(self.logger_level)
 
     def add_enumeration_module(self, module: EnumerationPublisher) -> None:
         """
@@ -81,9 +78,9 @@ class SubdomainEnumerator:
 if __name__ == "__main__":
     cli_args = (cli_parser := CLIParser()).parse()
     (config_parser := ConfigurationParser()).parse(file_path=cli_args.config_file)
+    logging.getLogger().setLevel(cli_parser.args.logger_level)
 
     enumerator = SubdomainEnumerator(
-        logger_level=cli_parser.args.logger_level,
         file_path=cli_args.output,
         json_path=cli_args.json,
     )
