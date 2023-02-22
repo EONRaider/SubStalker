@@ -143,7 +143,7 @@ class PassiveSubdomainEnumerator(EnumerationPublisher):
                     subdomains=provider.fetch_subdomains(target),
                 )
             except urllib.error.HTTPError as e:
-                self.logger.info(
+                self.logger.error(
                     f'Received "{e.reason}" error message with code {e.code} from '
                     f"{provider.service_name}! Retrying in {self.retry_time} seconds "
                     f"(attempt {attempt}/{self.max_retries})..."
