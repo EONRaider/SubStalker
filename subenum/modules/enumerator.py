@@ -22,6 +22,7 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 import logging
+from pathlib import Path
 
 from subenum.core.exceptions import EnumeratorException
 from subenum.core.parsers.cli import CLIParser
@@ -35,44 +36,26 @@ from subenum.core.enumerators.passive import PassiveSubdomainEnumerator
 
 
 class SubdomainEnumerator:
-    def __init__(self, *, cli_parser: CLIParser, config_parser: ConfigurationParser):
-        self.cli_parser = cli_parser
-        self.config_parser = config_parser
+    def __init__(
+        self,
+        *,
+        logger_level: logging,
+        file_path: [str, Path] = None,
+        json_path: [str, Path] = None,
+    ):
+        self.logger_level = logger_level
+        self.file_path = file_path
+        self.json_path = json_path
         self.modules: list[EnumerationPublisher] = []
-        # Set the minimum global level for all loggers
         logging.getLogger().setLevel(self.logger_level)
 
-    @property
-    def cli_parser(self) -> CLIParser:
-        return self._cli_parser
-
-    @cli_parser.setter
-    def cli_parser(self, parser: CLIParser):
-        self._cli_parser = parser
-        self.cli_args = parser.parse()
-
-    @property
-    def config_parser(self) -> ConfigurationParser:
-        return self._config_parser
-
-    @config_parser.setter
-    def config_parser(self, parser: ConfigurationParser):
-        self._config_parser = parser
-        self.config_args = parser.parse(file_path=self.cli_args.config_file)
-
-    @property
-    def logger_level(self) -> logging:
-        """
-        Set the logging level based on user-defined verbosity settings
-        """
-        if self.cli_args.debug:
-            return logging.DEBUG
-        elif self.cli_args.silent:
-            return logging.WARNING
-        else:
-            return logging.INFO
-
     def add_enumeration_module(self, module: EnumerationPublisher) -> None:
+        """
+        Add new modules to the Enumerator and initialize their observers
+
+        :param module: An instance of a type that implements the
+            EnumerationPublisher interface
+        """
         self.modules.append(module)
         self._attach_observers(module)
 
@@ -82,10 +65,10 @@ class SubdomainEnumerator:
         subdomain enumeration results
         """
         ScreenOutput(subject)
-        if self.cli_args.output is not None:
-            TextFileOutput(subject, path=self.cli_args.output)
-        if self.cli_args.json is not None:
-            JSONFileOutput(subject, path=self.cli_args.json)
+        if self.file_path is not None:
+            TextFileOutput(subject, path=self.file_path)
+        if self.json_path is not None:
+            JSONFileOutput(subject, path=self.json_path)
 
     def execute(self) -> None:
         for module in self.modules:
@@ -96,22 +79,28 @@ class SubdomainEnumerator:
 
 
 if __name__ == "__main__":
+    cli_args = (cli_parser := CLIParser()).parse()
+    (config_parser := ConfigurationParser()).parse(file_path=cli_args.config_file)
+
     enumerator = SubdomainEnumerator(
-        cli_parser=CLIParser(), config_parser=ConfigurationParser()
+        logger_level=cli_parser.args.logger_level,
+        file_path=cli_args.output,
+        json_path=cli_args.json,
     )
 
     enumerator.add_enumeration_module(
         PassiveSubdomainEnumerator(
-            targets=enumerator.cli_args.targets,
-            providers=enumerator.cli_parser.providers
-            | enumerator.config_parser.providers,
-            max_threads=enumerator.cli_args.max_threads,
-            retry_time=enumerator.cli_args.retry,
-            max_retries=enumerator.cli_args.max_retries,
+            targets=cli_args.targets,
+            providers=cli_parser.providers | config_parser.providers,
+            max_threads=cli_args.max_threads,
+            retry_time=cli_args.retry,
+            max_retries=cli_args.max_retries,
         )
     )
 
     try:
-        Scheduler(enumerator.execute, interval=enumerator.cli_args.schedule).execute()
+        Scheduler(task=enumerator.execute, interval=cli_args.interval).execute(
+            cli_args.repeat
+        )
     except KeyboardInterrupt:
         raise SystemExit("[!] Subdomain enumeration aborted by user. Exiting...")
