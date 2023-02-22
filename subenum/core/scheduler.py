@@ -24,9 +24,12 @@ import time
 
 import schedule
 
+from subenum.core.types.log import Logger
+
 
 class Scheduler:
     def __init__(self, task, interval: int = 0):
+        self.logger = Logger(name=self.__class__.__name__)
         self.task = task
         self.interval = interval
 
@@ -42,11 +45,21 @@ class Scheduler:
             )
         self._interval = value
         schedule.every(value).seconds.do(self.task)
+        self.logger.debug(
+            f"Scheduled task {self.task} for execution every {value} seconds"
+        )
 
-    @staticmethod
-    def execute(repeat: int = 1):
+    def execute(self, repeat: int = 1):
         for i in itertools.count(1):
+            self.logger.debug(
+                f"Executing task {self.task} "
+                f"(run {i}/{'infinite' if repeat == 0 else repeat})"
+            )
             schedule.run_pending()
             time.sleep(1)
             if i == repeat:
+                self.logger.debug(
+                    f"Execution of {i} task{'' if i == 1 else 's'} was finished "
+                    f"successfully"
+                )
                 break
