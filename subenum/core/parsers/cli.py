@@ -164,11 +164,17 @@ class CLIParser(Parser):
             "returned from it (defaults to 3 attempts)",
         )
         self.parser.add_argument(
-            "--schedule",
+            "--interval",
             type=int,
             default=0,
             help="Number of seconds to wait between periodic executions of the "
             "application",
+        )
+        self.parser.add_argument(
+            "--repeat",
+            type=int,
+            default=0,
+            help="Maximum number of times to repeat the execution of the application",
         )
         self.args = self.parser.parse_args(*args, **kwargs)
 
