@@ -40,7 +40,7 @@ def pytest_addoption(parser) -> None:
 def pytest_runtest_setup(item) -> None:
     if "timed_test" in item.keywords and not item.config.getoption("timed_test"):
         pytest.skip(
-            'Run pytest with the "--timed-test" option enabled to run ' "this test"
+            'Run pytest with the "--timed-test" option enabled to run this test'
         )
 
 
