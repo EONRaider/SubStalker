@@ -44,10 +44,9 @@ class Scheduler:
         schedule.every(value).seconds.do(self.task)
 
     @staticmethod
-    def execute(repeat: int = 0):
-        schedule.run_all()
+    def execute(repeat: int = 1):
         for i in itertools.count(1):
-            if i == repeat:
-                break
             schedule.run_pending()
             time.sleep(1)
+            if i == repeat:
+                break
