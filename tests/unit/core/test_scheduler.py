@@ -27,6 +27,7 @@ def task():
     print("Task completed", end="")
 
 
+@pytest.mark.timed_test
 class TestScheduler:
     def test_execute_job_once(self, capsys):
         Scheduler(task=task).execute()
