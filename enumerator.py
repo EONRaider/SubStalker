@@ -31,7 +31,7 @@ from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.core.scheduler import Scheduler
 from subenum.core.types.base import EnumerationPublisher
-from subenum.enumerators.passive import PassiveSubdomainEnumerator
+from subenum.core.enumerators.passive import PassiveSubdomainEnumerator
 
 
 class SubdomainEnumerator:

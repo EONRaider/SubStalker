@@ -26,7 +26,7 @@ from subenum.core.processors.json_file import JSONFileOutput
 from subenum.core.processors.text_file import TextFileOutput
 from subenum.core.processors.screen import ScreenOutput
 from subenum.core.providers import all_providers
-from subenum.enumerators.passive import PassiveSubdomainEnumerator
+from subenum.core.enumerators.passive import PassiveSubdomainEnumerator
 
 
 class TestApp:

@@ -51,7 +51,7 @@ class PassiveSubdomainEnumerator(EnumerationPublisher):
         providers
 
         :param targets: A collection of strings defining target domains
-        :param providers: A collection of instances of ExternalServices
+        :param providers: A collection of instances of ExternalService
             to be queried during the enumeration of subdomains of
             selected targets
         :param max_threads: Maximum number of threads to use when
