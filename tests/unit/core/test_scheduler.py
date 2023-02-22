@@ -53,21 +53,20 @@ class TestScheduler:
         Scheduler(task=task).execute()
         assert capsys.readouterr().out  # <- Add breakpoint to inspect
 
-    def test_execute_repeated_job(self, capsys):
-        Scheduler(task=task, interval=1).execute(2)
-        assert capsys.readouterr().out  # <- Add breakpoint to inspect
-
     def test_init_invalid_interval(self):
         with pytest.raises(TypeError):
             Scheduler(task=task, interval="invalid").execute()
 
     def test_logging_prompts(self, caplog):
         caplog.set_level(logging.DEBUG)
-        Scheduler(task=task, interval=1).execute(2)
+        Scheduler(task=task).execute()
         assert caplog.messages == [
-            "Scheduled task TestTask for execution every 1 second",
-            "Executing task TestTask (run 1/2)",
-            "Executing task TestTask (run 2/2)",
-            "Running job Job(interval=1, unit=seconds, do=task, args=(), kwargs={})",
-            "Execution of 2 tasks was finished successfully",
+            "Scheduled task TestTask for execution every 0 seconds",
+            "Running *all* 1 jobs with 0s delay in between",
+            "Running job Job(interval=0, unit=seconds, do=_run_task, args=(), "
+            "kwargs={'forever': False})",
+            "Executing subdomain enumeration task #1",
+            'Cancelling job "Job(interval=0, unit=seconds, do=_run_task, args=(), '
+            "kwargs={'forever': False})\"",
+            "Finished executing 0 subdomain enumeration tasks",
         ]
