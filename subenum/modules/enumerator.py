@@ -96,8 +96,6 @@ if __name__ == "__main__":
     )
 
     try:
-        Scheduler(task=enumerator.execute, interval=cli_args.interval).execute(
-            cli_args.repeat
-        )
+        Scheduler(task=enumerator.execute, interval=cli_args.interval).execute()
     except KeyboardInterrupt:
         raise SystemExit("[!] Subdomain enumeration aborted by user. Exiting...")

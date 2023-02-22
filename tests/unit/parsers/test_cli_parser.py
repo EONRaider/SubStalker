@@ -109,7 +109,6 @@ class TestCLIArgumentsParser:
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
             interval=0,
-            repeat=1,
             logger_level=20,
         )
 
@@ -140,7 +139,6 @@ class TestCLIArgumentsParser:
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
             interval=0,
-            repeat=1,
             logger_level=20,
         )
 
@@ -185,7 +183,6 @@ class TestCLIArgumentsParser:
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
             interval=0,
-            repeat=1,
             logger_level=20,
         )
 
@@ -217,7 +214,6 @@ class TestCLIArgumentsParser:
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
             interval=0,
-            repeat=1,
             logger_level=20,
         )
 
@@ -251,7 +247,6 @@ class TestCLIArgumentsParser:
             retry=parser.args.retry,
             max_retries=parser.args.max_retries,
             interval=0,
-            repeat=1,
             logger_level=20,
         )
 
