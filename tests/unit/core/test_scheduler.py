@@ -18,11 +18,31 @@ Contact: https://www.twitter.com/eon_raider
     along with this program. If not, see
     <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
 """
+
+import logging
+
 import pytest
 
 from subenum.core.scheduler import Scheduler
 
 
+def set_repr(description: str):
+    class FuncRepr:
+        def __init__(self, func):
+            self.func = func
+            self.__name__ = func.__name__
+            self.__doc__ = func.__doc__
+
+        def __call__(self, *args, **kwargs):
+            return self.func(*args, **kwargs)
+
+        def __repr__(self):
+            return description
+
+    return FuncRepr
+
+
+@set_repr(description="TestTask")
 def task():
     print("Task completed", end="")
 
@@ -40,3 +60,14 @@ class TestScheduler:
     def test_init_invalid_interval(self):
         with pytest.raises(TypeError):
             Scheduler(task=task, interval="invalid").execute()
+
+    def test_logging_prompts(self, caplog):
+        caplog.set_level(logging.DEBUG)
+        Scheduler(task=task, interval=1).execute(2)
+        assert caplog.messages == [
+            "Scheduled task TestTask for execution every 1 second",
+            "Executing task TestTask (run 1/2)",
+            "Executing task TestTask (run 2/2)",
+            "Running job Job(interval=1, unit=seconds, do=task, args=(), kwargs={})",
+            "Execution of 2 tasks was finished successfully",
+        ]
