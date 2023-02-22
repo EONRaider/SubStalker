@@ -26,8 +26,8 @@ import schedule
 
 
 class Scheduler:
-    def __init__(self, callback, interval: int = 0):
-        self.callback = callback
+    def __init__(self, task, interval: int = 0):
+        self.task = task
         self.interval = interval
 
     @property
@@ -41,7 +41,7 @@ class Scheduler:
                 f"Cannot set the scheduler's time interval to non-integer value {value}"
             )
         self._interval = value
-        schedule.every(value).seconds.do(self.callback)
+        schedule.every(value).seconds.do(self.task)
 
     @staticmethod
     def execute(repeat: int = 0):
