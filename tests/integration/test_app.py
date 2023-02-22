@@ -40,7 +40,8 @@ class TestApp:
         setup_virustotal_api_key,
     ):
         mocker.patch(
-            "subenum.enumerators.passive.PassiveEnumerator.query_provider",
+            "subenum.core.enumerators.passive.PassiveSubdomainEnumerator."
+            "query_provider",
             return_value=api_response_1,
         )
 
