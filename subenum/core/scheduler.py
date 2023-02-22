@@ -46,7 +46,8 @@ class Scheduler:
         self._interval = value
         schedule.every(value).seconds.do(self.task)
         self.logger.debug(
-            f"Scheduled task {self.task} for execution every {value} seconds"
+            f"Scheduled task {self.task} for execution every {value} second"
+            f"{'' if value == 1 else 's'}"
         )
 
     def execute(self, repeat: int = 1):
