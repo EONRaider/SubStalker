@@ -26,7 +26,22 @@ import pytest
 
 from subenum.core import providers
 from subenum.core.types.base import EnumerationResult
-from subenum.enumerators.passive import PassiveSubdomainEnumerator
+from subenum.core.enumerators.passive import PassiveSubdomainEnumerator
+
+
+def pytest_addoption(parser) -> None:
+    parser.addoption(
+        "--timed-test",
+        action="store_true",
+        help="Run tests that execute scheduled tests and take time to complete",
+    )
+
+
+def pytest_runtest_setup(item) -> None:
+    if "timed_test" in item.keywords and not item.config.getoption("timed_test"):
+        pytest.skip(
+            'Run pytest with the "--timed-test" option enabled to run ' "this test"
+        )
 
 
 @pytest.fixture
