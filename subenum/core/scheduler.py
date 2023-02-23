@@ -68,6 +68,7 @@ class Scheduler:
             f"Executing subdomain enumeration task #{self.tasks_completed + 1}"
         )
         self.task()
+        self.tasks_completed += 1
         if not self.interval:
             """Scheduled tasks will either be executed once or forever.
             They're executed only once if the interval is set to 0
