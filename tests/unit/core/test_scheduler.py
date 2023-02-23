@@ -42,7 +42,6 @@ def task():
     return Task()
 
 
-@pytest.mark.timed_test
 class TestScheduler:
     def test_execute_job_once(self, capsys, task):
         """
@@ -84,5 +83,5 @@ class TestScheduler:
             "Executing subdomain enumeration task #1",
             'Cancelling job "Job(interval=0, unit=seconds, do=_run_task, args=(), '
             'kwargs={})"',
-            "Finished executing 0 subdomain enumeration tasks",
+            "Finished executing 1 subdomain enumeration task",
         ]
