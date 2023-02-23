@@ -46,9 +46,10 @@ class SubdomainEnumerator:
         self.json_path = json_path
         self.modules: list[EnumerationPublisher] = []
 
-    def add_enumeration_module(self, module: EnumerationPublisher) -> None:
+    def attach_enumeration_module(self, module: EnumerationPublisher) -> None:
         """
-        Add new modules to the Enumerator and initialize their observers
+        Attach new modules to the Enumerator and initialize their
+        observers
 
         :param module: An instance of a type that implements the
             EnumerationPublisher interface
@@ -85,7 +86,7 @@ if __name__ == "__main__":
         json_path=cli_args.json,
     )
 
-    enumerator.add_enumeration_module(
+    enumerator.attach_enumeration_module(
         PassiveSubdomainEnumerator(
             targets=cli_args.targets,
             providers=cli_parser.providers | config_parser.providers,

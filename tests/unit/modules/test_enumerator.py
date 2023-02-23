@@ -32,7 +32,7 @@ class TestSubdomainEnumerator:
             file_path=tmp_path.joinpath("file.txt"),
             json_path=tmp_path.joinpath("json.txt"),
         )
-        enumerator.add_enumeration_module(passive_enumerator)
+        enumerator.attach_enumeration_module(passive_enumerator)
         module = enumerator.modules[0]
         assert isinstance(module, EnumerationPublisher)
         assert isinstance(module._observers[0], ScreenOutput)
