@@ -26,40 +26,35 @@ import pytest
 from subenum.core.scheduler import Scheduler
 
 
-def set_repr(description: str):
-    class FuncRepr:
-        def __init__(self, func):
-            self.func = func
-            self.__name__ = func.__name__
-            self.__doc__ = func.__doc__
+class Task:
+    def __init__(self, description: str = "TestTask"):
+        self.description = description
 
-        def __call__(self, *args, **kwargs):
-            return self.func(*args, **kwargs)
+    def __call__(self, *args, **kwargs):
+        print("Task Completed")
 
-        def __repr__(self):
-            return description
-
-    return FuncRepr
+    def __repr__(self):
+        return self.description
 
 
-@set_repr(description="TestTask")
+@pytest.fixture
 def task():
-    print("Task completed", end="")
+    return Task()
 
 
 @pytest.mark.timed_test
 class TestScheduler:
-    def test_execute_job_once(self, capsys):
-        Scheduler(task=task).execute()
+    def test_execute_job_once(self, capsys, task):
+        Scheduler(task).execute()
         assert capsys.readouterr().out  # <- Add breakpoint to inspect
 
-    def test_init_invalid_interval(self):
+    def test_init_invalid_interval(self, task):
         with pytest.raises(TypeError):
-            Scheduler(task=task, interval="invalid").execute()
+            Scheduler(task, interval="invalid").execute()
 
-    def test_logging_prompts(self, caplog):
+    def test_logging_prompts(self, caplog, task):
         caplog.set_level(logging.DEBUG)
-        Scheduler(task=task).execute()
+        Scheduler(task).execute()
         assert caplog.messages == [
             "Scheduled task TestTask for execution every 0 seconds",
             "Running *all* 1 jobs with 0s delay in between",
