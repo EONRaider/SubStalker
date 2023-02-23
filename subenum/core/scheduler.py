@@ -52,9 +52,9 @@ class Scheduler:
 
         :param value: Integer representing the time interval in seconds
         """
-        if not isinstance(value, int):
+        if not isinstance(value, int) or value < 0:
             raise TypeError(
-                f"Cannot set the scheduler's time interval to non-integer value {value}"
+                f"Cannot set the scheduler's time interval to invalid value {value}"
             )
         self._interval = value
         schedule.every(value).seconds.do(self._run_task)

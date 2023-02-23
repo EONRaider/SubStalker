@@ -54,7 +54,8 @@ class TestScheduler:
         Scheduler(task).execute()
         assert capsys.readouterr().out  # <- Add breakpoint to inspect
 
-    def test_init_invalid_interval(self, task):
+    @pytest.mark.parametrize("invalid_argument", [None, "invalid", [], {}, -1, -1000])
+    def test_init_invalid_interval(self, task, invalid_argument):
         """
         GIVEN a callable representing a correctly implemented task
         WHEN this callable is passed as an initialization parameter to
@@ -63,7 +64,7 @@ class TestScheduler:
         THEN a TypeError exception must be raised
         """
         with pytest.raises(TypeError):
-            Scheduler(task, interval="invalid").execute()
+            Scheduler(task, interval=invalid_argument).execute()
 
     def test_logging_prompts(self, caplog, task):
         """
@@ -79,9 +80,9 @@ class TestScheduler:
             "Scheduled task TestTask for execution every 0 seconds",
             "Running *all* 1 jobs with 0s delay in between",
             "Running job Job(interval=0, unit=seconds, do=_run_task, args=(), "
-            "kwargs={'forever': False})",
+            "kwargs={})",
             "Executing subdomain enumeration task #1",
             'Cancelling job "Job(interval=0, unit=seconds, do=_run_task, args=(), '
-            "kwargs={'forever': False})\"",
+            'kwargs={})"',
             "Finished executing 0 subdomain enumeration tasks",
         ]
