@@ -45,6 +45,14 @@ class EnumerationPublisher(ABC):
         self._class_name = self.__class__.__name__
 
     @abstractmethod
+    def __enter__(self):
+        ...
+
+    @abstractmethod
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        ...
+
+    @abstractmethod
     def register(self, observer) -> None:
         ...
 
@@ -66,8 +74,8 @@ class EnumerationSubscriber(ABC):
         :param subject: An instance of EnumerationPublisher to observe
         """
         subject.register(self)
-        self._class_name = self.__class__.__name__
         self.subject = subject
+        self._class_name = self.__class__.__name__
         self.logger = Logger(name=self._class_name)
         self.logger.debug(
             f"{self._class_name} observer successfully attached to instance of "
