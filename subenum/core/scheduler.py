@@ -57,18 +57,18 @@ class Scheduler:
                 f"Cannot set the scheduler's time interval to non-integer value {value}"
             )
         self._interval = value
-        schedule.every(value).seconds.do(self._run_task, forever=bool(value))
+        schedule.every(value).seconds.do(self._run_task)
         self.logger.debug(
             f"Scheduled task {self.task} for execution every {value} "
             f"{'second' if value == 1 else 'seconds'}"
         )
 
-    def _run_task(self, forever: bool = False):
+    def _run_task(self) -> [None, schedule.CancelJob]:
         self.logger.info(
             f"Executing subdomain enumeration task #{self.tasks_completed + 1}"
         )
         self.task()
-        if not forever:
+        if not self.interval:
             """Scheduled tasks will either be executed once or forever.
             They're executed only once if the interval is set to 0
             (default value) and forever (at regular time intervals) if
