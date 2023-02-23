@@ -45,14 +45,34 @@ def task():
 @pytest.mark.timed_test
 class TestScheduler:
     def test_execute_job_once(self, capsys, task):
+        """
+        GIVEN a callable representing a correctly implemented task
+        WHEN this callable is passed as an initialization parameter to
+        an instance of Scheduler
+        THEN the task must be executed without exceptions
+        """
         Scheduler(task).execute()
         assert capsys.readouterr().out  # <- Add breakpoint to inspect
 
     def test_init_invalid_interval(self, task):
+        """
+        GIVEN a callable representing a correctly implemented task
+        WHEN this callable is passed as an initialization parameter to
+        an instance of Scheduler but an invalid type is passed as an
+        interval
+        THEN a TypeError exception must be raised
+        """
         with pytest.raises(TypeError):
             Scheduler(task, interval="invalid").execute()
 
     def test_logging_prompts(self, caplog, task):
+        """
+        GIVEN a callable representing a correctly implemented task
+        WHEN this callable is passed as an initialization parameter to
+        an instance of Scheduler
+        THEN the execution of the task must register all logging prompts
+        as expected
+        """
         caplog.set_level(logging.DEBUG)
         Scheduler(task).execute()
         assert caplog.messages == [

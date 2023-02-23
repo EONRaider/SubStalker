@@ -42,6 +42,15 @@ class SubdomainEnumerator:
         file_path: [str, Path] = None,
         json_path: [str, Path] = None,
     ):
+        """
+        Enumerate subdomains through attached modules that implement the
+        EnumerationPublisher interface
+
+        :param file_path: Absolute path to a file to which line-separated
+            subdomain enumeration results will be written
+        :param json_path: Absolute path to a file to which JSON-formatted
+            subdomain enumeration results will be written
+        """
         self.file_path = file_path
         self.json_path = json_path
         self.modules: list[EnumerationPublisher] = []
@@ -69,6 +78,10 @@ class SubdomainEnumerator:
             JSONFileOutput(subject, path=self.json_path)
 
     def execute(self) -> None:
+        """
+        Perform subdomain enumeration by calling the "execute" method
+        of each attached enumerator
+        """
         for module in self.modules:
             with module:
                 for result in module.execute():

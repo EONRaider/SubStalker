@@ -41,9 +41,9 @@ class ConfigurationParser(Parser):
         """
         Get instances of data providers specified by the sections of a
         INI configuration file
-        :return: A set of instances of non-authenticated data providers
-            of type ExternalService as defined by the INI configuration
-            file
+
+        :return: A set of instances of authenticated data providers of
+            type ExternalService as defined by the INI configuration file
         """
         try:
             # Return all providers specified in the file
