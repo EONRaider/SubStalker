@@ -1,5 +1,5 @@
 """
-SubdomainEnumerator: Find subdomains belonging to given target hosts
+SubStalker: Find subdomains belonging to given target hosts
 using active and passive enumeration methods
 
 Author: EONRaider
@@ -16,7 +16,7 @@ Contact: https://www.twitter.com/eon_raider
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program. If not, see
-    <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
+    <https://github.com/EONRaider/SubStalker/blob/master/LICENSE>.
 """
 
 import argparse
@@ -28,13 +28,13 @@ from collections.abc import Iterator
 
 from reconlib.core.base import ExternalService
 
-from subenum.core import providers
-from subenum.core.exceptions import (
+from substalker.core import providers
+from substalker.core.exceptions import (
     TargetSpecificationError,
     FileReadError,
     InvalidProviderError,
 )
-from subenum.core.parsers.base import Parser
+from substalker.core.parsers.base import Parser
 
 
 class CLIParser(Parser):
@@ -100,7 +100,7 @@ class CLIParser(Parser):
         self.targeting.add_argument(
             "--version",
             action="store_true",
-            help="Display the version of SubdomainEnumerator",
+            help="Display the version of SubStalker",
         )
         self.parser.add_argument(
             "-p",
@@ -173,7 +173,7 @@ class CLIParser(Parser):
         self.args = self.parser.parse_args(*args, **kwargs)
 
         if self.args.version:
-            raise SystemExit(importlib.metadata.version("subenum"))
+            raise SystemExit(importlib.metadata.version("substalker"))
 
         self.args.targets = self._set_targets()
         self.args.logger_level = self._set_logger_level()

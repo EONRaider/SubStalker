@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "subenum"
-repository = "https://github.com/EONRaider/SubdomainEnumerator"
+name = "substalker"
+repository = "https://github.com/EONRaider/SubStalker"
 version = "0.1.0"
 description = "Enumerate subdomains of different targets through external APIs and active methods"
 authors = ["EONRaider <livewire_voodoo@protonmail.com>"]

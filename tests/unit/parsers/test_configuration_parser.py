@@ -1,5 +1,5 @@
 """
-SubdomainEnumerator: Find subdomains belonging to given target hosts
+SubStalker: Find subdomains belonging to given target hosts
 using active and passive enumeration methods
 
 Author: EONRaider
@@ -16,10 +16,10 @@ Contact: https://www.twitter.com/eon_raider
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program. If not, see
-    <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
+    <https://github.com/EONRaider/SubStalker/blob/master/LICENSE>.
 """
 
-from subenum.core.parsers.configuration import ConfigurationParser
+from substalker.core.parsers.configuration import ConfigurationParser
 
 
 class TestConfigurationParser:

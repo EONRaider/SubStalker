@@ -1,5 +1,5 @@
 """
-SubdomainEnumerator: Find subdomains belonging to given target hosts
+SubStalker: Find subdomains belonging to given target hosts
 using active and passive enumeration methods
 
 Author: EONRaider
@@ -16,17 +16,17 @@ Contact: https://www.twitter.com/eon_raider
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program. If not, see
-    <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
+    <https://github.com/EONRaider/SubStalker/blob/master/LICENSE>.
 """
 
 import logging
 import random
 
-from subenum.core.processors.json_file import JSONFileOutput
-from subenum.core.processors.text_file import TextFileOutput
-from subenum.core.processors.screen import ScreenOutput
-from subenum.core.providers import all_providers
-from subenum.core.enumerators.passive import PassiveSubdomainEnumerator
+from substalker.core.processors.json_file import JSONFileOutput
+from substalker.core.processors.text_file import TextFileOutput
+from substalker.core.processors.screen import ScreenOutput
+from substalker.core.providers import all_providers
+from substalker.core.enumerators.passive import PassiveSubdomainEnumerator
 
 
 class TestApp:
@@ -40,7 +40,7 @@ class TestApp:
         setup_virustotal_api_key,
     ):
         mocker.patch(
-            "subenum.core.enumerators.passive.PassiveSubdomainEnumerator."
+            "substalker.core.enumerators.passive.PassiveSubdomainEnumerator."
             "query_provider",
             return_value=api_response_1,
         )

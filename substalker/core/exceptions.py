@@ -1,5 +1,5 @@
 """
-SubdomainEnumerator: Find subdomains belonging to given target hosts
+SubStalker: Find subdomains belonging to given target hosts
 using active and passive enumeration methods
 
 Author: EONRaider
@@ -16,33 +16,26 @@ Contact: https://www.twitter.com/eon_raider
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program. If not, see
-    <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
+    <https://github.com/EONRaider/SubStalker/blob/master/LICENSE>.
 """
 
-from abc import ABC, abstractmethod
 
-from reconlib.core.base import ExternalService
+class EnumeratorException(Exception):
+    def __init__(self, message: str, code: int):
+        super().__init__(f"{self.__class__.__name__}: {message}")
+        self.code = code
 
 
-class Parser(ABC):
-    def __init__(self, parser):
-        """
-        Base class for all parsers responsible for processing
-        configuration settings and/or options
-        """
-        self.parser = parser
+class TargetSpecificationError(EnumeratorException):
+    def __init__(self, message: str, code: int = 1):
+        super().__init__(message, code)
 
-    @property
-    @abstractmethod
-    def providers(self) -> set[ExternalService]:
-        """
-        Get a set of properly initialized instances of ExternalService
-        """
-        ...
 
-    @abstractmethod
-    def parse(self, *args, **kwargs):
-        """
-        Parse configuration settings and/or options
-        """
-        ...
+class FileReadError(EnumeratorException):
+    def __init__(self, message: str, code: int = 1):
+        super().__init__(message, code)
+
+
+class InvalidProviderError(EnumeratorException):
+    def __init__(self, message: str, code: int = 1):
+        super().__init__(message, code)

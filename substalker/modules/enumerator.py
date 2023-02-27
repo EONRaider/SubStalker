@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-SubdomainEnumerator: Find subdomains belonging to given target hosts
+SubStalker: Find subdomains belonging to given target hosts
 using active and passive enumeration methods
 
 Author: EONRaider
@@ -18,21 +18,21 @@ Contact: https://www.twitter.com/eon_raider
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program. If not, see
-    <https://github.com/EONRaider/SubdomainEnumerator/blob/master/LICENSE>.
+    <https://github.com/EONRaider/SubStalker/blob/master/LICENSE>.
 """
 
 import logging
 from pathlib import Path
 
-from subenum.core.exceptions import EnumeratorException
-from subenum.core.parsers.cli import CLIParser
-from subenum.core.parsers.configuration import ConfigurationParser
-from subenum.core.processors.json_file import JSONFileOutput
-from subenum.core.processors.text_file import TextFileOutput
-from subenum.core.processors.screen import ScreenOutput
-from subenum.core.scheduler import Scheduler
-from subenum.core.types.base import EnumerationPublisher
-from subenum.core.enumerators.passive import PassiveSubdomainEnumerator
+from substalker.core.exceptions import EnumeratorException
+from substalker.core.parsers.cli import CLIParser
+from substalker.core.parsers.configuration import ConfigurationParser
+from substalker.core.processors.json_file import JSONFileOutput
+from substalker.core.processors.text_file import TextFileOutput
+from substalker.core.processors.screen import ScreenOutput
+from substalker.core.scheduler import Scheduler
+from substalker.core.types.base import EnumerationPublisher
+from substalker.core.enumerators.passive import PassiveSubdomainEnumerator
 
 
 class SubdomainEnumerator:
@@ -112,4 +112,5 @@ if __name__ == "__main__":
     try:
         Scheduler(task=enumerator.execute, interval=cli_args.interval).execute()
     except KeyboardInterrupt:
+        # TODO: Add logging at INFO level here
         raise SystemExit("[!] Subdomain enumeration aborted by user. Exiting...")
