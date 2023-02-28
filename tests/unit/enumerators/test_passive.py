@@ -20,7 +20,7 @@ Contact: https://www.twitter.com/eon_raider
 """
 
 
-class TestPassiveEnumerator:
+class TestPassiveSubdomainEnumerator:
     def test_num_found_domains(
         self, passive_enumerator, api_response_1, api_response_2
     ):
@@ -33,7 +33,9 @@ class TestPassiveEnumerator:
         passive_enumerator.found_domains[
             api_response_1.domain
         ] = api_response_1.subdomains
+
         passive_enumerator.found_domains[
             api_response_2.domain
         ] = api_response_2.subdomains
+
         assert passive_enumerator.num_found_domains == 10
