@@ -24,14 +24,12 @@ import time
 import urllib.error
 from collections import defaultdict
 from collections.abc import Collection, Iterator
-from contextlib import suppress
 
 from reconlib.core.base import ExternalService
 
 from substalker.core.types.base import (
     EnumerationResult,
     EnumerationPublisher,
-    EnumerationSubscriber,
 )
 from substalker.core.types.log import Logger
 
@@ -72,15 +70,6 @@ class PassiveSubdomainEnumerator(EnumerationPublisher):
         self.found_domains = defaultdict(set)
         self.logger = Logger(name=self._class_name)
 
-    def __enter__(self) -> "PassiveSubdomainEnumerator":
-        self.start_time = time.perf_counter()
-        [observer.startup(subject=self) for observer in self._observers]
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
-        self.total_time = time.perf_counter() - self.start_time
-        [observer.cleanup(subject=self) for observer in self._observers]
-
     @property
     def num_found_domains(self) -> int:
         """
@@ -88,37 +77,6 @@ class PassiveSubdomainEnumerator(EnumerationPublisher):
         from all data providers
         """
         return sum(len(subdomains) for subdomains in self.found_domains.values())
-
-    def register(self, observer: EnumerationSubscriber) -> None:
-        """
-        Attach an observer to the enumerator for further processing
-        and/or output of results.
-
-        :param observer: An object implementing the interface of
-            EnumerationSubscriber
-        """
-        self._observers.append(observer)
-
-    def unregister(self, observer: EnumerationSubscriber) -> None:
-        """
-        Remove an observer previously attached to the enumerator.
-
-        :param observer: An object implementing the interface of
-            EnumerationSubscriber
-        """
-        with suppress(ValueError):
-            # Supress exceptions raised by an attempt to unregister a
-            # non-existent observer
-            self._observers.remove(observer)
-
-    def _notify_all(self, result: EnumerationResult) -> None:
-        """
-        Notify all registered observers of an enumeration result for
-        further processing and/or output.
-
-        :param result: An instance of type EnumerationResult
-        """
-        [observer.update(result) for observer in self._observers]
 
     def query_provider(
         self, provider: ExternalService, target: str
@@ -165,6 +123,7 @@ class PassiveSubdomainEnumerator(EnumerationPublisher):
                 for target in self.targets
                 for provider in self.providers
             )
+
             queries = {ex.submit(self.query_provider, *task): task for task in tasks}
 
             for future in concurrent.futures.as_completed(queries):
@@ -172,4 +131,5 @@ class PassiveSubdomainEnumerator(EnumerationPublisher):
                     self._notify_all(result)
                     self.found_domains[result.domain] |= result.subdomains
                     yield result
+
         self.logger.debug("Subdomain enumeration finished")
