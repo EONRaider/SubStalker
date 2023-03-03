@@ -51,12 +51,22 @@ def root_dir() -> Path:
 
 @pytest.fixture
 def target_domain_1() -> str:
-    return "some-target-domain.com"
+    return "nmap.org"
 
 
 @pytest.fixture
 def target_domain_2() -> str:
     return "other-target-domain.com.br"
+
+
+@pytest.fixture
+def target_domains(target_domain_1, target_domain_2) -> tuple[str]:
+    return target_domain_1, target_domain_2
+
+
+@pytest.fixture
+def target_subdomains() -> tuple:
+    return "subdomain1", "subdomain2", "subdomain3", "subdomain4", "subdomain5"
 
 
 @pytest.fixture
@@ -109,9 +119,9 @@ def setup_virustotal_api_key(api_key):
 
 
 @pytest.fixture
-def passive_enumerator(target_domain_1, target_domain_2):
+def passive_enumerator(target_domains):
     return PassiveSubdomainEnumerator(
-        targets=(target_domain_1, target_domain_2),
+        targets=target_domains,
         providers={provider() for provider in providers.open_providers},
         max_threads=10,
         retry_time=60,

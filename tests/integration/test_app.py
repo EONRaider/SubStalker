@@ -69,11 +69,11 @@ class TestApp:
         assert caplog.messages == [
             f"Subdomain enumerator started with {num_threads} "
             f"thread{'s' if num_threads > 1 else ''} for {target_domain_1}",
-            "\t[InstanceOfExternalService1] sub1.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub2.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub3.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub4.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub5.some-target-domain.com",
+            "\t[InstanceOfExternalService1] sub1.nmap.org",
+            "\t[InstanceOfExternalService1] sub2.nmap.org",
+            "\t[InstanceOfExternalService1] sub3.nmap.org",
+            "\t[InstanceOfExternalService1] sub4.nmap.org",
+            "\t[InstanceOfExternalService1] sub5.nmap.org",
             f"Enumeration of 1 domain was completed in "
             f"{enumerator.total_time:.2f} seconds and found "
             f"{screen.subject.num_found_domains} subdomains",

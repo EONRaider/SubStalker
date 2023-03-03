@@ -84,11 +84,11 @@ class TestFile:
             written_results = file.readlines()
 
         assert written_results == [
-            "sub1.some-target-domain.com\n",
-            "sub2.some-target-domain.com\n",
-            "sub3.some-target-domain.com\n",
-            "sub4.some-target-domain.com\n",
-            "sub5.some-target-domain.com\n",
+            "sub1.nmap.org\n",
+            "sub2.nmap.org\n",
+            "sub3.nmap.org\n",
+            "sub4.nmap.org\n",
+            "sub5.nmap.org\n",
             "sub1.other-target-domain.com.br\n",
             "sub2.other-target-domain.com.br\n",
             "sub3.other-target-domain.com.br\n",

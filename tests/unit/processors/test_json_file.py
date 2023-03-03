@@ -76,18 +76,18 @@ class TestJSONFile:
                     "sub5.other-target-domain.com.br",
                 ]
             },
-            "some-target-domain.com": {
+            "nmap.org": {
                 "InstanceOfExternalService1": [
-                    "sub1.some-target-domain.com",
-                    "sub2.some-target-domain.com",
-                    "sub3.some-target-domain.com",
-                    "sub4.some-target-domain.com",
-                    "sub5.some-target-domain.com",
+                    "sub1.nmap.org",
+                    "sub2.nmap.org",
+                    "sub3.nmap.org",
+                    "sub4.nmap.org",
+                    "sub5.nmap.org",
                 ],
                 "InstanceOfExternalService3": [
-                    "sub1.some-target-domain.com",
-                    "sub2.some-target-domain.com",
-                    "sub3.some-target-domain.com",
+                    "sub1.nmap.org",
+                    "sub2.nmap.org",
+                    "sub3.nmap.org",
                 ],
             },
         }
@@ -134,18 +134,18 @@ class TestJSONFile:
                         "sub5.other-target-domain.com.br",
                     ]
                 },
-                "some-target-domain.com": {
+                "nmap.org": {
                     "InstanceOfExternalService1": [
-                        "sub1.some-target-domain.com",
-                        "sub2.some-target-domain.com",
-                        "sub3.some-target-domain.com",
-                        "sub4.some-target-domain.com",
-                        "sub5.some-target-domain.com",
+                        "sub1.nmap.org",
+                        "sub2.nmap.org",
+                        "sub3.nmap.org",
+                        "sub4.nmap.org",
+                        "sub5.nmap.org",
                     ],
                     "InstanceOfExternalService3": [
-                        "sub1.some-target-domain.com",
-                        "sub2.some-target-domain.com",
-                        "sub3.some-target-domain.com",
+                        "sub1.nmap.org",
+                        "sub2.nmap.org",
+                        "sub3.nmap.org",
                     ],
                 },
             }

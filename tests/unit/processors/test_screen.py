@@ -65,7 +65,7 @@ class TestScreen:
 
         assert (
             "Subdomain enumerator started with 10 threads for "
-            "some-target-domain.com | other-target-domain.com.br" in caplog.messages
+            "nmap.org | other-target-domain.com.br" in caplog.messages
         )
 
     def test_screen_update(
@@ -92,11 +92,11 @@ class TestScreen:
             passive_enumerator.found_domains[response.domain] |= response.subdomains
 
         assert caplog.messages == [
-            "\t[InstanceOfExternalService1] sub1.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub2.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub3.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub4.some-target-domain.com",
-            "\t[InstanceOfExternalService1] sub5.some-target-domain.com",
+            "\t[InstanceOfExternalService1] sub1.nmap.org",
+            "\t[InstanceOfExternalService1] sub2.nmap.org",
+            "\t[InstanceOfExternalService1] sub3.nmap.org",
+            "\t[InstanceOfExternalService1] sub4.nmap.org",
+            "\t[InstanceOfExternalService1] sub5.nmap.org",
             "\t[InstanceOfExternalService2] sub1.other-target-domain.com.br",
             "\t[InstanceOfExternalService2] sub2.other-target-domain.com.br",
             "\t[InstanceOfExternalService2] sub3.other-target-domain.com.br",
@@ -141,9 +141,9 @@ class TestScreen:
         screen.cleanup()
 
         assert caplog.messages == [
-            "sub1.some-target-domain.com",
-            "sub2.some-target-domain.com",
-            "sub3.some-target-domain.com",
-            "sub4.some-target-domain.com",
-            "sub5.some-target-domain.com",
+            "sub1.nmap.org",
+            "sub2.nmap.org",
+            "sub3.nmap.org",
+            "sub4.nmap.org",
+            "sub5.nmap.org",
         ]
